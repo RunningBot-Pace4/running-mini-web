@@ -58,3 +58,30 @@ export async function createEventAction(_: unknown, formData: FormData) {
   revalidatePath("/");
   return { success: "Event created." };
 }
+
+const updateEventStatusSchema = z.object({
+  eventId: z.string().min(1),
+  status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]),
+});
+
+export async function updateEventStatusAction(formData: FormData) {
+  await requireAdmin();
+
+  const parsed = updateEventStatusSchema.safeParse({
+    eventId: formData.get("eventId"),
+    status: formData.get("status"),
+  });
+
+  if (!parsed.success) throw new Error("Invalid event status.");
+
+  const event = await prisma.event.update({
+    where: { id: parsed.data.eventId },
+    data: { status: parsed.data.status },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/events/${event.id}`);
+  revalidatePath(`/events/${event.slug}`);
+}
+

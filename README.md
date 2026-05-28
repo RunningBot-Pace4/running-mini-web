@@ -54,3 +54,20 @@ Example: 5.9km = `1 + 5*2 = 11 points`.
 - Add CAPTCHA or rate limiting on registration/login.
 - Use HTTPS for Web Share API and OAuth redirect.
 - Use Strava webhooks later for automatic syncing; this MVP uses manual sync.
+
+
+## Admin event management
+
+After login as admin, open:
+
+```text
+/admin
+```
+
+Use **Manage** beside an event to:
+
+- view who voted ATTEND or NOT_ATTEND
+- see submitted runs
+- close, reopen, draft, or archive the event
+
+When an event is set to `CLOSED`, users cannot vote or submit new runs for that event.
