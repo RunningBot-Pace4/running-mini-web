@@ -71,3 +71,60 @@ Use **Manage** beside an event to:
 - close, reopen, draft, or archive the event
 
 When an event is set to `CLOSED`, users cannot vote or submit new runs for that event.
+
+
+## Update in this package
+
+This package fixes:
+
+- Event date display now includes time.
+- Date display format is `dd/mm/yyyy, HH:mm`.
+- Event descriptions keep line breaks and display simple headings such as `Main`, `Warm up`, and `Drills`.
+- Strava connect redirects back to the event and shows clearer error messages.
+- Login remembers email on the same device. Passwords are not stored by the app; browser password managers handle password saving.
+- Forgot password and reset password pages were added.
+
+## Event date/time configuration
+
+For Malaysia/Singapore time, keep these values:
+
+```env
+APP_TIME_ZONE="Asia/Kuala_Lumpur"
+EVENT_TIME_ZONE_OFFSET="+08:00"
+```
+
+Vercel also needs these values in Project Settings → Environment Variables.
+
+## Forgot password setup
+
+The app includes:
+
+```text
+/forgot-password
+/reset-password?token=...
+```
+
+For real email delivery, configure:
+
+```env
+RESEND_API_KEY="your_resend_api_key"
+RESEND_FROM="Run Mini <noreply@yourdomain.com>"
+```
+
+For testing only, you can set:
+
+```env
+SHOW_RESET_LINK="true"
+```
+
+This shows the reset link on screen after requesting reset. Do not use this for public production unless you understand the risk.
+
+## Vercel deployment command
+
+Use:
+
+```bash
+npx prisma db push && npm run seed && npm run build
+```
+
+Because this update adds a `PasswordResetToken` table, Vercel must run `prisma db push` again.

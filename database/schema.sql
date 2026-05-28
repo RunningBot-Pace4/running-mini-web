@@ -25,6 +25,15 @@ CREATE TABLE "Session" (
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE "PasswordResetToken" (
+  "id" TEXT PRIMARY KEY,
+  "userId" TEXT NOT NULL REFERENCES "User"("id") ON DELETE CASCADE,
+  "tokenHash" TEXT NOT NULL UNIQUE,
+  "expiresAt" TIMESTAMPTZ NOT NULL,
+  "usedAt" TIMESTAMPTZ,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE "StravaToken" (
   "id" TEXT PRIMARY KEY,
   "userId" TEXT NOT NULL UNIQUE REFERENCES "User"("id") ON DELETE CASCADE,
@@ -94,6 +103,8 @@ CREATE TABLE "Submission" (
 
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 CREATE INDEX "Session_expiresAt_idx" ON "Session"("expiresAt");
+CREATE INDEX "PasswordResetToken_userId_idx" ON "PasswordResetToken"("userId");
+CREATE INDEX "PasswordResetToken_expiresAt_idx" ON "PasswordResetToken"("expiresAt");
 CREATE INDEX "Event_status_idx" ON "Event"("status");
 CREATE INDEX "Event_startAt_endAt_idx" ON "Event"("startAt", "endAt");
 CREATE INDEX "EventVote_userId_status_idx" ON "EventVote"("userId", "status");

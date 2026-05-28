@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
+import { formatDateTimeRange } from "@/lib/datetime";
+import { EventDescription } from "@/components/EventDescription";
 
 export default async function HomePage() {
   const user = await getCurrentUser();
@@ -47,9 +49,9 @@ export default async function HomePage() {
             </div>
             <h2>{event.title}</h2>
             <p className="muted">
-              {event.startAt.toLocaleDateString()} – {event.endAt.toLocaleDateString()}
+              {formatDateTimeRange(event.startAt, event.endAt)}
             </p>
-            {event.description && <p>{event.description}</p>}
+            {event.description && <EventDescription text={event.description} compact />}
             <Link className="button full" href={`/events/${event.slug}`}>
               View event
             </Link>

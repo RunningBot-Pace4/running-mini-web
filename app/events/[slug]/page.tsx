@@ -4,9 +4,21 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { voteAction, submitActivityAction } from "@/app/events/actions";
 import { SubmitRunForm } from "@/components/SubmitRunForm";
+import { EventDescription } from "@/components/EventDescription";
+import { formatDateTimeRange } from "@/lib/datetime";
 
-export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EventPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { slug } = await params;
+  const query = searchParams ? await searchParams : {};
+  const stravaError = typeof query.strava_error === "string" ? query.strava_error : "";
+  const syncError = typeof query.sync_error === "string" ? query.sync_error : "";
+  const stravaConnected = query.strava_connected === "1";
   const user = await getCurrentUser();
 
   const event = await prisma.event.findUnique({
@@ -45,21 +57,32 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const mySubmissions = user
     ? event.submissions.filter((submission) => submission.userId === user.id)
     : [];
+  const isOpen = event.status === "OPEN";
 
   return (
     <>
       <section className="hero">
         <span className={event.status === "OPEN" ? "badge success" : "badge"}>{event.status}</span>
         <h1>{event.title}</h1>
-        <p>
-          {event.startAt.toLocaleString()} – {event.endAt.toLocaleString()}
-        </p>
+        <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
       </section>
 
       <div className="card">
-        {event.description && <p>{event.description}</p>}
+        {event.description && <EventDescription text={event.description} />}
         <p className="muted">Scoring: Attend = 1 point, each completed 1km = 2 points.</p>
       </div>
+
+      {(stravaError || syncError || stravaConnected) && (
+        <div className="card">
+          {stravaConnected && <p className="success-text">Strava connected successfully.</p>}
+          {stravaError && (
+            <p className="error">
+              Strava link failed: {stravaError}. Please check the Strava callback domain and Vercel environment variables.
+            </p>
+          )}
+          {syncError && <p className="error">Strava sync failed: {syncError}</p>}
+        </div>
+      )}
 
       {!user && (
         <div className="card">
@@ -83,16 +106,17 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             <p className="muted">
               Current vote: <strong>{vote?.status || "No vote yet"}</strong>
             </p>
+            {!isOpen && <p className="error">This event is closed. New votes are disabled.</p>}
             <div className="row">
               <form action={voteAction}>
                 <input type="hidden" name="eventId" value={event.id} />
                 <input type="hidden" name="status" value="ATTEND" />
-                <button type="submit">Attend</button>
+                <button type="submit" disabled={!isOpen}>Attend</button>
               </form>
               <form action={voteAction}>
                 <input type="hidden" name="eventId" value={event.id} />
                 <input type="hidden" name="status" value="NOT_ATTEND" />
-                <button className="ghost" type="submit">
+                <button className="ghost" type="submit" disabled={!isOpen}>
                   Not attend
                 </button>
               </form>
@@ -111,7 +135,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             ) : (
               <>
                 <p className="muted">Connect Strava to fetch your running activities for this event.</p>
-                <a className="button" href="/api/strava/connect">
+                <a className="button" href={`/api/strava/connect?next=/events/${event.slug}`}>
                   Connect Strava
                 </a>
               </>
@@ -121,7 +145,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           <div className="card">
             <h2>3. Submit run</h2>
             <p className="muted">Only Strava runs inside this event date range can be submitted.</p>
-            <SubmitRunForm eventId={event.id} activities={activities} action={submitActivityAction} />
+            <SubmitRunForm eventId={event.id} activities={activities} action={submitActivityAction} disabled={!isOpen} />
           </div>
 
           {mySubmissions.length > 0 && (

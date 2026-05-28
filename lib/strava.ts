@@ -31,8 +31,7 @@ function stravaClientSecret() {
   return value;
 }
 
-export function getStravaAuthorizeUrl(state: string) {
-  const redirectUri = process.env.STRAVA_REDIRECT_URI || `${process.env.APP_URL}/api/strava/callback`;
+export function getStravaAuthorizeUrl(state: string, redirectUri: string) {
   const url = new URL("https://www.strava.com/oauth/authorize");
   url.searchParams.set("client_id", stravaClientId());
   url.searchParams.set("redirect_uri", redirectUri);

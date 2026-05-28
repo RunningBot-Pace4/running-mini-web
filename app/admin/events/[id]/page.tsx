@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { updateEventStatusAction } from "@/app/admin/actions";
+import { formatDateTime, formatDateTimeRange } from "@/lib/datetime";
+import { EventDescription } from "@/components/EventDescription";
 
 export default async function AdminEventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -40,9 +42,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
         </Link>
         <p className="muted" style={{ marginTop: 16 }}>Admin event management</p>
         <h1>{event.title}</h1>
-        <p>
-          {event.startAt.toLocaleString()} – {event.endAt.toLocaleString()}
-        </p>
+        <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
       </section>
 
       <div className="card">
@@ -77,6 +77,13 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
         </div>
       </div>
 
+      {event.description && (
+        <div className="card">
+          <h2>Description</h2>
+          <EventDescription text={event.description} />
+        </div>
+      )}
+
       <div className="grid grid-2">
         <div className="card">
           <h2>{attendCount}</h2>
@@ -110,7 +117,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
                       {vote.status}
                     </span>
                   </td>
-                  <td>{vote.updatedAt.toLocaleString()}</td>
+                  <td>{formatDateTime(vote.updatedAt)}</td>
                 </tr>
               ))}
             </tbody>
@@ -141,7 +148,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
                   <td>{submission.activity.name}</td>
                   <td>{submission.distanceKm.toString()}km</td>
                   <td>{submission.totalPoints}</td>
-                  <td>{submission.createdAt.toLocaleString()}</td>
+                  <td>{formatDateTime(submission.createdAt)}</td>
                 </tr>
               ))}
             </tbody>

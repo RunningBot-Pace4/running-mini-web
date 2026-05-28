@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
 import { createEventAction, updateEventStatusAction } from "@/app/admin/actions";
+import { formatDateTimeRange } from "@/lib/datetime";
 
 export default async function AdminPage() {
   const user = await getCurrentUser();
@@ -49,7 +50,7 @@ export default async function AdminPage() {
                     <Link href={`/events/${event.slug}`}>{event.title}</Link>
                     <br />
                     <span className="muted">
-                      {event.startAt.toLocaleDateString()} – {event.endAt.toLocaleDateString()}
+                      {formatDateTimeRange(event.startAt, event.endAt)}
                     </span>
                   </td>
                   <td>

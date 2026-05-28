@@ -5,6 +5,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import { slugify } from "@/lib/slug";
+import { parseDateTimeLocal } from "@/lib/datetime";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -27,8 +28,8 @@ export async function createEventAction(_: unknown, formData: FormData) {
 
   if (!parsed.success) return { error: "Please enter valid event details." };
 
-  const startAt = new Date(parsed.data.startAt);
-  const endAt = new Date(parsed.data.endAt);
+  const startAt = parseDateTimeLocal(parsed.data.startAt);
+  const endAt = parseDateTimeLocal(parsed.data.endAt);
 
   if (Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime()) || startAt >= endAt) {
     return { error: "End date must be after start date." };
