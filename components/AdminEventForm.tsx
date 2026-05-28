@@ -15,7 +15,7 @@ export function AdminEventForm({
     <form className="form-stack" action={formAction}>
       <div>
         <label htmlFor="title">Event title</label>
-        <input id="title" name="title" required placeholder="Example: Interval Run" />
+        <input id="title" name="title" required  />
       </div>
 
       <div>
@@ -24,14 +24,7 @@ export function AdminEventForm({
           id="description"
           name="description"
           rows={8}
-          placeholder={`2k warm up (DO NOT SKIP THIS)
-drills as usual
-
-Main
-4x1km @ threshold pace
-Rest 90s
-Short break
-4x200 fast 200 float`}
+          
         />
       </div>
 
