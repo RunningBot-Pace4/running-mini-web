@@ -2,9 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
-import { updateEventStatusAction } from "@/app/admin/actions";
-import { formatDateTime, formatDateTimeRange } from "@/lib/datetime";
+import { updateEventDetailsAction, updateEventStatusAction } from "@/app/admin/actions";
+import { formatDateTime, formatDateTimeLocalInput, formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
+import { EditEventForm } from "@/components/EditEventForm";
 
 export default async function AdminEventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -77,9 +78,27 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
         </div>
       </div>
 
+      <div className="card">
+        <h2>Edit event details</h2>
+        <p className="muted">
+          Update draft descriptions, event date/time, title, or status. The public event link remains the same.
+        </p>
+        <EditEventForm
+          action={updateEventDetailsAction}
+          event={{
+            id: event.id,
+            title: event.title,
+            description: event.description || "",
+            startAtInput: formatDateTimeLocalInput(event.startAt),
+            endAtInput: formatDateTimeLocalInput(event.endAt),
+            status: event.status,
+          }}
+        />
+      </div>
+
       {event.description && (
         <div className="card">
-          <h2>Description</h2>
+          <h2>Description preview</h2>
           <EventDescription text={event.description} />
         </div>
       )}

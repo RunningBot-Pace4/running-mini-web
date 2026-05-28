@@ -9,7 +9,7 @@ import { parseDateTimeLocal } from "@/lib/datetime";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
-  description: z.string().max(1000).optional(),
+  description: z.string().max(5000).optional(),
   startAt: z.string().min(1),
   endAt: z.string().min(1),
   status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]).default("OPEN"),
@@ -59,6 +59,56 @@ export async function createEventAction(_: unknown, formData: FormData) {
   revalidatePath("/");
   return { success: "Event created." };
 }
+
+
+const updateEventDetailsSchema = z.object({
+  eventId: z.string().min(1),
+  title: z.string().min(3).max(120),
+  description: z.string().max(5000).optional(),
+  startAt: z.string().min(1),
+  endAt: z.string().min(1),
+  status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]),
+});
+
+export async function updateEventDetailsAction(_: unknown, formData: FormData) {
+  await requireAdmin();
+
+  const parsed = updateEventDetailsSchema.safeParse({
+    eventId: formData.get("eventId"),
+    title: formData.get("title"),
+    description: String(formData.get("description") || ""),
+    startAt: formData.get("startAt"),
+    endAt: formData.get("endAt"),
+    status: formData.get("status"),
+  });
+
+  if (!parsed.success) return { error: "Please enter valid event details." };
+
+  const startAt = parseDateTimeLocal(parsed.data.startAt);
+  const endAt = parseDateTimeLocal(parsed.data.endAt);
+
+  if (Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime()) || startAt >= endAt) {
+    return { error: "End date must be after start date." };
+  }
+
+  const event = await prisma.event.update({
+    where: { id: parsed.data.eventId },
+    data: {
+      title: parsed.data.title,
+      description: parsed.data.description,
+      startAt,
+      endAt,
+      status: parsed.data.status,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/events/${event.id}`);
+  revalidatePath(`/events/${event.slug}`);
+  return { success: "Event updated." };
+}
+
 
 const updateEventStatusSchema = z.object({
   eventId: z.string().min(1),

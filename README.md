@@ -128,3 +128,22 @@ npx prisma db push && npm run seed && npm run build
 ```
 
 Because this update adds a `PasswordResetToken` table, Vercel must run `prisma db push` again.
+
+
+## Admin Event Editing
+
+Admins can edit existing event details from:
+
+```text
+/admin → Manage
+```
+
+The manage page now supports updating:
+
+- title
+- multi-line description
+- start date/time
+- end date/time
+- status
+
+No database migration is required for this admin editing update.
