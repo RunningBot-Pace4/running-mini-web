@@ -195,3 +195,23 @@ This update adds a `SiteContent` table. For Vercel, keep the build command:
 ```bash
 npx prisma db push && npm run seed && npm run build
 ```
+
+
+## Full rich text toolbar update
+
+The event description editor and home description editor now use a richer WYSIWYG toolbar powered by Tiptap.
+
+Available tools:
+
+- alignment: left, center, right, justify
+- bold, italic, underline, strikethrough
+- headings, paragraph, quote, code block
+- font size
+- text color
+- bullet and numbered lists
+- indent and outdent for list items
+- undo and redo
+- link insertion
+- fullscreen editor mode
+
+This update changes editor dependencies in `package.json`, so Vercel must run `npm install` during deployment. No database migration is required.
