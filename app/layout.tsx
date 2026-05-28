@@ -17,22 +17,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <header className="topbar">
           <div className="topbar-inner">
-            <Link className="brand" href="/">
-              Run Mini
+            <Link className="brand" href="/" aria-label="Run Mini home">
+              <span className="brand-mark">↗</span>
+              <span>Run Mini</span>
             </Link>
             <nav className="nav">
               <Link href="/">Events</Link>
               {user?.role === "ADMIN" && <Link href="/admin">Admin</Link>}
               {user ? (
                 <form action={logoutAction}>
-                  <button className="ghost" type="submit">
+                  <button className="ghost nav-button" type="submit">
                     Logout
                   </button>
                 </form>
               ) : (
                 <>
                   <Link href="/login">Login</Link>
-                  <Link className="button" href="/register">
+                  <Link className="button nav-button" href="/register">
                     Register
                   </Link>
                 </>

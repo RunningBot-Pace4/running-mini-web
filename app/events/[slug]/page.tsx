@@ -7,6 +7,14 @@ import { SubmitRunForm } from "@/components/SubmitRunForm";
 import { EventDescription } from "@/components/EventDescription";
 import { formatDateTimeRange } from "@/lib/datetime";
 
+export const dynamic = "force-dynamic";
+
+function statusClass(status: string) {
+  if (status === "OPEN") return "badge success";
+  if (status === "CLOSED") return "badge danger";
+  return "badge";
+}
+
 export default async function EventPage({
   params,
   searchParams,
@@ -61,15 +69,32 @@ export default async function EventPage({
 
   return (
     <>
-      <section className="hero">
-        <span className={event.status === "OPEN" ? "badge success" : "badge"}>{event.status}</span>
-        <h1>{event.title}</h1>
-        <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
+      <section className="hero event-hero-detail">
+        <div>
+          <span className={statusClass(event.status)}>{event.status}</span>
+          <h1>{event.title}</h1>
+          <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
+        </div>
+        <div className="mini-score-card">
+          <span>Scoring</span>
+          <strong>1 + 2/km</strong>
+          <small>Attendance + completed kilometres</small>
+        </div>
       </section>
 
-      <div className="card">
-        {event.description && <EventDescription text={event.description} />}
-        <p className="muted">Scoring: Attend = 1 point, each completed 1km = 2 points.</p>
+      <div className="card workout-card">
+        <div className="section-heading compact-heading">
+          <div>
+            <span className="eyebrow">Workout plan</span>
+            <h2>Session details</h2>
+          </div>
+        </div>
+        {event.description ? (
+          <EventDescription text={event.description} />
+        ) : (
+          <p className="muted">No event description yet.</p>
+        )}
+        <div className="score-note">Attend = 1 point · Each completed 1km = 2 points</div>
       </div>
 
       {(stravaError || syncError || stravaConnected) && (

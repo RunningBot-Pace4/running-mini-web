@@ -147,3 +147,17 @@ The manage page now supports updating:
 - status
 
 No database migration is required for this admin editing update.
+
+
+## Latest UI update
+
+This version refreshes the public mini web with a running-themed design:
+
+- Hero banner with running challenge messaging
+- Event board with richer cards
+- Better workout preview formatting
+- Event descriptions keep line breaks and now show more lines on home
+- Dynamic rendering is forced for home, public event and admin pages so edited event descriptions show after redeploy
+- Admin can still edit event title, description, date/time and status from `/admin -> Manage`
+
+If an edited description still does not show online, check that you have pushed the latest files to GitHub and redeployed Vercel.

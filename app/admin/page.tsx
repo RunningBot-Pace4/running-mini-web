@@ -6,6 +6,8 @@ import { AdminEventForm } from "@/components/AdminEventForm";
 import { createEventAction, updateEventStatusAction } from "@/app/admin/actions";
 import { formatDateTimeRange } from "@/lib/datetime";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -20,9 +22,10 @@ export default async function AdminPage() {
 
   return (
     <>
-      <section className="hero">
-        <h1>Admin</h1>
-        <p>Create events that users can vote for and submit Strava activities to.</p>
+      <section className="hero admin-hero">
+        <span className="eyebrow">Race control</span>
+        <h1>Admin dashboard</h1>
+        <p>Create sessions, edit workout descriptions, view votes and close events.</p>
       </section>
 
       <div className="card">
