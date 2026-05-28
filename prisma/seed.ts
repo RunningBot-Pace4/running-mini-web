@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../lib/password";
+import { DEFAULT_HOME_CONTENT, HOME_CONTENT_KEY } from "../lib/site-content";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +20,15 @@ async function main() {
       name,
       role: "ADMIN",
       passwordHash: await hashPassword(password),
+    },
+  });
+
+  await prisma.siteContent.upsert({
+    where: { key: HOME_CONTENT_KEY },
+    update: {},
+    create: {
+      key: HOME_CONTENT_KEY,
+      ...DEFAULT_HOME_CONTENT,
     },
   });
 

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import { slugify } from "@/lib/slug";
 import { parseDateTimeLocal } from "@/lib/datetime";
+import { HOME_CONTENT_KEY } from "@/lib/site-content";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -59,6 +60,45 @@ export async function createEventAction(_: unknown, formData: FormData) {
   revalidatePath("/");
   return { success: "Event created." };
 }
+
+
+const updateHomeContentSchema = z.object({
+  heroEyebrow: z.string().min(2).max(80),
+  heroTitle: z.string().min(3).max(160),
+  heroDescription: z.string().min(3).max(2000),
+});
+
+export async function updateHomeContentAction(_: unknown, formData: FormData) {
+  await requireAdmin();
+
+  const parsed = updateHomeContentSchema.safeParse({
+    heroEyebrow: formData.get("heroEyebrow"),
+    heroTitle: formData.get("heroTitle"),
+    heroDescription: formData.get("heroDescription"),
+  });
+
+  if (!parsed.success) return { error: "Please enter valid home content." };
+
+  await prisma.siteContent.upsert({
+    where: { key: HOME_CONTENT_KEY },
+    update: {
+      heroEyebrow: parsed.data.heroEyebrow,
+      heroTitle: parsed.data.heroTitle,
+      heroDescription: parsed.data.heroDescription,
+    },
+    create: {
+      key: HOME_CONTENT_KEY,
+      heroEyebrow: parsed.data.heroEyebrow,
+      heroTitle: parsed.data.heroTitle,
+      heroDescription: parsed.data.heroDescription,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return { success: "Home content updated." };
+}
+
 
 
 const updateEventDetailsSchema = z.object({

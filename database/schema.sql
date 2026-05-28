@@ -34,6 +34,17 @@ CREATE TABLE "PasswordResetToken" (
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+
+CREATE TABLE "SiteContent" (
+  "id" TEXT PRIMARY KEY,
+  "key" TEXT NOT NULL UNIQUE,
+  "heroEyebrow" TEXT NOT NULL,
+  "heroTitle" TEXT NOT NULL,
+  "heroDescription" TEXT NOT NULL,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE "StravaToken" (
   "id" TEXT PRIMARY KEY,
   "userId" TEXT NOT NULL UNIQUE REFERENCES "User"("id") ON DELETE CASCADE,

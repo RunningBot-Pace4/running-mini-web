@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
+import { getHomeContent } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ function statusClass(status: string) {
 
 export default async function HomePage() {
   const user = await getCurrentUser();
+  const homeContent = await getHomeContent();
   const events = await prisma.event.findMany({
     where: { status: { in: ["OPEN", "CLOSED"] } },
     orderBy: { startAt: "desc" },
@@ -30,12 +32,11 @@ export default async function HomePage() {
     <>
       <section className="hero run-hero">
         <div className="hero-copy">
-          <span className="eyebrow">Mobile running challenge</span>
-          <h1>Run. Vote. Sync. Score.</h1>
-          <p>
-            Join club sessions, confirm attendance, submit Strava runs, climb the leaderboard,
-            and share your finish with the team.
-          </p>
+          <span className="eyebrow">{homeContent.heroEyebrow}</span>
+          <h1>{homeContent.heroTitle}</h1>
+          <div className="hero-description">
+            <EventDescription text={homeContent.heroDescription} />
+          </div>
           <div className="hero-actions">
             <Link className="button" href={user ? "#events" : "/register"}>
               {user ? "View events" : "Join the run"}

@@ -3,8 +3,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
-import { createEventAction, updateEventStatusAction } from "@/app/admin/actions";
+import { HomeContentForm } from "@/components/HomeContentForm";
+import { createEventAction, updateEventStatusAction, updateHomeContentAction } from "@/app/admin/actions";
 import { formatDateTimeRange } from "@/lib/datetime";
+import { getHomeContent } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,8 @@ export default async function AdminPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "ADMIN") redirect("/");
+
+  const homeContent = await getHomeContent();
 
   const events = await prisma.event.findMany({
     orderBy: { createdAt: "desc" },
@@ -27,6 +31,14 @@ export default async function AdminPage() {
         <h1>Admin dashboard</h1>
         <p>Create sessions, edit workout descriptions, view votes and close events.</p>
       </section>
+
+      <div className="card">
+        <h2>Edit home page hero</h2>
+        <p className="muted">
+          Update the public home page title and intro text. The description supports the toolbar formatting.
+        </p>
+        <HomeContentForm content={homeContent} action={updateHomeContentAction} />
+      </div>
 
       <div className="card">
         <h2>Create event</h2>

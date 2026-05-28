@@ -172,3 +172,26 @@ The admin create/edit event forms now include simple formatting tools for the ev
 - Color buttons insert `[orange]text[/orange]`, `[green]text[/green]`, `[blue]text[/blue]`, or `[red]text[/red]`
 
 The public event page renders these safely without using raw HTML.
+
+
+## Home page content management
+
+Admins can edit the public home page hero from:
+
+```text
+/admin → Edit home page hero
+```
+
+Editable fields:
+
+- small heading
+- large home title
+- home description
+
+The home description uses the same toolbar as event descriptions: bold, underline, and colored text.
+
+This update adds a `SiteContent` table. For Vercel, keep the build command:
+
+```bash
+npx prisma db push && npm run seed && npm run build
+```

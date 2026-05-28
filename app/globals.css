@@ -194,6 +194,31 @@ a {
   font-size: clamp(18px, 3vw, 22px);
 }
 
+
+.hero-copy h1 {
+  white-space: pre-line;
+}
+
+.hero-description {
+  margin-top: 2px;
+  max-width: 680px;
+}
+
+.hero-description .event-description {
+  margin: 0;
+  gap: 7px;
+}
+
+.hero-description .desc-line,
+.hero-description .desc-heading {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.hero-description .desc-heading {
+  color: #ffd18a;
+  margin-top: 6px;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
