@@ -215,3 +215,25 @@ Available tools:
 - fullscreen editor mode
 
 This update changes editor dependencies in `package.json`, so Vercel must run `npm install` during deployment. No database migration is required.
+
+
+## Latest feature update
+
+- Home workout preview "View full workout plan" now links to the full event page.
+- Admin can edit scoring rules from `/admin`.
+- Attendance vote buttons now use the same neutral style and show color only on hover/press.
+- Logged-in users can open `/account` to view profile details, Strava connection status, votes, submissions, distance, and points.
+- Scoring settings are stored in `ScoreSetting`; run `npx prisma db push` on deployment.
+
+
+## Change password
+
+Logged-in users can open `/account` and use **Change password**.
+
+The form requires:
+
+- Old password
+- New password
+- Confirm new password
+
+The new password must be at least 8 characters and must be different from the old password.

@@ -35,6 +35,15 @@ CREATE TABLE "PasswordResetToken" (
 );
 
 
+CREATE TABLE "ScoreSetting" (
+  "id" TEXT PRIMARY KEY,
+  "key" TEXT NOT NULL UNIQUE,
+  "attendancePoints" INTEGER NOT NULL DEFAULT 1,
+  "perKmPoints" INTEGER NOT NULL DEFAULT 2,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE "SiteContent" (
   "id" TEXT PRIMARY KEY,
   "key" TEXT NOT NULL UNIQUE,

@@ -4,9 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
 import { HomeContentForm } from "@/components/HomeContentForm";
-import { createEventAction, updateEventStatusAction, updateHomeContentAction } from "@/app/admin/actions";
+import { ScoreSettingsForm } from "@/components/ScoreSettingsForm";
+import { createEventAction, updateEventStatusAction, updateHomeContentAction, updateScoreSettingsAction } from "@/app/admin/actions";
 import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
+import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,7 @@ export default async function AdminPage() {
   if (user.role !== "ADMIN") redirect("/");
 
   const homeContent = await getHomeContent();
+  const scoreSettings = await getScoreSettings();
 
   const events = await prisma.event.findMany({
     orderBy: { createdAt: "desc" },
@@ -38,6 +41,14 @@ export default async function AdminPage() {
           Update the public home page title and intro text. The description supports the toolbar formatting.
         </p>
         <HomeContentForm content={homeContent} action={updateHomeContentAction} />
+      </div>
+
+      <div className="card">
+        <h2>Edit scoring rules</h2>
+        <p className="muted">
+          Current formula: <strong>{scoringFormulaLabel(scoreSettings)}</strong>. {scoringDescription(scoreSettings)}.
+        </p>
+        <ScoreSettingsForm settings={scoreSettings} action={updateScoreSettingsAction} />
       </div>
 
       <div className="card">

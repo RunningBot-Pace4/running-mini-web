@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/session";
 import { formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
 import { getHomeContent } from "@/lib/site-content";
+import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ function statusClass(status: string) {
 export default async function HomePage() {
   const user = await getCurrentUser();
   const homeContent = await getHomeContent();
+  const scoreSettings = await getScoreSettings();
   const events = await prisma.event.findMany({
     where: { status: { in: ["OPEN", "CLOSED"] } },
     orderBy: { startAt: "desc" },
@@ -41,7 +43,7 @@ export default async function HomePage() {
             <Link className="button" href={user ? "#events" : "/register"}>
               {user ? "View events" : "Join the run"}
             </Link>
-            <Link className="button ghost dark-ghost" href="/login">
+            <Link className="button ghost dark-ghost" href={user ? "/account" : "/login"}>
               {user ? "My account" : "Login"}
             </Link>
           </div>
@@ -51,8 +53,8 @@ export default async function HomePage() {
           <div className="track-lines" />
           <div className="runner-badge">🏃</div>
           <p className="panel-label">Scoring</p>
-          <div className="panel-score">1 + 2/km</div>
-          <p className="panel-note">Attend = 1 point · Every completed 1km = 2 points</p>
+          <div className="panel-score">{scoringFormulaLabel(scoreSettings)}</div>
+          <p className="panel-note">{scoringDescription(scoreSettings)}</p>
         </div>
       </section>
 
@@ -110,7 +112,7 @@ export default async function HomePage() {
 
             {event.description && (
               <div className="workout-preview">
-                <EventDescription text={event.description} compact />
+                <EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} />
               </div>
             )}
 

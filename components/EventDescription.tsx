@@ -1,9 +1,17 @@
 import { richTextToHtml, richTextToPreviewHtml } from "@/lib/rich-content";
 
-export function EventDescription({ text, compact = false }: { text?: string | null; compact?: boolean }) {
+export function EventDescription({
+  text,
+  compact = false,
+  fullHref,
+}: {
+  text?: string | null;
+  compact?: boolean;
+  fullHref?: string;
+}) {
   if (!text) return null;
 
-  const html = compact ? richTextToPreviewHtml(text, 8) : richTextToHtml(text);
+  const html = compact ? richTextToPreviewHtml(text, 8, fullHref) : richTextToHtml(text);
 
   if (!html) return null;
 

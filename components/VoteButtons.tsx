@@ -23,7 +23,7 @@ function VoteSubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <button className={className} type="submit" disabled={disabled || pending}>
+    <button className={className ? `vote-button ${className}` : "vote-button"} type="submit" disabled={disabled || pending}>
       {pending ? (
         <span className="button-loading">
           <span className="spinner" aria-hidden="true" />
@@ -68,7 +68,7 @@ export function VoteButtons({ eventId, action, disabled = false }: VoteButtonsPr
       <VoteForm eventId={eventId} status="ATTEND" action={action} disabled={disabled}>
         Attend
       </VoteForm>
-      <VoteForm eventId={eventId} status="NOT_ATTEND" action={action} disabled={disabled} className="ghost">
+      <VoteForm eventId={eventId} status="NOT_ATTEND" action={action} disabled={disabled}>
         Not attend
       </VoteForm>
     </div>

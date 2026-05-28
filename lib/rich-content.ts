@@ -117,7 +117,7 @@ function sanitizeStyle(style: string) {
   return allowed.join("; ");
 }
 
-function sanitizeHref(href: string) {
+export function sanitizeHref(href: string) {
   const clean = href.trim();
 
   if (/^(https?:|mailto:|tel:)/i.test(clean)) {
@@ -216,7 +216,7 @@ export function richTextToHtml(value?: string | null) {
   return sanitizeRichHtml(html);
 }
 
-export function richTextToPreviewHtml(value?: string | null, maxBlocks = 8) {
+export function richTextToPreviewHtml(value?: string | null, maxBlocks = 8, fullHref?: string) {
   const html = richTextToHtml(value);
   if (!html) return "";
 
@@ -226,5 +226,9 @@ export function richTextToPreviewHtml(value?: string | null, maxBlocks = 8) {
     return html;
   }
 
-  return `${blocks.slice(0, maxBlocks).join("")}<p class="desc-more">View full workout plan →</p>`;
+  const more = fullHref
+    ? `<p class="desc-more"><a href="${sanitizeHref(fullHref)}">View full workout plan →</a></p>`
+    : `<p class="desc-more">View full workout plan →</p>`;
+
+  return `${blocks.slice(0, maxBlocks).join("")}${more}`;
 }

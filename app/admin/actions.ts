@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/session";
 import { slugify } from "@/lib/slug";
 import { parseDateTimeLocal } from "@/lib/datetime";
 import { HOME_CONTENT_KEY } from "@/lib/site-content";
+import { SCORE_SETTING_KEY } from "@/lib/score-config";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -99,6 +100,40 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
   return { success: "Home content updated." };
 }
 
+
+const updateScoreSettingsSchema = z.object({
+  attendancePoints: z.coerce.number().int().min(0).max(100),
+  perKmPoints: z.coerce.number().int().min(0).max(100),
+});
+
+export async function updateScoreSettingsAction(_: unknown, formData: FormData) {
+  await requireAdmin();
+
+  const parsed = updateScoreSettingsSchema.safeParse({
+    attendancePoints: formData.get("attendancePoints"),
+    perKmPoints: formData.get("perKmPoints"),
+  });
+
+  if (!parsed.success) return { error: "Please enter valid scoring values from 0 to 100." };
+
+  await prisma.scoreSetting.upsert({
+    where: { key: SCORE_SETTING_KEY },
+    update: {
+      attendancePoints: parsed.data.attendancePoints,
+      perKmPoints: parsed.data.perKmPoints,
+    },
+    create: {
+      key: SCORE_SETTING_KEY,
+      attendancePoints: parsed.data.attendancePoints,
+      perKmPoints: parsed.data.perKmPoints,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath("/events/[slug]", "page");
+  return { success: "Scoring rules updated." };
+}
 
 
 const updateEventDetailsSchema = z.object({

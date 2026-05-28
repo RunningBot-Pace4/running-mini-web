@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
-import { calculateScore } from "@/lib/scoring";
+import { calculateScore, getScoreSettings } from "@/lib/scoring";
 
 const voteSchema = z.object({
   eventId: z.string().min(1),
@@ -71,7 +71,8 @@ export async function submitActivityAction(_: unknown, formData: FormData) {
     return { error: "This activity is outside the event date range." };
   }
 
-  const score = calculateScore(activity.distanceMeters);
+  const scoreSettings = await getScoreSettings();
+  const score = calculateScore(activity.distanceMeters, scoreSettings);
 
   await prisma.submission.upsert({
     where: {

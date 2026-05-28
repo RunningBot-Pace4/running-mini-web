@@ -57,7 +57,7 @@ export default async function SharePage({ params }: { params: Promise<{ submissi
           {submission.activity.name} · {submission.distanceKm.toString()}km
         </p>
         <p className="muted">
-          1 attendance point + {submission.distancePoints} distance points
+          {submission.attendancePoints} attendance point{submission.attendancePoints === 1 ? "" : "s"} + {submission.distancePoints} distance points
         </p>
       </div>
 

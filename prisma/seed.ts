@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../lib/password";
 import { DEFAULT_HOME_CONTENT, HOME_CONTENT_KEY } from "../lib/site-content";
+import { DEFAULT_SCORE_SETTING, SCORE_SETTING_KEY } from "../lib/score-config";
 
 const prisma = new PrismaClient();
 
@@ -29,6 +30,15 @@ async function main() {
     create: {
       key: HOME_CONTENT_KEY,
       ...DEFAULT_HOME_CONTENT,
+    },
+  });
+
+  await prisma.scoreSetting.upsert({
+    where: { key: SCORE_SETTING_KEY },
+    update: {},
+    create: {
+      key: SCORE_SETTING_KEY,
+      ...DEFAULT_SCORE_SETTING,
     },
   });
 

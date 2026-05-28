@@ -7,6 +7,7 @@ import { SubmitRunForm } from "@/components/SubmitRunForm";
 import { EventDescription } from "@/components/EventDescription";
 import { VoteButtons } from "@/components/VoteButtons";
 import { formatDateTimeRange } from "@/lib/datetime";
+import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ export default async function EventPage({
   const syncError = typeof query.sync_error === "string" ? query.sync_error : "";
   const stravaConnected = query.strava_connected === "1";
   const user = await getCurrentUser();
+  const scoreSettings = await getScoreSettings();
 
   const event = await prisma.event.findUnique({
     where: { slug },
@@ -78,7 +80,7 @@ export default async function EventPage({
         </div>
         <div className="mini-score-card">
           <span>Scoring</span>
-          <strong>1 + 2/km</strong>
+          <strong>{scoringFormulaLabel(scoreSettings)}</strong>
           <small>Attendance + completed kilometres</small>
         </div>
       </section>
@@ -95,7 +97,7 @@ export default async function EventPage({
         ) : (
           <p className="muted">No event description yet.</p>
         )}
-        <div className="score-note">Attend = 1 point · Each completed 1km = 2 points</div>
+        <div className="score-note">{scoringDescription(scoreSettings)}</div>
       </div>
 
       {(stravaError || syncError || stravaConnected) && (

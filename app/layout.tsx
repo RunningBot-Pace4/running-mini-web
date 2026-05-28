@@ -23,6 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </Link>
             <nav className="nav">
               <Link href="/">Events</Link>
+              {user && <Link href="/account">Account</Link>}
               {user?.role === "ADMIN" && <Link href="/admin">Admin</Link>}
               {user ? (
                 <form action={logoutAction}>

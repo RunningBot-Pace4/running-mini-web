@@ -1166,3 +1166,107 @@ th {
     border-radius: 18px;
   }
 }
+
+/* Account page */
+.account-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: end;
+  padding-bottom: 12px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stat-card h2 {
+  font-size: 42px;
+  line-height: 1;
+  margin: 0;
+  letter-spacing: -0.05em;
+}
+
+.profile-list {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-list span {
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.profile-list strong {
+  text-align: right;
+}
+
+/* Neutral attendance vote buttons */
+.vote-button {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.vote-button:hover,
+.vote-button:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #ff7a1f);
+  border-color: transparent;
+}
+
+.vote-button:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.vote-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.rich-content .desc-more a {
+  display: inline-flex;
+  color: var(--accent);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.rich-content .desc-more a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 780px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .account-hero {
+    display: grid;
+    align-items: start;
+  }
+
+  .profile-list div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .profile-list strong {
+    text-align: left;
+  }
+}
+
+
+.field-help {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
