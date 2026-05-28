@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import { voteAction, submitActivityAction } from "@/app/events/actions";
 import { SubmitRunForm } from "@/components/SubmitRunForm";
 import { EventDescription } from "@/components/EventDescription";
+import { VoteButtons } from "@/components/VoteButtons";
 import { formatDateTimeRange } from "@/lib/datetime";
 
 export const dynamic = "force-dynamic";
@@ -132,20 +133,7 @@ export default async function EventPage({
               Current vote: <strong>{vote?.status || "No vote yet"}</strong>
             </p>
             {!isOpen && <p className="error">This event is closed. New votes are disabled.</p>}
-            <div className="row">
-              <form action={voteAction}>
-                <input type="hidden" name="eventId" value={event.id} />
-                <input type="hidden" name="status" value="ATTEND" />
-                <button type="submit" disabled={!isOpen}>Attend</button>
-              </form>
-              <form action={voteAction}>
-                <input type="hidden" name="eventId" value={event.id} />
-                <input type="hidden" name="status" value="NOT_ATTEND" />
-                <button className="ghost" type="submit" disabled={!isOpen}>
-                  Not attend
-                </button>
-              </form>
-            </div>
+            <VoteButtons eventId={event.id} action={voteAction} disabled={!isOpen} />
           </div>
 
           <div className="card">

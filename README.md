@@ -161,3 +161,14 @@ This version refreshes the public mini web with a running-themed design:
 - Admin can still edit event title, description, date/time and status from `/admin -> Manage`
 
 If an edited description still does not show online, check that you have pushed the latest files to GitHub and redeployed Vercel.
+
+
+## Admin description editor
+
+The admin create/edit event forms now include simple formatting tools for the event description:
+
+- Bold inserts `**text**`
+- Underline inserts `__text__`
+- Color buttons insert `[orange]text[/orange]`, `[green]text[/green]`, `[blue]text[/blue]`, or `[red]text[/red]`
+
+The public event page renders these safely without using raw HTML.

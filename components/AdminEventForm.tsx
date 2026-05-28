@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
 type State = { error?: string; success?: string } | undefined;
 
@@ -15,17 +16,12 @@ export function AdminEventForm({
     <form className="form-stack" action={formAction}>
       <div>
         <label htmlFor="title">Event title</label>
-        <input id="title" name="title" required  />
+        <input id="title" name="title" required />
       </div>
 
       <div>
         <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          rows={8}
-          
-        />
+        <RichDescriptionEditor id="description" name="description" rows={8} />
       </div>
 
       <div className="grid grid-2">

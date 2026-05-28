@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
 type State = { error?: string; success?: string } | undefined;
 
@@ -33,29 +34,17 @@ export function EditEventForm({
           name="title"
           required
           defaultValue={event.title}
-          placeholder="Example: Tuesday Threshold Session"
         />
       </div>
 
       <div>
         <label htmlFor="edit-description">Description</label>
-        <textarea
+        <RichDescriptionEditor
           id="edit-description"
           name="description"
           rows={9}
           defaultValue={event.description}
-          placeholder={`2k warm up (DO NOT SKIP THIS)
-drills as usual
-
-Main
-4x1km @ threshold pace
-Rest 90s
-Short break
-4x200 fast 200 float`}
         />
-        <p className="muted">
-          Line breaks will be kept on the public event page.
-        </p>
       </div>
 
       <div className="grid grid-2">

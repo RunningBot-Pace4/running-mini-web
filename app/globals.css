@@ -778,3 +778,104 @@ th {
     align-items: flex-start;
   }
 }
+
+
+/* Rich event description editor */
+.rich-editor {
+  display: grid;
+  gap: 10px;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 248, 236, 0.8);
+}
+
+.editor-toolbar button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.editor-toolbar button:hover {
+  border-color: rgba(255, 90, 31, 0.45);
+  transform: translateY(-1px);
+}
+
+.toolbar-underline,
+.desc-underline {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.editor-help {
+  font-size: 14px;
+  margin-top: 0;
+}
+
+.desc-strong {
+  font-weight: 900;
+}
+
+.desc-color {
+  font-weight: 750;
+}
+
+.desc-color-orange {
+  color: var(--accent);
+}
+
+.desc-color-green {
+  color: var(--success);
+}
+
+.desc-color-blue {
+  color: #2563eb;
+}
+
+.desc-color-red {
+  color: var(--danger);
+}
+
+.desc-color-purple {
+  color: #7c3aed;
+}
+
+/* Vote loading feedback */
+.vote-actions form {
+  min-width: 130px;
+}
+
+.button-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  display: inline-block;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
