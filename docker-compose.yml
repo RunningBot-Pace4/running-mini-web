@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: running-mini-web-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: running_mini_web
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - running_mini_web_pg:/var/lib/postgresql/data
+
+volumes:
+  running_mini_web_pg:

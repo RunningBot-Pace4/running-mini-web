@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EventStatus {
+  DRAFT
+  OPEN
+  CLOSED
+  ARCHIVED
+}
+
+enum VoteStatus {
+  ATTEND
+  NOT_ATTEND
+}
+
+enum SubmissionStatus {
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  name            String
+  passwordHash    String
+  role            Role             @default(USER)
+  stravaAthleteId BigInt?          @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  sessions        Session[]
+  stravaToken     StravaToken?
+  createdEvents   Event[]          @relation("EventCreatedBy")
+  votes           EventVote[]
+  activities      StravaActivity[]
+  submissions     Submission[]
+
+  @@index([role])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model StravaToken {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  athleteId    BigInt   @unique
+  accessToken  String
+  refreshToken String
+  expiresAt    Int
+  scope        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id          String       @id @default(cuid())
+  title       String
+  slug        String       @unique
+  description String?
+  startAt     DateTime
+  endAt       DateTime
+  status      EventStatus  @default(OPEN)
+  createdById String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  createdBy   User         @relation("EventCreatedBy", fields: [createdById], references: [id])
+  votes       EventVote[]
+  submissions Submission[]
+
+  @@index([status])
+  @@index([startAt, endAt])
+}
+
+model EventVote {
+  id        String     @id @default(cuid())
+  eventId   String
+  userId    String
+  status    VoteStatus
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([userId, status])
+}
+
+model StravaActivity {
+  id             String       @id @default(cuid())
+  userId         String
+  stravaId       BigInt
+  name           String
+  type           String
+  sportType      String?
+  distanceMeters Float
+  movingTimeSec  Int
+  elapsedTimeSec Int?
+  startDate      DateTime
+  rawJson        Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submissions    Submission[]
+
+  @@unique([userId, stravaId])
+  @@index([userId, startDate])
+  @@index([type])
+}
+
+model Submission {
+  id               String           @id @default(cuid())
+  eventId          String
+  userId           String
+  activityId       String
+  distanceKm       Decimal          @db.Decimal(10, 2)
+  attendancePoints Int              @default(1)
+  distancePoints   Int
+  totalPoints      Int
+  status           SubmissionStatus @default(APPROVED)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  event            Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity         StravaActivity   @relation(fields: [activityId], references: [id], onDelete: Restrict)
+
+  @@unique([eventId, userId, activityId])
+  @@index([eventId, status])
+  @@index([userId])
+}
