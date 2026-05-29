@@ -267,3 +267,8 @@ No database migration is required for this update.
   - no vote = neutral
 - Long-running actions now show a full-page loading overlay to stop duplicate clicks.
 - Home page has a more creative running-club experience with runner pass, mission steps, vibe cards, and stronger event cards.
+
+
+## Loading Overlay Fix
+
+The loading overlay now renders through a React portal directly into `document.body`, uses the highest z-index, locks page scrolling, and captures mouse/touch/keyboard events while pending. This prevents users from clicking other controls during slow saves or redirects.

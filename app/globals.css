@@ -1385,18 +1385,36 @@ th {
 }
 
 /* Full-page loading freeze */
+html.is-page-loading,
+body.is-page-loading {
+  overflow: hidden !important;
+}
+
 .page-loading-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 5000;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100vw;
+  width: 100dvw;
+  min-height: 100vh;
+  height: 100dvh;
+  z-index: 2147483647 !important;
   display: grid;
   place-items: center;
   padding: 20px;
   background:
     radial-gradient(circle at 50% 42%, rgba(255, 90, 31, 0.22), transparent 28rem),
-    rgba(15, 12, 9, 0.52);
-  backdrop-filter: blur(8px);
+    rgba(15, 12, 9, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   cursor: wait;
+  pointer-events: all;
+  user-select: none;
+  touch-action: none;
+  overscroll-behavior: contain;
+  isolation: isolate;
 }
 
 .page-loading-card {
