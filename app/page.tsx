@@ -95,6 +95,22 @@ function GuestIntro({
         </div>
       </section>
 
+
+      <section className="interactive-lanes" aria-label="Club experience">
+        <div className="lane-row">
+          <strong>Discipline</strong>
+          <span>Show up when the plan says go.</span>
+        </div>
+        <div className="lane-row">
+          <strong>Consistency</strong>
+          <span>Small wins become visible points.</span>
+        </div>
+        <div className="lane-row">
+          <strong>Community</strong>
+          <span>Every run pushes the team forward.</span>
+        </div>
+      </section>
+
       <div className="card callout-card">
         <div>
           <span className="eyebrow">Members only</span>
@@ -145,6 +161,8 @@ export default async function HomePage() {
 
   const myDistanceKm = mySubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const myPoints = mySubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
+  const momentum = Math.min(100, Math.max(12, openEvents * 22 + totalVotes * 7 + totalRuns * 11));
+  const nextEvent = events.find((event) => isEventAcceptingResponses(event)) || events[0];
 
   return (
     <>
@@ -186,6 +204,40 @@ export default async function HomePage() {
         <div>
           <strong>{totalRuns}</strong>
           <span>submitted runs</span>
+        </div>
+      </section>
+
+
+      <section className="challenge-control-room" aria-label="Challenge control room">
+        <div className="control-main">
+          <span className="eyebrow">Challenge cockpit</span>
+          <h2>Vote fast. Run strong. Make every session count.</h2>
+          <p>
+            Your members get one clear flow: choose an event, confirm attendance, submit Strava or manual distance,
+            then watch the leaderboard move.
+          </p>
+          <div className="momentum-meter" aria-label={`Club momentum ${momentum}%`}>
+            <span style={{ width: `${momentum}%` }} />
+          </div>
+          <small>Club momentum · {momentum}% active</small>
+        </div>
+
+        <div className="control-stack">
+          <div className="control-card hot">
+            <span>Next focus</span>
+            <strong>{nextEvent?.title || "Create your first event"}</strong>
+            <small>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add one from the dashboard."}</small>
+          </div>
+          <div className="control-card">
+            <span>Input modes</span>
+            <strong>Strava + Manual</strong>
+            <small>Flexible for members who forget to sync.</small>
+          </div>
+          <div className="control-card">
+            <span>Auto control</span>
+            <strong>Vote window managed</strong>
+            <small>Events close automatically after the configured window.</small>
+          </div>
         </div>
       </section>
 

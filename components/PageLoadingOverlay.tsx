@@ -74,11 +74,16 @@ export function PageLoadingOverlay({
 
   return createPortal(
     <div className="page-loading-overlay" role="status" aria-live="polite" aria-busy="true">
+      <div className="page-loading-track" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="page-loading-card">
         <span className="page-loading-runner" aria-hidden="true">🏃‍♂️</span>
         <span className="page-loading-spinner" aria-hidden="true" />
         <strong>{label}</strong>
-        <small>Please wait, we are updating your running board.</small>
+        <small>Hold tight. We are updating your running board.</small>
       </div>
     </div>,
     document.body,

@@ -272,3 +272,16 @@ No database migration is required for this update.
 ## Loading Overlay Fix
 
 The loading overlay now renders through a React portal directly into `document.body`, uses the highest z-index, locks page scrolling, and captures mouse/touch/keyboard events while pending. This prevents users from clicking other controls during slow saves or redirects.
+
+
+## Update: navigation loading and premium running theme
+
+This package fixes the previous loading issue where the overlay could remain visible after clicking top navigation links. The logo, Events, Account, and Admin links now reset loading state automatically when the route changes.
+
+Changes included:
+
+- Brand logo click now shows loading.
+- Loading overlay fully blocks page interaction while an action is running.
+- Loading overlay resets after route changes and has a safety timeout.
+- Event detail page no longer shows the auto-close timestamp line.
+- Home page has a more premium running club experience with a challenge cockpit, club momentum meter, interactive lane cards, and stronger card/button hover effects.

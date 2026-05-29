@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { LoadingLink } from "@/components/LoadingLink";
 import { LogoutForm } from "@/components/LogoutForm";
 import "./globals.css";
@@ -19,10 +18,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <header className="topbar">
           <div className="topbar-inner">
-            <Link className="brand" href="/" aria-label="Run Mini home">
+            <LoadingLink className="brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
               <span className="brand-mark">↗</span>
               <span>Run Mini</span>
-            </Link>
+            </LoadingLink>
             <nav className="nav">
               <LoadingLink href="/">Events</LoadingLink>
               {user && <LoadingLink href="/account">Account</LoadingLink>}

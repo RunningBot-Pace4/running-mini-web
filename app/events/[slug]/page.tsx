@@ -6,9 +6,9 @@ import { SubmitRunForm } from "@/components/SubmitRunForm";
 import { EventDescription } from "@/components/EventDescription";
 import { VoteButtons } from "@/components/VoteButtons";
 import { LoadingLink } from "@/components/LoadingLink";
-import { formatDateTime, formatDateTimeRange } from "@/lib/datetime";
+import { formatDateTimeRange } from "@/lib/datetime";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
-import { autoCloseNotice, eventAutoCloseAt, eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
+import { autoCloseNotice, eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 
 export const dynamic = "force-dynamic";
 
@@ -86,7 +86,6 @@ export default async function EventPage({
           <span className={statusClass(displayStatus)}>{displayStatus}</span>
           <h1>{event.title}</h1>
           <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
-          <p className="field-help">Auto close: {formatDateTime(eventAutoCloseAt(event))}</p>
         </div>
         <div className="mini-score-card">
           <span>Scoring</span>
