@@ -237,3 +237,23 @@ The form requires:
 - Confirm new password
 
 The new password must be at least 8 characters and must be different from the old password.
+
+
+## Latest behaviour update
+
+- Guests now see a running club introduction page only. Event board and account information are shown after login.
+- Attendance vote buttons show the selected state: ATTEND is green and NOT_ATTEND is red.
+- Event distance submission supports two methods:
+  - Strava synced run
+  - Manual distance entry in kilometres
+- Manual/Strava distance submission is only allowed when the user has voted ATTEND.
+- If the user votes NOT_ATTEND, the distance input is blocked.
+- Events automatically stop accepting votes and submissions 8 hours after the event end date/time.
+- Most navigation buttons now show a loading spinner while redirecting.
+- Optional environment variable:
+
+```env
+EVENT_AUTO_CLOSE_AFTER_HOURS=8
+```
+
+No database migration is required for this update.

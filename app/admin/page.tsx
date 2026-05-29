@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { LoadingLink } from "@/components/LoadingLink";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
@@ -73,7 +73,7 @@ export default async function AdminPage() {
               {events.map((event) => (
                 <tr key={event.id}>
                   <td>
-                    <Link href={`/events/${event.slug}`}>{event.title}</Link>
+                    <LoadingLink href={`/events/${event.slug}`}>{event.title}</LoadingLink>
                     <br />
                     <span className="muted">
                       {formatDateTimeRange(event.startAt, event.endAt)}
@@ -88,9 +88,9 @@ export default async function AdminPage() {
                   <td>{event._count.submissions}</td>
                   <td>
                     <div className="row">
-                      <Link className="button ghost" href={`/admin/events/${event.id}`}>
+                      <LoadingLink className="button ghost" href={`/admin/events/${event.id}`}>
                         Manage
-                      </Link>
+                      </LoadingLink>
                       {event.status !== "CLOSED" && (
                         <form action={updateEventStatusAction}>
                           <input type="hidden" name="eventId" value={event.id} />

@@ -1270,3 +1270,89 @@ th {
   color: var(--muted);
   font-size: 13px;
 }
+
+/* Intro-only guest landing */
+.intro-hero {
+  margin-bottom: 20px;
+}
+
+.intro-panel .panel-score {
+  font-size: clamp(44px, 7vw, 66px);
+}
+
+/* Selected attendance state */
+.vote-button.selected-attend {
+  color: var(--success);
+  background: #e6f8ef;
+  border-color: rgba(4, 122, 69, 0.28);
+}
+
+.vote-button.selected-attend:hover,
+.vote-button.selected-attend:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, var(--success), #10a562);
+  border-color: transparent;
+}
+
+.vote-button.selected-not-attend {
+  color: var(--danger);
+  background: #feeceb;
+  border-color: rgba(180, 35, 24, 0.24);
+}
+
+.vote-button.selected-not-attend:hover,
+.vote-button.selected-not-attend:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, var(--danger), #de3b2f);
+  border-color: transparent;
+}
+
+/* Strava / manual submission selector */
+.submit-run-shell {
+  display: grid;
+  gap: 14px;
+}
+
+.method-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.method-toggle button {
+  width: 100%;
+  min-height: 42px;
+  box-shadow: none;
+  background: transparent;
+  color: var(--ink);
+  border: 0;
+}
+
+.method-toggle button:hover {
+  background: #fff4e8;
+  color: var(--ink);
+}
+
+.method-toggle button.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--ink), var(--accent));
+  box-shadow: 0 8px 20px rgba(255, 90, 31, 0.18);
+}
+
+.submit-blocked {
+  border: 1px dashed rgba(180, 35, 24, 0.28);
+  background: #fff7f6;
+  border-radius: 18px;
+  padding: 14px;
+}
+
+@media (max-width: 520px) {
+  .method-toggle {
+    grid-template-columns: 1fr;
+    border-radius: 22px;
+  }
+}

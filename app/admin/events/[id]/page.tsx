@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LoadingLink } from "@/components/LoadingLink";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
@@ -40,9 +40,9 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
   return (
     <>
       <section className="hero admin-hero">
-        <Link className="button ghost" href="/admin">
+        <LoadingLink className="button ghost" href="/admin">
           ← Back to admin
-        </Link>
+        </LoadingLink>
         <p className="muted" style={{ marginTop: 16 }}>Admin event management</p>
         <h1>{event.title}</h1>
         <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
@@ -53,9 +53,9 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
           <span className={event.status === "OPEN" ? "badge success" : event.status === "CLOSED" ? "badge danger" : "badge"}>
             {event.status}
           </span>
-          <Link className="button ghost" href={`/events/${event.slug}`}>
+          <LoadingLink className="button ghost" href={`/events/${event.slug}`}>
             View public event
-          </Link>
+          </LoadingLink>
         </div>
 
         <h2>Change event status</h2>

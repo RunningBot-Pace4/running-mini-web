@@ -1,13 +1,14 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
-import { voteAction, submitActivityAction } from "@/app/events/actions";
+import { voteAction, submitActivityAction, submitManualDistanceAction } from "@/app/events/actions";
 import { SubmitRunForm } from "@/components/SubmitRunForm";
 import { EventDescription } from "@/components/EventDescription";
 import { VoteButtons } from "@/components/VoteButtons";
-import { formatDateTimeRange } from "@/lib/datetime";
+import { LoadingLink } from "@/components/LoadingLink";
+import { formatDateTime, formatDateTimeRange } from "@/lib/datetime";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
+import { autoCloseNotice, eventAutoCloseAt, eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,7 @@ export default async function EventPage({
     ? await prisma.stravaActivity.findMany({
         where: {
           userId: user.id,
+          type: { not: "Manual" },
           startDate: { gte: event.startAt, lte: event.endAt },
         },
         orderBy: { startDate: "desc" },
@@ -68,15 +70,23 @@ export default async function EventPage({
   const mySubmissions = user
     ? event.submissions.filter((submission) => submission.userId === user.id)
     : [];
-  const isOpen = event.status === "OPEN";
+  const isOpen = isEventAcceptingResponses(event);
+  const displayStatus = eventDisplayStatus(event);
+  const canSubmitRun = isOpen && vote?.status === "ATTEND";
+  const submitBlockedReason = !isOpen
+    ? "This event is closed. You cannot submit distance now."
+    : vote?.status === "NOT_ATTEND"
+      ? "You selected NOT_ATTEND, so distance submission is disabled."
+      : "Please vote ATTEND before submitting your distance.";
 
   return (
     <>
       <section className="hero event-hero-detail">
         <div>
-          <span className={statusClass(event.status)}>{event.status}</span>
+          <span className={statusClass(displayStatus)}>{displayStatus}</span>
           <h1>{event.title}</h1>
           <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
+          <p className="field-help">Auto close: {formatDateTime(eventAutoCloseAt(event))}</p>
         </div>
         <div className="mini-score-card">
           <span>Scoring</span>
@@ -115,14 +125,14 @@ export default async function EventPage({
       {!user && (
         <div className="card">
           <h2>Login required</h2>
-          <p className="muted">Register or login to vote, connect Strava and submit your run.</p>
+          <p className="muted">Register or login to vote, connect Strava, or submit manual/Strava distance.</p>
           <div className="row">
-            <Link className="button" href="/register">
+            <LoadingLink className="button" href="/register">
               Register
-            </Link>
-            <Link className="button ghost" href="/login">
+            </LoadingLink>
+            <LoadingLink className="button ghost" href="/login">
               Login
-            </Link>
+            </LoadingLink>
           </div>
         </div>
       )}
@@ -134,8 +144,9 @@ export default async function EventPage({
             <p className="muted">
               Current vote: <strong>{vote?.status || "No vote yet"}</strong>
             </p>
+            <p className="field-help">{autoCloseNotice(event)}</p>
             {!isOpen && <p className="error">This event is closed. New votes are disabled.</p>}
-            <VoteButtons eventId={event.id} action={voteAction} disabled={!isOpen} />
+            <VoteButtons eventId={event.id} currentStatus={vote?.status} action={voteAction} disabled={!isOpen} />
           </div>
 
           <div className="card">
@@ -143,24 +154,32 @@ export default async function EventPage({
             {stravaToken ? (
               <>
                 <p className="success-text">Strava connected.</p>
-                <a className="button" href={`/api/strava/sync?eventId=${event.id}`}>
+                <LoadingLink className="button" href={`/api/strava/sync?eventId=${event.id}`}>
                   Sync event runs
-                </a>
+                </LoadingLink>
               </>
             ) : (
               <>
-                <p className="muted">Connect Strava to fetch your running activities for this event.</p>
-                <a className="button" href={`/api/strava/connect?next=/events/${event.slug}`}>
+                <p className="muted">Connect Strava to fetch your running activities for this event, or use manual distance below.</p>
+                <LoadingLink className="button" href={`/api/strava/connect?next=/events/${event.slug}`}>
                   Connect Strava
-                </a>
+                </LoadingLink>
               </>
             )}
           </div>
 
           <div className="card">
-            <h2>3. Submit run</h2>
-            <p className="muted">Only Strava runs inside this event date range can be submitted.</p>
-            <SubmitRunForm eventId={event.id} activities={activities} action={submitActivityAction} disabled={!isOpen} />
+            <h2>3. Submit run distance</h2>
+            <p className="muted">Choose Strava activity or manually key in distance. Manual distance is allowed only after voting ATTEND.</p>
+            <SubmitRunForm
+              eventId={event.id}
+              activities={activities}
+              stravaAction={submitActivityAction}
+              manualAction={submitManualDistanceAction}
+              disabled={!isOpen}
+              canSubmit={canSubmitRun}
+              blockedReason={submitBlockedReason}
+            />
           </div>
 
           {mySubmissions.length > 0 && (
@@ -172,9 +191,9 @@ export default async function EventPage({
                   <p>
                     {submission.activity.name} · {submission.distanceKm.toString()}km
                   </p>
-                  <Link className="button full" href={`/share/${submission.id}`}>
+                  <LoadingLink className="button full" href={`/share/${submission.id}`}>
                     Share result
-                  </Link>
+                  </LoadingLink>
                 </div>
               ))}
             </div>
@@ -208,6 +227,10 @@ export default async function EventPage({
         </div>
         {event.submissions.length === 0 && <p className="muted">No approved submissions yet.</p>}
       </div>
+
+      <LoadingLink className="button ghost full" href="/">
+        Back to home
+      </LoadingLink>
     </>
   );
 }

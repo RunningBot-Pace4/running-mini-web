@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { LoadingLink } from "@/components/LoadingLink";
 import { prisma } from "@/lib/prisma";
 import { ShareButtons } from "@/components/ShareButtons";
 
@@ -66,9 +66,9 @@ export default async function SharePage({ params }: { params: Promise<{ submissi
         <ShareButtons text={shareText} />
       </div>
 
-      <Link className="button ghost full" href={`/events/${submission.event.slug}`}>
+      <LoadingLink className="button ghost full" href={`/events/${submission.event.slug}`}>
         Back to event
-      </Link>
+      </LoadingLink>
     </>
   );
 }

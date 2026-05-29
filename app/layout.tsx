@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LoadingLink } from "@/components/LoadingLink";
 import "./globals.css";
 import { getCurrentUser } from "@/lib/session";
 import { logoutAction } from "@/app/auth/actions";
@@ -22,9 +23,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <span>Run Mini</span>
             </Link>
             <nav className="nav">
-              <Link href="/">Events</Link>
-              {user && <Link href="/account">Account</Link>}
-              {user?.role === "ADMIN" && <Link href="/admin">Admin</Link>}
+              <LoadingLink href="/">Events</LoadingLink>
+              {user && <LoadingLink href="/account">Account</LoadingLink>}
+              {user?.role === "ADMIN" && <LoadingLink href="/admin">Admin</LoadingLink>}
               {user ? (
                 <form action={logoutAction}>
                   <button className="ghost nav-button" type="submit">
@@ -33,10 +34,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </form>
               ) : (
                 <>
-                  <Link href="/login">Login</Link>
-                  <Link className="button nav-button" href="/register">
+                  <LoadingLink href="/login">Login</LoadingLink>
+                  <LoadingLink className="button nav-button" href="/register">
                     Register
-                  </Link>
+                  </LoadingLink>
                 </>
               )}
             </nav>

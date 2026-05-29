@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LoadingLink } from "@/components/LoadingLink";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
@@ -106,7 +106,7 @@ export default async function AccountPage() {
               {votes.map((vote) => (
                 <tr key={vote.id}>
                   <td>
-                    <Link href={`/events/${vote.event.slug}`}>{vote.event.title}</Link>
+                    <LoadingLink href={`/events/${vote.event.slug}`}>{vote.event.title}</LoadingLink>
                   </td>
                   <td>
                     <span className={vote.status === "ATTEND" ? "badge success" : "badge danger"}>
@@ -139,7 +139,7 @@ export default async function AccountPage() {
               {submissions.map((submission) => (
                 <tr key={submission.id}>
                   <td>
-                    <Link href={`/events/${submission.event.slug}`}>{submission.event.title}</Link>
+                    <LoadingLink href={`/events/${submission.event.slug}`}>{submission.event.title}</LoadingLink>
                   </td>
                   <td>{submission.activity.name}</td>
                   <td>{submission.distanceKm.toString()}km</td>

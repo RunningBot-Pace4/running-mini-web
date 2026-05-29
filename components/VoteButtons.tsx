@@ -7,6 +7,7 @@ type VoteStatus = "ATTEND" | "NOT_ATTEND";
 
 type VoteButtonsProps = {
   eventId: string;
+  currentStatus?: VoteStatus | null;
   action: (formData: FormData) => void | Promise<void>;
   disabled?: boolean;
 };
@@ -41,34 +42,53 @@ function VoteForm({
   status,
   action,
   disabled,
+  selected,
   children,
-  className,
 }: {
   eventId: string;
   status: VoteStatus;
   action: (formData: FormData) => void | Promise<void>;
   disabled?: boolean;
+  selected?: boolean;
   children: ReactNode;
-  className?: string;
 }) {
+  const selectedClass =
+    selected && status === "ATTEND"
+      ? "selected-attend"
+      : selected && status === "NOT_ATTEND"
+        ? "selected-not-attend"
+        : "";
+
   return (
     <form action={action}>
       <input type="hidden" name="eventId" value={eventId} />
       <input type="hidden" name="status" value={status} />
-      <VoteSubmitButton className={className} disabled={disabled}>
+      <VoteSubmitButton className={selectedClass} disabled={disabled}>
         {children}
       </VoteSubmitButton>
     </form>
   );
 }
 
-export function VoteButtons({ eventId, action, disabled = false }: VoteButtonsProps) {
+export function VoteButtons({ eventId, currentStatus, action, disabled = false }: VoteButtonsProps) {
   return (
     <div className="row vote-actions">
-      <VoteForm eventId={eventId} status="ATTEND" action={action} disabled={disabled}>
+      <VoteForm
+        eventId={eventId}
+        status="ATTEND"
+        action={action}
+        disabled={disabled}
+        selected={currentStatus === "ATTEND"}
+      >
         Attend
       </VoteForm>
-      <VoteForm eventId={eventId} status="NOT_ATTEND" action={action} disabled={disabled}>
+      <VoteForm
+        eventId={eventId}
+        status="NOT_ATTEND"
+        action={action}
+        disabled={disabled}
+        selected={currentStatus === "NOT_ATTEND"}
+      >
         Not attend
       </VoteForm>
     </div>
