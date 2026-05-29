@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 
 type Activity = {
   id: string;
@@ -41,7 +42,9 @@ export function SubmitRunForm({
   }
 
   return (
-    <div className="submit-run-shell">
+    <>
+      <PageLoadingOverlay show={stravaPending || manualPending} label="Submitting your distance..." />
+      <div className="submit-run-shell">
       <div className="method-toggle" role="tablist" aria-label="Distance submission method">
         <button
           type="button"
@@ -130,6 +133,7 @@ export function SubmitRunForm({
           </button>
         </form>
       )}
-    </div>
+      </div>
+    </>
   );
 }

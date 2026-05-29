@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { useState } from "react";
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 
 type LoadingLinkProps = ComponentProps<typeof Link> & {
   children: ReactNode;
@@ -19,34 +20,37 @@ export function LoadingLink({
   const [loading, setLoading] = useState(false);
 
   return (
-    <Link
-      {...props}
-      className={className}
-      onClick={(event) => {
-        onClick?.(event);
-        const hrefValue = typeof props.href === "string" ? props.href : "";
-        if (
-          event.defaultPrevented ||
-          event.metaKey ||
-          event.ctrlKey ||
-          event.shiftKey ||
-          event.altKey ||
-          event.button !== 0 ||
-          hrefValue.startsWith("#")
-        ) {
-          return;
-        }
-        setLoading(true);
-      }}
-    >
-      {loading ? (
-        <span className="button-loading">
-          <span className="spinner" aria-hidden="true" />
-          {loadingLabel}
-        </span>
-      ) : (
-        children
-      )}
-    </Link>
+    <>
+      <Link
+        {...props}
+        className={className}
+        onClick={(event) => {
+          onClick?.(event);
+          const hrefValue = typeof props.href === "string" ? props.href : "";
+          if (
+            event.defaultPrevented ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey ||
+            event.button !== 0 ||
+            hrefValue.startsWith("#")
+          ) {
+            return;
+          }
+          setLoading(true);
+        }}
+      >
+        {loading ? (
+          <span className="button-loading">
+            <span className="spinner" aria-hidden="true" />
+            {loadingLabel}
+          </span>
+        ) : (
+          children
+        )}
+      </Link>
+      <PageLoadingOverlay show={loading} label={loadingLabel} />
+    </>
   );
 }

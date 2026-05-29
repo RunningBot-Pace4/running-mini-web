@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useFormStatus } from "react-dom";
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 
 type VoteStatus = "ATTEND" | "NOT_ATTEND";
 
@@ -24,16 +25,19 @@ function VoteSubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <button className={className ? `vote-button ${className}` : "vote-button"} type="submit" disabled={disabled || pending}>
-      {pending ? (
-        <span className="button-loading">
-          <span className="spinner" aria-hidden="true" />
-          Saving...
-        </span>
-      ) : (
-        children
-      )}
-    </button>
+    <>
+      <button className={className ? `vote-button ${className}` : "vote-button"} type="submit" disabled={disabled || pending}>
+        {pending ? (
+          <span className="button-loading">
+            <span className="spinner" aria-hidden="true" />
+            Saving...
+          </span>
+        ) : (
+          children
+        )}
+      </button>
+      <PageLoadingOverlay show={pending} label="Saving your attendance vote..." />
+    </>
   );
 }
 

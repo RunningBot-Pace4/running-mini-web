@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 
 type State = { error?: string; success?: string; resetUrl?: string } | undefined;
@@ -12,7 +13,9 @@ export function ForgotPasswordForm({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <form className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Creating reset link..." />
+      <form className="form-stack" action={formAction}>
       <div>
         <label htmlFor="email">Registered email</label>
         <input id="email" name="email" type="email" required placeholder="you@example.com" autoComplete="email" />
@@ -31,6 +34,7 @@ export function ForgotPasswordForm({
       <button type="submit" disabled={pending}>
         {pending ? "Creating link..." : "Send reset link"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

@@ -257,3 +257,13 @@ EVENT_AUTO_CLOSE_AFTER_HOURS=8
 ```
 
 No database migration is required for this update.
+
+
+## Latest UI update
+
+- Attendance vote buttons now keep a clear selected state:
+  - ATTEND = green
+  - NOT_ATTEND = red
+  - no vote = neutral
+- Long-running actions now show a full-page loading overlay to stop duplicate clicks.
+- Home page has a more creative running-club experience with runner pass, mission steps, vibe cards, and stronger event cards.

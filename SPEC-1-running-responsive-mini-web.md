@@ -2,7 +2,7 @@
 
 ## Background
 
-The system is a mobile-first mini web application for running events. Admins create running events, users register, vote whether they will attend, connect Strava, submit only valid Strava running activities for the selected event, receive points, and share their results to social media.
+The system is a mobile-first mini web application for running events with a creative running-club experience. Admins create running events, users register, vote whether they will attend, connect Strava, submit only valid Strava running activities for the selected event, receive points, and share their results to social media.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ The system is a mobile-first mini web application for running events. Admins cre
 - Mobile responsive web UI.
 - User registration and login.
 - Admin event creation with date range and status.
-- User attendance voting: attend or not attend.
+- User attendance voting: attend or not attend with selected state colors and full-page loading feedback.
 - Strava OAuth integration.
 - Sync Strava running activities for the event date range.
 - Restrict submissions to activities matching an admin-created event.

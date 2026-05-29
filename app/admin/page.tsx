@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { LoadingLink } from "@/components/LoadingLink";
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
@@ -95,7 +96,7 @@ export default async function AdminPage() {
                         <form action={updateEventStatusAction}>
                           <input type="hidden" name="eventId" value={event.id} />
                           <input type="hidden" name="status" value="CLOSED" />
-                          <button className="ghost" type="submit">Close</button>
+                          <FormSubmitButton className="ghost" pendingLabel="Closing event...">Close</FormSubmitButton>
                         </form>
                       )}
                     </div>

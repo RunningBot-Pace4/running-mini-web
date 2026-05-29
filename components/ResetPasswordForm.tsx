@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 
 type State = { error?: string; success?: string } | undefined;
@@ -15,7 +16,9 @@ export function ResetPasswordForm({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <form className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Updating password..." />
+      <form className="form-stack" action={formAction}>
       <input type="hidden" name="token" value={token} />
 
       <div>
@@ -54,6 +57,7 @@ export function ResetPasswordForm({
       <button type="submit" disabled={pending}>
         {pending ? "Updating..." : "Update password"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

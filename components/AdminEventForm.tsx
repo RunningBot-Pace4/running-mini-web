@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
@@ -13,7 +14,9 @@ export function AdminEventForm({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <form className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Creating event..." />
+      <form className="form-stack" action={formAction}>
       <div>
         <label htmlFor="title">Event title</label>
         <input id="title" name="title" required />
@@ -51,6 +54,7 @@ export function AdminEventForm({
       <button type="submit" disabled={pending}>
         {pending ? "Creating..." : "Create event"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

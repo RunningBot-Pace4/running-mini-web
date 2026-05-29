@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState, useEffect, useState } from "react";
 
 type State = { error?: string } | undefined;
@@ -38,7 +39,9 @@ export function AuthForm({
   }
 
   return (
-    <form className="form-stack" action={formAction} onSubmit={handleSubmit}>
+    <>
+      <PageLoadingOverlay show={pending} label="Signing you in..." />
+      <form className="form-stack" action={formAction} onSubmit={handleSubmit}>
       {mode === "register" && (
         <div>
           <label htmlFor="name">Name</label>
@@ -90,6 +93,7 @@ export function AuthForm({
       <button type="submit" disabled={pending}>
         {pending ? "Please wait..." : mode === "register" ? "Register" : "Login"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

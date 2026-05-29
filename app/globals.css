@@ -1356,3 +1356,386 @@ th {
     border-radius: 22px;
   }
 }
+
+
+/* Persistent attendance states */
+.vote-button.selected-attend,
+.vote-button.selected-attend:hover,
+.vote-button.selected-attend:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, #047a45, #10a562);
+  border-color: transparent;
+  box-shadow: 0 12px 28px rgba(4, 122, 69, 0.26);
+}
+
+.vote-button.selected-not-attend,
+.vote-button.selected-not-attend:hover,
+.vote-button.selected-not-attend:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, #b42318, #ef4444);
+  border-color: transparent;
+  box-shadow: 0 12px 28px rgba(180, 35, 24, 0.24);
+}
+
+.vote-button:not(.selected-attend):not(.selected-not-attend):hover,
+.vote-button:not(.selected-attend):not(.selected-not-attend):focus-visible {
+  color: var(--ink);
+  background: #fff4e8;
+  border-color: rgba(255, 90, 31, 0.35);
+}
+
+/* Full-page loading freeze */
+.page-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 90, 31, 0.22), transparent 28rem),
+    rgba(15, 12, 9, 0.52);
+  backdrop-filter: blur(8px);
+  cursor: wait;
+}
+
+.page-loading-card {
+  width: min(92vw, 360px);
+  border-radius: 30px;
+  padding: 28px 22px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: #fff;
+  text-align: center;
+  background:
+    linear-gradient(145deg, rgba(23, 18, 13, 0.92), rgba(255, 90, 31, 0.86)),
+    repeating-linear-gradient(90deg, transparent 0 16px, rgba(255, 255, 255, 0.08) 17px 18px);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.page-loading-card strong {
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.page-loading-card small {
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.45;
+}
+
+.page-loading-runner {
+  font-size: 42px;
+  animation: runner-bounce 0.65s ease-in-out infinite alternate;
+}
+
+.page-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(255, 255, 255, 0.32);
+  border-top-color: #fff;
+  border-radius: 999px;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes runner-bounce {
+  from {
+    transform: translateX(-8px) translateY(1px);
+  }
+  to {
+    transform: translateX(8px) translateY(-4px);
+  }
+}
+
+/* More energetic running-club experience */
+.run-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.run-hero::before {
+  content: "";
+  position: absolute;
+  inset: -80px -100px auto auto;
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 176, 0, 0.46), transparent 66%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.run-hero::after {
+  content: "";
+  position: absolute;
+  left: -16%;
+  right: -16%;
+  bottom: -46px;
+  height: 110px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 76px, rgba(255, 255, 255, 0.23) 77px 82px),
+    linear-gradient(135deg, rgba(255, 90, 31, 0.18), rgba(23, 18, 13, 0.06));
+  transform: rotate(-3deg);
+  pointer-events: none;
+}
+
+.hero-copy,
+.hero-panel {
+  position: relative;
+  z-index: 1;
+}
+
+.club-vibe-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.vibe-card {
+  position: relative;
+  min-height: 170px;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: 22px;
+  color: #fff;
+  background: linear-gradient(145deg, #17120d, #ff5a1f);
+  box-shadow: var(--shadow);
+}
+
+.vibe-card.big {
+  background:
+    radial-gradient(circle at 80% 10%, rgba(255, 176, 0, 0.52), transparent 14rem),
+    linear-gradient(145deg, #17120d, #7c2d12 52%, #ff5a1f);
+}
+
+.vibe-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -20px -40px -20px;
+  height: 90px;
+  background: repeating-linear-gradient(90deg, transparent 0 34px, rgba(255, 255, 255, 0.16) 35px 38px);
+  transform: rotate(-5deg);
+}
+
+.vibe-card span {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 24px;
+}
+
+.vibe-card h3 {
+  margin: 16px 0 8px;
+  font-size: 26px;
+  letter-spacing: -0.04em;
+}
+
+.vibe-card p {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.runner-dashboard {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+.runner-pass,
+.runner-metrics {
+  border-radius: 30px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.runner-pass {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(circle at 90% 18%, rgba(255, 176, 0, 0.5), transparent 11rem),
+    linear-gradient(135deg, #17120d, #2b1d12 48%, #ff5a1f);
+}
+
+.runner-pass::after {
+  content: "";
+  position: absolute;
+  inset: auto -30px -40px 8%;
+  height: 96px;
+  background: repeating-linear-gradient(90deg, transparent 0 52px, rgba(255, 255, 255, 0.16) 53px 57px);
+  transform: rotate(-6deg);
+}
+
+.runner-pass h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1;
+  margin: 8px 0 10px;
+  letter-spacing: -0.05em;
+}
+
+.runner-pass p {
+  max-width: 580px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.55;
+}
+
+.runner-pass-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.runner-metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.runner-metrics div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0 12px;
+}
+
+.runner-metrics div:last-child {
+  border-bottom: 0;
+}
+
+.runner-metrics strong {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--accent-dark);
+}
+
+.runner-metrics span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.mission-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 26px;
+}
+
+.mission-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  padding: 18px;
+  min-height: 128px;
+  background: linear-gradient(180deg, #fff, #fff7ec);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 34px rgba(46, 28, 12, 0.08);
+}
+
+.mission-card span {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 950;
+  background: var(--ink);
+  margin-bottom: 18px;
+}
+
+.mission-card strong {
+  display: block;
+  font-size: 18px;
+}
+
+.mission-card small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.event-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.event-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 7px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), #10a562);
+  z-index: 1;
+}
+
+.event-card-glow {
+  position: absolute;
+  top: -64px;
+  right: -48px;
+  width: 160px;
+  height: 160px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 90, 31, 0.22), transparent 68%);
+  pointer-events: none;
+}
+
+.event-card h2 {
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.02;
+}
+
+.date-pill {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #17120d;
+  color: #fff;
+  font-weight: 850;
+}
+
+.workout-preview {
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+  background: linear-gradient(90deg, rgba(255, 90, 31, 0.08), transparent);
+  border-radius: 0 18px 18px 0;
+}
+
+@media (max-width: 780px) {
+  .club-vibe-grid,
+  .runner-dashboard,
+  .mission-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .vibe-card,
+  .runner-pass,
+  .runner-metrics,
+  .mission-card {
+    border-radius: 22px;
+  }
+
+  .page-loading-card {
+    border-radius: 24px;
+  }
+}

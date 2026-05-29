@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 
 type State = { error?: string; success?: string } | undefined;
@@ -19,7 +20,9 @@ export function ScoreSettingsForm({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <form className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Saving scoring rules..." />
+      <form className="form-stack" action={formAction}>
       <div className="grid grid-2">
         <div>
           <label htmlFor="attendancePoints">Attendance vote points</label>
@@ -60,6 +63,7 @@ export function ScoreSettingsForm({
       <button type="submit" disabled={pending}>
         {pending ? "Saving..." : "Save scoring rules"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

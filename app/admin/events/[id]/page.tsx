@@ -1,4 +1,5 @@
 import { LoadingLink } from "@/components/LoadingLink";
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
@@ -68,13 +69,13 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
             <form key={status} action={updateEventStatusAction}>
               <input type="hidden" name="eventId" value={event.id} />
               <input type="hidden" name="status" value={status} />
-              <button
+              <FormSubmitButton
                 className={event.status === status ? "secondary" : "ghost"}
-                type="submit"
+                pendingLabel="Updating status..."
                 disabled={event.status === status}
               >
                 {status}
-              </button>
+              </FormSubmitButton>
             </form>
           ))}
         </div>

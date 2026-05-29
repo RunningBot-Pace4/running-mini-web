@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
@@ -24,7 +25,9 @@ export function EditEventForm({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <form className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Saving event..." />
+      <form className="form-stack" action={formAction}>
       <input type="hidden" name="eventId" value={event.id} />
 
       <div>
@@ -86,6 +89,7 @@ export function EditEventForm({
       <button type="submit" disabled={pending}>
         {pending ? "Saving..." : "Save changes"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

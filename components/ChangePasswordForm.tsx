@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState, useEffect, useRef } from "react";
 import { changePasswordAction } from "@/app/account/actions";
 
@@ -21,7 +22,9 @@ export function ChangePasswordForm() {
   }, [state?.success]);
 
   return (
-    <form ref={formRef} className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Changing password..." />
+      <form ref={formRef} className="form-stack" action={formAction}>
       <div>
         <label htmlFor="currentPassword">Old password</label>
         <input
@@ -74,6 +77,7 @@ export function ChangePasswordForm() {
           "Change password"
         )}
       </button>
-    </form>
+      </form>
+    </>
   );
 }

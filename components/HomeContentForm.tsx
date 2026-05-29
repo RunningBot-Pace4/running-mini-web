@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
@@ -21,7 +22,9 @@ export function HomeContentForm({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <form className="form-stack" action={formAction}>
+    <>
+      <PageLoadingOverlay show={pending} label="Saving home content..." />
+      <form className="form-stack" action={formAction}>
       <div>
         <label htmlFor="heroEyebrow">Small heading</label>
         <input
@@ -60,6 +63,7 @@ export function HomeContentForm({
       <button type="submit" disabled={pending}>
         {pending ? "Saving..." : "Save home content"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }
