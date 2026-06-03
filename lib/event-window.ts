@@ -19,13 +19,21 @@ export function isAfterAutoClose(event: EventTiming, now = new Date()) {
   return now.getTime() > eventAutoCloseAt(event).getTime();
 }
 
+export function statusAfterAutoClose<TStatus extends string>(
+  status: TStatus,
+  endAt: Date | string,
+  now = new Date(),
+): TStatus | "CLOSED" {
+  if (status === "OPEN" && isAfterAutoClose({ status, endAt }, now)) return "CLOSED";
+  return status;
+}
+
 export function isEventAcceptingResponses(event: EventTiming, now = new Date()) {
   return event.status === "OPEN" && !isAfterAutoClose(event, now);
 }
 
 export function eventDisplayStatus(event: EventTiming, now = new Date()) {
-  if (event.status === "OPEN" && isAfterAutoClose(event, now)) return "CLOSED";
-  return event.status;
+  return statusAfterAutoClose(event.status, event.endAt, now);
 }
 
 export function autoCloseNotice(event: EventTiming) {

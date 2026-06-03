@@ -6,6 +6,7 @@ import { LoadingLink } from "@/components/LoadingLink";
 import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
+import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 
 export const dynamic = "force-dynamic";
 
@@ -135,6 +136,8 @@ export default async function HomePage() {
   if (!user) {
     return <GuestIntro homeContent={homeContent} />;
   }
+
+  await closeExpiredOpenEvents();
 
   const scoreSettings = await getScoreSettings();
   const events = await prisma.event.findMany({

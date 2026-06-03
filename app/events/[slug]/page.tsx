@@ -8,7 +8,8 @@ import { VoteButtons } from "@/components/VoteButtons";
 import { LoadingLink } from "@/components/LoadingLink";
 import { formatDateTimeRange } from "@/lib/datetime";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
-import { autoCloseNotice, eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
+import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
+import { closeExpiredOpenEventIfNeeded } from "@/lib/event-maintenance";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,7 @@ export default async function EventPage({
   const user = await getCurrentUser();
   const scoreSettings = await getScoreSettings();
 
-  const event = await prisma.event.findUnique({
+  const rawEvent = await prisma.event.findUnique({
     where: { slug },
     include: {
       submissions: {
@@ -44,7 +45,9 @@ export default async function EventPage({
     },
   });
 
-  if (!event) redirect("/");
+  if (!rawEvent) redirect("/");
+
+  const event = await closeExpiredOpenEventIfNeeded(rawEvent);
 
   const vote = user
     ? await prisma.eventVote.findUnique({
@@ -163,7 +166,6 @@ export default async function EventPage({
               <p className="muted">
                 Current vote: <strong>{vote?.status || "No vote yet"}</strong>
               </p>
-              <p className="field-help">{autoCloseNotice(event)}</p>
               {!isOpen && <p className="error">This event is closed. New votes are disabled.</p>}
               <VoteButtons eventId={event.id} currentStatus={vote?.status} action={voteAction} disabled={!isOpen} />
             </div>

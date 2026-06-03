@@ -7,6 +7,7 @@ import { updateEventDetailsAction, updateEventStatusAction } from "@/app/admin/a
 import { formatDateTime, formatDateTimeLocalInput, formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
 import { EditEventForm } from "@/components/EditEventForm";
+import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,8 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "ADMIN") redirect("/");
+
+  await closeExpiredOpenEvents();
 
   const event = await prisma.event.findUnique({
     where: { id },

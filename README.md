@@ -320,3 +320,23 @@ This package includes a full visual redesign inspired by China mobile mini-progr
 - Existing features remain unchanged: admin event creation, Strava/manual distance, voting, scoring, account, change password, and admin controls
 
 No database migration is required for this UI-only update.
+
+
+## Auto close bug fix
+
+Expired open events are now auto-synchronized to `CLOSED` when the admin dashboard, event detail page, or public event board loads.
+
+Rule:
+
+```text
+If event.status = OPEN and current time > event.endAt + EVENT_AUTO_CLOSE_AFTER_HOURS,
+the system updates the database status to CLOSED.
+```
+
+Default:
+
+```env
+EVENT_AUTO_CLOSE_AFTER_HOURS=8
+```
+
+This means admin will no longer see an expired event as `OPEN` after the auto-close window has passed.

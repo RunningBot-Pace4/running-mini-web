@@ -10,6 +10,7 @@ import { createEventAction, updateEventStatusAction, updateHomeContentAction, up
 import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
+import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,8 @@ export default async function AdminPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "ADMIN") redirect("/");
+
+  await closeExpiredOpenEvents();
 
   const homeContent = await getHomeContent();
   const scoreSettings = await getScoreSettings();

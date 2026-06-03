@@ -8,6 +8,7 @@ import { slugify } from "@/lib/slug";
 import { parseDateTimeLocal } from "@/lib/datetime";
 import { HOME_CONTENT_KEY } from "@/lib/site-content";
 import { SCORE_SETTING_KEY } from "@/lib/score-config";
+import { statusAfterAutoClose } from "@/lib/event-window";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -37,6 +38,8 @@ export async function createEventAction(_: unknown, formData: FormData) {
     return { error: "End date must be after start date." };
   }
 
+  const status = statusAfterAutoClose(parsed.data.status, endAt);
+
   const baseSlug = slugify(parsed.data.title);
   let slug = baseSlug;
   let counter = 2;
@@ -52,7 +55,7 @@ export async function createEventAction(_: unknown, formData: FormData) {
       description: parsed.data.description,
       startAt,
       endAt,
-      status: parsed.data.status,
+      status,
       createdById: admin.id,
     },
   });
@@ -166,6 +169,8 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
     return { error: "End date must be after start date." };
   }
 
+  const status = statusAfterAutoClose(parsed.data.status, endAt);
+
   const event = await prisma.event.update({
     where: { id: parsed.data.eventId },
     data: {
@@ -173,7 +178,7 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
       description: parsed.data.description,
       startAt,
       endAt,
-      status: parsed.data.status,
+      status,
     },
   });
 
@@ -200,14 +205,23 @@ export async function updateEventStatusAction(formData: FormData) {
 
   if (!parsed.success) throw new Error("Invalid event status.");
 
+  const currentEvent = await prisma.event.findUnique({
+    where: { id: parsed.data.eventId },
+    select: { id: true, slug: true, endAt: true },
+  });
+
+  if (!currentEvent) throw new Error("Event not found.");
+
+  const status = statusAfterAutoClose(parsed.data.status, currentEvent.endAt);
+
   const event = await prisma.event.update({
     where: { id: parsed.data.eventId },
-    data: { status: parsed.data.status },
+    data: { status },
   });
 
   revalidatePath("/");
   revalidatePath("/admin");
   revalidatePath(`/admin/events/${event.id}`);
-  revalidatePath(`/events/${event.slug}`);
+  revalidatePath(`/events/${currentEvent.slug}`);
 }
 
