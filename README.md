@@ -292,3 +292,16 @@ Changes included:
 This package redesigns the home hero into a more premium race-club style screen with animated track orbit, score ticket, live challenge chip, next-focus card, and improved mobile layout.
 
 The loading screen is also updated to a stadium-style full-screen overlay with animated lanes, runner stage, progress bar, and stronger click-blocking behavior.
+
+
+## China Super-App Inspired Design Update
+
+This version refreshes the public/member home page and loading experience with a more interactive mini-program style:
+
+- Mobile-first hero with red/gold running challenge visual language
+- Mini-program phone card preview
+- Gamified task cards and member progress cards
+- Reward-style scoring ticket
+- More interactive event cards
+- Full-screen creative loading screen that blocks repeat clicks
+- No database change required

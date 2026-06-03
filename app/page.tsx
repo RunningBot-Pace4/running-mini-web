@@ -26,112 +26,104 @@ function GuestIntro({
 }) {
   return (
     <>
-      <section className="hero race-club-hero intro-hero">
-        <div className="race-hero-bg" aria-hidden="true" />
-        <div className="race-hero-copy">
-          <span className="eyebrow hero-eyebrow">{homeContent.heroEyebrow}</span>
+      <section className="china-hero guest-china-hero" aria-label="Running club introduction">
+        <div className="china-hero-glow" aria-hidden="true" />
+        <div className="china-hero-copy">
+          <span className="china-badge">
+            <span className="pulse-dot" />
+            {homeContent.heroEyebrow || "Mobile running challenge"}
+          </span>
           <h1>{homeContent.heroTitle}</h1>
-          <div className="hero-description race-description">
+          <div className="china-hero-description">
             <EventDescription text={homeContent.heroDescription} />
           </div>
-          <div className="hero-actions">
-            <LoadingLink className="button race-primary" href="/register" loadingLabel="Opening registration...">
-              Join the club
+
+          <div className="china-action-row">
+            <LoadingLink className="button china-primary" href="/register" loadingLabel="Opening registration...">
+              Join challenge
             </LoadingLink>
-            <LoadingLink className="button race-secondary" href="/login" loadingLabel="Opening login...">
+            <LoadingLink className="button china-secondary" href="/login" loadingLabel="Opening login...">
               Member login
             </LoadingLink>
           </div>
+
+          <div className="china-trust-row" aria-label="Club highlights">
+            <span>🏃 Club sessions</span>
+            <span>🧾 Attendance vote</span>
+            <span>🔥 Points race</span>
+          </div>
         </div>
 
-        <div className="race-hero-visual" aria-label="Running club preview">
-          <div className="live-chip"><span /> Live club challenge</div>
-          <div className="track-orbit">
-            <span className="orbit-runner">🏃‍♂️</span>
-            <span className="orbit-dot dot-a" />
-            <span className="orbit-dot dot-b" />
+        <div className="china-phone-stage" aria-label="Mini app preview">
+          <div className="phone-card">
+            <div className="phone-top">
+              <span className="phone-avatar">跑</span>
+              <div>
+                <strong>Run Mini Club</strong>
+                <small>Challenge board live</small>
+              </div>
+              <span className="phone-status">LIVE</span>
+            </div>
+            <div className="mini-route-card">
+              <span className="route-runner">🏃‍♂️</span>
+              <div className="route-line">
+                <span />
+              </div>
+              <div className="route-stats">
+                <strong>Vote</strong>
+                <strong>Run</strong>
+                <strong>Score</strong>
+              </div>
+            </div>
+            <div className="phone-task-list">
+              <div><span>01</span><strong>Register account</strong><small>Unlock event board</small></div>
+              <div><span>02</span><strong>Vote attendance</strong><small>Commit to the session</small></div>
+              <div><span>03</span><strong>Submit distance</strong><small>Strava or manual</small></div>
+            </div>
           </div>
-          <div className="race-ticket">
-            <strong>Train. Vote. Score.</strong>
-            <small>Members unlock the event board, attendance voting, Strava/manual distance, and leaderboard.</small>
-          </div>
+
+          <div className="floating-medal">🏆</div>
+          <div className="floating-redpacket">+2/km</div>
         </div>
       </section>
 
-      <section className="section-heading">
+      <section className="china-section-heading">
         <div>
-          <span className="eyebrow">How it works</span>
-          <h2>Simple flow for every runner</h2>
+          <span className="eyebrow">Mini program flow</span>
+          <h2>One tap path from interest to attendance.</h2>
         </div>
       </section>
 
-      <div className="grid grid-3">
-        <div className="card stat-card">
-          <span className="eyebrow">01</span>
-          <h2>Register</h2>
-          <p className="muted">Create your member account before joining event voting and scoring.</p>
-        </div>
-        <div className="card stat-card">
-          <span className="eyebrow">02</span>
-          <h2>Attend</h2>
-          <p className="muted">Vote Attend or Not Attend for each training event.</p>
-        </div>
-        <div className="card stat-card">
-          <span className="eyebrow">03</span>
-          <h2>Score</h2>
-          <p className="muted">Submit Strava or manual distance after attending to earn points.</p>
-        </div>
+      <div className="china-feature-grid">
+        <article className="china-feature-card">
+          <span className="feature-icon">🎯</span>
+          <h3>Mission-based events</h3>
+          <p>Each workout feels like a challenge, not just a plain announcement.</p>
+        </article>
+        <article className="china-feature-card">
+          <span className="feature-icon">🧧</span>
+          <h3>Reward feeling</h3>
+          <p>Attendance and distance become instant progress, points, and motivation.</p>
+        </article>
+        <article className="china-feature-card">
+          <span className="feature-icon">📣</span>
+          <h3>Share-ready result</h3>
+          <p>Members can share their progress and bring more runners into the club.</p>
+        </article>
       </div>
 
-      <section className="club-vibe-grid" aria-label="Running club energy">
-        <div className="vibe-card big">
-          <span>🔥</span>
-          <h3>Train with purpose</h3>
-          <p>Every session has a mission, a pace target, and a reason to show up.</p>
-        </div>
-        <div className="vibe-card">
-          <span>⚡</span>
-          <h3>Earn points</h3>
-          <p>Attendance and distance become visible progress.</p>
-        </div>
-        <div className="vibe-card">
-          <span>🏆</span>
-          <h3>Climb together</h3>
-          <p>Leaderboard, sharing, and team energy keep the group moving.</p>
-        </div>
-      </section>
-
-
-      <section className="interactive-lanes" aria-label="Club experience">
-        <div className="lane-row">
-          <strong>Discipline</strong>
-          <span>Show up when the plan says go.</span>
-        </div>
-        <div className="lane-row">
-          <strong>Consistency</strong>
-          <span>Small wins become visible points.</span>
-        </div>
-        <div className="lane-row">
-          <strong>Community</strong>
-          <span>Every run pushes the team forward.</span>
-        </div>
-      </section>
-
-      <div className="card callout-card">
+      <section className="china-feed-preview" aria-label="Member-only preview">
         <div>
           <span className="eyebrow">Members only</span>
-          <h2>Login to view event details and submit results.</h2>
-          <p className="muted">The event board, voting, distance submission, and leaderboard are shown after login.</p>
+          <h2>Login to unlock the live board.</h2>
+          <p>Voting, event details, distance submission, leaderboard, and account progress are shown after login.</p>
         </div>
-        <div className="row">
-          <LoadingLink className="button" href="/register">
-            Register
-          </LoadingLink>
-          <LoadingLink className="button ghost" href="/login">
-            Login
-          </LoadingLink>
+        <div className="feed-stack" aria-hidden="true">
+          <span>New event opened</span>
+          <span>Attendance vote updated</span>
+          <span>Leaderboard refreshed</span>
         </div>
-      </div>
+      </section>
     </>
   );
 }
@@ -172,20 +164,20 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="hero race-club-hero member-hero">
-        <div className="race-hero-bg" aria-hidden="true" />
-        <div className="race-hero-copy">
-          <span className="eyebrow hero-eyebrow">{homeContent.heroEyebrow}</span>
+      <section className="china-hero member-china-hero">
+        <div className="china-hero-glow" aria-hidden="true" />
+        <div className="china-hero-copy">
+          <span className="china-badge"><span className="pulse-dot" />{homeContent.heroEyebrow}</span>
           <h1>{homeContent.heroTitle}</h1>
-          <div className="hero-description race-description">
+          <div className="china-hero-description">
             <EventDescription text={homeContent.heroDescription} />
           </div>
 
-          <div className="hero-actions">
-            <LoadingLink className="button race-primary" href="#events">
+          <div className="china-action-row">
+            <LoadingLink className="button china-primary" href="#events">
               View events
             </LoadingLink>
-            <LoadingLink className="button race-secondary" href="/account" loadingLabel="Opening account...">
+            <LoadingLink className="button china-secondary" href="/account" loadingLabel="Opening account...">
               My account
             </LoadingLink>
           </div>
@@ -206,23 +198,37 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="race-hero-visual" aria-label="Challenge status">
-          <div className="live-chip"><span /> Race board live</div>
-          <div className="track-orbit">
-            <span className="orbit-runner">🏃‍♂️</span>
-            <span className="orbit-dot dot-a" />
-            <span className="orbit-dot dot-b" />
+        <div className="china-phone-stage member-phone-stage" aria-label="Challenge status">
+          <div className="phone-card member-phone-card">
+            <div className="phone-top">
+              <span className="phone-avatar">跑</span>
+              <div>
+                <strong>Race board live</strong>
+                <small>{user.name}'s challenge pass</small>
+              </div>
+              <span className="phone-status">LIVE</span>
+            </div>
+
+            <div className="score-ticket-cn">
+              <span>Scoring rule</span>
+              <strong>{scoringFormulaLabel(scoreSettings)}</strong>
+              <small>{scoringDescription(scoreSettings)}</small>
+            </div>
+
+            <div className="next-focus-cn">
+              <span>Next focus</span>
+              <strong>{nextEvent?.title || "Create your first event"}</strong>
+              <small>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add one from the dashboard."}</small>
+            </div>
+
+            <div className="mini-progress-grid">
+              <div><strong>{myPoints}</strong><span>points</span></div>
+              <div><strong>{myDistanceKm.toFixed(1)}</strong><span>km</span></div>
+              <div><strong>{myVoteCount}</strong><span>votes</span></div>
+            </div>
           </div>
-          <div className="race-ticket glass-ticket">
-            <span className="ticket-label">Scoring rule</span>
-            <strong>{scoringFormulaLabel(scoreSettings)}</strong>
-            <small>{scoringDescription(scoreSettings)}</small>
-          </div>
-          <div className="next-race-card">
-            <span>Next focus</span>
-            <strong>{nextEvent?.title || "Create your first event"}</strong>
-            <small>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add one from the dashboard."}</small>
-          </div>
+          <div className="floating-medal">🏅</div>
+          <div className="floating-redpacket">{momentum}% active</div>
         </div>
       </section>
 
@@ -238,6 +244,34 @@ export default async function HomePage() {
         <div>
           <strong>{totalRuns}</strong>
           <span>submitted runs</span>
+        </div>
+      </section>
+
+      <section className="china-engagement-board" aria-label="Interactive club board">
+        <div className="engage-card main-engage">
+          <span className="eyebrow">Club energy</span>
+          <h2>Make the web feel alive before the run starts.</h2>
+          <p>Members see points, missions, next focus and board movement without digging through menus.</p>
+          <div className="energy-orbit" aria-hidden="true">
+            <span>🏃</span>
+            <span>🔥</span>
+            <span>🏁</span>
+          </div>
+        </div>
+        <div className="engage-card">
+          <strong>Today task</strong>
+          <span>Vote attendance</span>
+          <small>Green = attend · Red = not attend</small>
+        </div>
+        <div className="engage-card">
+          <strong>Submission mode</strong>
+          <span>Strava / Manual</span>
+          <small>Let every runner complete the flow.</small>
+        </div>
+        <div className="engage-card">
+          <strong>Auto control</strong>
+          <span>Smart close</span>
+          <small>Event locks after the allowed window.</small>
         </div>
       </section>
 

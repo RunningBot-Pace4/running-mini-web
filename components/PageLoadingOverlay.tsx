@@ -73,27 +73,36 @@ export function PageLoadingOverlay({
   if (!show || !mounted) return null;
 
   return createPortal(
-    <div className="page-loading-overlay" role="status" aria-live="polite" aria-busy="true">
-      <div className="loading-stadium" aria-hidden="true">
-        <span className="stadium-lane lane-1" />
-        <span className="stadium-lane lane-2" />
-        <span className="stadium-lane lane-3" />
-        <span className="stadium-lane lane-4" />
+    <div className="page-loading-overlay cn-loading-overlay" role="status" aria-live="polite" aria-busy="true">
+      <div className="cn-loading-ambient" aria-hidden="true">
+        <span className="cn-ambient-dot dot-1" />
+        <span className="cn-ambient-dot dot-2" />
+        <span className="cn-ambient-dot dot-3" />
       </div>
 
-      <div className="page-loading-card premium-loading-card">
-        <div className="loading-runner-stage" aria-hidden="true">
-          <span className="runner-shadow" />
-          <span className="page-loading-runner">🏃‍♂️</span>
+      <div className="cn-loading-phone">
+        <div className="cn-loading-top">
+          <span className="phone-avatar">跑</span>
+          <div>
+            <span className="loading-kicker">RUN MINI</span>
+            <strong>{label}</strong>
+          </div>
+          <span className="cn-loading-live">加油</span>
         </div>
 
-        <div className="loading-copy">
-          <span className="loading-kicker">RUN MINI</span>
-          <strong>{label}</strong>
-          <small>Locking the lane. Please wait while we update your running board.</small>
+        <div className="cn-loading-track" aria-hidden="true">
+          <span className="cn-track-line line-a" />
+          <span className="cn-track-line line-b" />
+          <span className="cn-track-line line-c" />
+          <span className="cn-track-runner">🏃‍♂️</span>
         </div>
 
-        <div className="loading-progress" aria-hidden="true">
+        <div className="cn-loading-copy">
+          <span>Updating your challenge board</span>
+          <small>Please wait. The lane is locked so nothing is clicked twice.</small>
+        </div>
+
+        <div className="cn-progress-bar" aria-hidden="true">
           <span />
         </div>
       </div>
