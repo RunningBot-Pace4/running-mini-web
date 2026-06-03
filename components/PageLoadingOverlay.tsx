@@ -74,16 +74,28 @@ export function PageLoadingOverlay({
 
   return createPortal(
     <div className="page-loading-overlay" role="status" aria-live="polite" aria-busy="true">
-      <div className="page-loading-track" aria-hidden="true">
-        <span />
-        <span />
-        <span />
+      <div className="loading-stadium" aria-hidden="true">
+        <span className="stadium-lane lane-1" />
+        <span className="stadium-lane lane-2" />
+        <span className="stadium-lane lane-3" />
+        <span className="stadium-lane lane-4" />
       </div>
-      <div className="page-loading-card">
-        <span className="page-loading-runner" aria-hidden="true">🏃‍♂️</span>
-        <span className="page-loading-spinner" aria-hidden="true" />
-        <strong>{label}</strong>
-        <small>Hold tight. We are updating your running board.</small>
+
+      <div className="page-loading-card premium-loading-card">
+        <div className="loading-runner-stage" aria-hidden="true">
+          <span className="runner-shadow" />
+          <span className="page-loading-runner">🏃‍♂️</span>
+        </div>
+
+        <div className="loading-copy">
+          <span className="loading-kicker">RUN MINI</span>
+          <strong>{label}</strong>
+          <small>Locking the lane. Please wait while we update your running board.</small>
+        </div>
+
+        <div className="loading-progress" aria-hidden="true">
+          <span />
+        </div>
       </div>
     </div>,
     document.body,

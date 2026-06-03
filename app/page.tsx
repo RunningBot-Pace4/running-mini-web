@@ -26,29 +26,35 @@ function GuestIntro({
 }) {
   return (
     <>
-      <section className="hero run-hero intro-hero">
-        <div className="hero-copy">
-          <span className="eyebrow">{homeContent.heroEyebrow}</span>
+      <section className="hero race-club-hero intro-hero">
+        <div className="race-hero-bg" aria-hidden="true" />
+        <div className="race-hero-copy">
+          <span className="eyebrow hero-eyebrow">{homeContent.heroEyebrow}</span>
           <h1>{homeContent.heroTitle}</h1>
-          <div className="hero-description">
+          <div className="hero-description race-description">
             <EventDescription text={homeContent.heroDescription} />
           </div>
           <div className="hero-actions">
-            <LoadingLink className="button" href="/register">
+            <LoadingLink className="button race-primary" href="/register" loadingLabel="Opening registration...">
               Join the club
             </LoadingLink>
-            <LoadingLink className="button ghost dark-ghost" href="/login">
+            <LoadingLink className="button race-secondary" href="/login" loadingLabel="Opening login...">
               Member login
             </LoadingLink>
           </div>
         </div>
 
-        <div className="hero-panel intro-panel" aria-label="Running club">
-          <div className="track-lines" />
-          <div className="runner-badge">🏃</div>
-          <p className="panel-label">Running club</p>
-          <div className="panel-score">Train</div>
-          <p className="panel-note">Vote attendance, submit your run, collect points, and grow stronger with the team.</p>
+        <div className="race-hero-visual" aria-label="Running club preview">
+          <div className="live-chip"><span /> Live club challenge</div>
+          <div className="track-orbit">
+            <span className="orbit-runner">🏃‍♂️</span>
+            <span className="orbit-dot dot-a" />
+            <span className="orbit-dot dot-b" />
+          </div>
+          <div className="race-ticket">
+            <strong>Train. Vote. Score.</strong>
+            <small>Members unlock the event board, attendance voting, Strava/manual distance, and leaderboard.</small>
+          </div>
         </div>
       </section>
 
@@ -166,29 +172,57 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="hero run-hero">
-        <div className="hero-copy">
-          <span className="eyebrow">{homeContent.heroEyebrow}</span>
+      <section className="hero race-club-hero member-hero">
+        <div className="race-hero-bg" aria-hidden="true" />
+        <div className="race-hero-copy">
+          <span className="eyebrow hero-eyebrow">{homeContent.heroEyebrow}</span>
           <h1>{homeContent.heroTitle}</h1>
-          <div className="hero-description">
+          <div className="hero-description race-description">
             <EventDescription text={homeContent.heroDescription} />
           </div>
+
           <div className="hero-actions">
-            <LoadingLink className="button" href="#events">
+            <LoadingLink className="button race-primary" href="#events">
               View events
             </LoadingLink>
-            <LoadingLink className="button ghost dark-ghost" href="/account">
+            <LoadingLink className="button race-secondary" href="/account" loadingLabel="Opening account...">
               My account
             </LoadingLink>
           </div>
+
+          <div className="hero-mini-stats" aria-label="Your progress">
+            <div>
+              <strong>{myPoints}</strong>
+              <span>my points</span>
+            </div>
+            <div>
+              <strong>{myDistanceKm.toFixed(1)}</strong>
+              <span>km</span>
+            </div>
+            <div>
+              <strong>{myVoteCount}</strong>
+              <span>votes</span>
+            </div>
+          </div>
         </div>
 
-        <div className="hero-panel" aria-label="Scoring summary">
-          <div className="track-lines" />
-          <div className="runner-badge">🏃</div>
-          <p className="panel-label">Scoring</p>
-          <div className="panel-score">{scoringFormulaLabel(scoreSettings)}</div>
-          <p className="panel-note">{scoringDescription(scoreSettings)}</p>
+        <div className="race-hero-visual" aria-label="Challenge status">
+          <div className="live-chip"><span /> Race board live</div>
+          <div className="track-orbit">
+            <span className="orbit-runner">🏃‍♂️</span>
+            <span className="orbit-dot dot-a" />
+            <span className="orbit-dot dot-b" />
+          </div>
+          <div className="race-ticket glass-ticket">
+            <span className="ticket-label">Scoring rule</span>
+            <strong>{scoringFormulaLabel(scoreSettings)}</strong>
+            <small>{scoringDescription(scoreSettings)}</small>
+          </div>
+          <div className="next-race-card">
+            <span>Next focus</span>
+            <strong>{nextEvent?.title || "Create your first event"}</strong>
+            <small>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add one from the dashboard."}</small>
+          </div>
         </div>
       </section>
 

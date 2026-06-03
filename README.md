@@ -285,3 +285,10 @@ Changes included:
 - Loading overlay resets after route changes and has a safety timeout.
 - Event detail page no longer shows the auto-close timestamp line.
 - Home page has a more premium running club experience with a challenge cockpit, club momentum meter, interactive lane cards, and stronger card/button hover effects.
+
+
+## Update: premium race hero and creative loading
+
+This package redesigns the home hero into a more premium race-club style screen with animated track orbit, score ticket, live challenge chip, next-focus card, and improved mobile layout.
+
+The loading screen is also updated to a stadium-style full-screen overlay with animated lanes, runner stage, progress bar, and stronger click-blocking behavior.

@@ -37,12 +37,12 @@ function isSameRoute(targetHref: string, currentPath: string, currentSearch: str
     const target = new URL(targetHref, window.location.origin);
     const current = new URL(`${currentPath}${currentSearch ? `?${currentSearch}` : ""}`, window.location.origin);
 
-    return (
-      target.pathname === current.pathname &&
-      target.search === current.search &&
-      // Hash-only movement should feel instant and should not freeze the page.
-      (target.hash === "" || target.hash === window.location.hash)
-    );
+    const samePathAndSearch = target.pathname === current.pathname && target.search === current.search;
+
+    // Hash-only movement should feel instant and should not freeze the page.
+    if (samePathAndSearch && target.hash) return true;
+
+    return samePathAndSearch && target.hash === window.location.hash;
   } catch {
     return false;
   }
