@@ -96,10 +96,15 @@ export default async function EventPage({
           </div>
         </div>
 
-        <div className="cn-event-score-ticket">
-          <span>Scoring rule</span>
-          <strong>{scoringFormulaLabel(scoreSettings)}</strong>
-          <small>Attendance + completed kilometres</small>
+        <div className="cn-event-score-ticket premium-score-ticket">
+          <span>Points rule</span>
+          <div className="score-ticket-grid">
+            <strong>{scoreSettings.attendancePoints}</strong>
+            <small>Attend</small>
+            <strong>{scoreSettings.perKmPoints}</strong>
+            <small>Per km</small>
+          </div>
+          <p>{scoringDescription(scoreSettings)}</p>
         </div>
       </section>
 
@@ -109,7 +114,7 @@ export default async function EventPage({
             <span className="eyebrow">Workout plan</span>
             <h2>Session mission</h2>
           </div>
-          <span className="cn-board-badge">训练计划</span>
+          <span className="cn-board-badge">WORKOUT</span>
         </div>
         {event.description ? (
           <EventDescription text={event.description} />
@@ -230,7 +235,7 @@ export default async function EventPage({
             <span className="eyebrow">Leaderboard</span>
             <h2>Club ranking</h2>
           </div>
-          <span className="cn-board-badge">排行</span>
+          <span className="cn-board-badge">RANKING</span>
         </div>
         <div className="table-scroll">
           <table>

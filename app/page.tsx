@@ -25,9 +25,9 @@ function GuestIntro({
   };
 }) {
   const cultureCards = [
-    { icon: "🟢", title: "WeChat style flow", text: "Simple tap cards, fast actions, and no confusing navigation." },
-    { icon: "🧧", title: "Reward energy", text: "Points, badges, and challenge progress make every session feel valuable." },
-    { icon: "📌", title: "Mini app board", text: "Members see tasks, votes, runs, and leaderboard in one mobile-first screen." },
+    { icon: "⚡", title: "Fast action flow", text: "Simple tap cards, quick decisions, and no confusing navigation." },
+    { icon: "🏆", title: "Reward energy", text: "Points, badges, and challenge progress make every session feel valuable." },
+    { icon: "📌", title: "Live club board", text: "Members see tasks, votes, runs, and leaderboard in one mobile-first screen." },
   ];
 
   return (
@@ -65,7 +65,7 @@ function GuestIntro({
 
         <div className="cn-miniapp-phone" aria-label="Mini app preview">
           <div className="cn-phone-header">
-            <span className="phone-avatar">跑</span>
+            <span className="phone-avatar">↗</span>
             <div>
               <strong>Run Mini</strong>
               <small>Club challenge board</small>
@@ -91,14 +91,14 @@ function GuestIntro({
       </section>
 
       <section className="cn-marquee" aria-label="Running club motto">
-        <span>加油</span>
+        <span>Run strong</span>
         <strong>Sweat · Push · Repeat · Champion</strong>
-        <span>一起跑</span>
+        <span>Finish proud</span>
       </section>
 
       <section className="cn-section-title">
-        <span className="eyebrow">China mini-app direction</span>
-        <h2>Built like a challenge app, not a normal event page.</h2>
+        <span className="eyebrow">Premium mobile challenge</span>
+        <h2>Built like a high-energy challenge app, not a normal event page.</h2>
         <p>Designed for mobile members: quick decisions, visual rewards, clear tasks, and strong running-club identity.</p>
       </section>
 
@@ -191,7 +191,7 @@ export default async function HomePage() {
 
         <div className="cn-miniapp-phone member-cn-phone">
           <div className="cn-phone-header">
-            <span className="phone-avatar">跑</span>
+            <span className="phone-avatar">↗</span>
             <div>
               <strong>{user.name}</strong>
               <small>Runner pass active</small>
@@ -227,9 +227,17 @@ export default async function HomePage() {
             <span style={{ width: `${momentum}%` }} />
           </div>
         </div>
-        <div className="cn-dashboard-card">
-          <span>Scoring</span>
-          <strong>{scoringFormulaLabel(scoreSettings)}</strong>
+        <div className="cn-dashboard-card score-rule-card">
+          <div className="score-rule-top">
+            <span>Points rule</span>
+            <em>Admin editable</em>
+          </div>
+          <div className="score-rule-main">
+            <strong>{scoreSettings.attendancePoints}</strong>
+            <span>Attend</span>
+            <strong>{scoreSettings.perKmPoints}</strong>
+            <span>Per km</span>
+          </div>
           <small>{scoringDescription(scoreSettings)}</small>
         </div>
         <div className="cn-dashboard-card">

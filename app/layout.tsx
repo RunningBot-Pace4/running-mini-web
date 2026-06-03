@@ -19,7 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <header className="topbar cn-topbar">
           <div className="topbar-inner cn-topbar-inner">
             <LoadingLink className="brand cn-brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
-              <span className="brand-mark cn-brand-mark">跑</span>
+              <span className="brand-mark cn-brand-mark">↗</span>
               <span>Run Mini</span>
             </LoadingLink>
             <nav className="nav cn-nav">

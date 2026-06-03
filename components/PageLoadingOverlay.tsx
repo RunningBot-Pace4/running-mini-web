@@ -82,12 +82,12 @@ export function PageLoadingOverlay({
 
       <div className="cn-loading-phone">
         <div className="cn-loading-top">
-          <span className="phone-avatar">跑</span>
+          <span className="phone-avatar">↗</span>
           <div>
             <span className="loading-kicker">RUN MINI</span>
             <strong>{label}</strong>
           </div>
-          <span className="cn-loading-live">加油</span>
+          <span className="cn-loading-live">LIVE</span>
         </div>
 
         <div className="cn-loading-track" aria-hidden="true">
