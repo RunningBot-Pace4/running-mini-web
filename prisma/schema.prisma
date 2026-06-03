@@ -99,6 +99,7 @@ model Event {
   startAt     DateTime
   endAt       DateTime
   status      EventStatus  @default(OPEN)
+  manualOpenAt DateTime?
   createdById String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

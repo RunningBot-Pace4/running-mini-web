@@ -36,7 +36,7 @@ export default async function AdminPage() {
       <section className="hero admin-hero">
         <span className="eyebrow">Race control</span>
         <h1>Admin dashboard</h1>
-        <p>Create sessions, edit workout descriptions, view votes and close events.</p>
+        <p>Create sessions, edit workout descriptions, view votes, and manually open or close events.</p>
       </section>
 
       <div className="card">

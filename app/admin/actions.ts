@@ -8,7 +8,6 @@ import { slugify } from "@/lib/slug";
 import { parseDateTimeLocal } from "@/lib/datetime";
 import { HOME_CONTENT_KEY } from "@/lib/site-content";
 import { SCORE_SETTING_KEY } from "@/lib/score-config";
-import { statusAfterAutoClose } from "@/lib/event-window";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -38,7 +37,8 @@ export async function createEventAction(_: unknown, formData: FormData) {
     return { error: "End date must be after start date." };
   }
 
-  const status = statusAfterAutoClose(parsed.data.status, endAt);
+  const now = new Date();
+  const manualOpenAt = parsed.data.status === "OPEN" ? now : null;
 
   const baseSlug = slugify(parsed.data.title);
   let slug = baseSlug;
@@ -55,7 +55,8 @@ export async function createEventAction(_: unknown, formData: FormData) {
       description: parsed.data.description,
       startAt,
       endAt,
-      status,
+      status: parsed.data.status,
+      manualOpenAt,
       createdById: admin.id,
     },
   });
@@ -169,7 +170,7 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
     return { error: "End date must be after start date." };
   }
 
-  const status = statusAfterAutoClose(parsed.data.status, endAt);
+  const manualOpenAt = parsed.data.status === "OPEN" ? new Date() : null;
 
   const event = await prisma.event.update({
     where: { id: parsed.data.eventId },
@@ -178,7 +179,8 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
       description: parsed.data.description,
       startAt,
       endAt,
-      status,
+      status: parsed.data.status,
+      manualOpenAt,
     },
   });
 
@@ -212,11 +214,12 @@ export async function updateEventStatusAction(formData: FormData) {
 
   if (!currentEvent) throw new Error("Event not found.");
 
-  const status = statusAfterAutoClose(parsed.data.status, currentEvent.endAt);
-
   const event = await prisma.event.update({
     where: { id: parsed.data.eventId },
-    data: { status },
+    data: {
+      status: parsed.data.status,
+      manualOpenAt: parsed.data.status === "OPEN" ? new Date() : null,
+    },
   });
 
   revalidatePath("/");

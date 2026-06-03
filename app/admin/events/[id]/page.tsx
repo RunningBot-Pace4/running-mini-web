@@ -64,7 +64,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
 
         <h2>Change event status</h2>
         <p className="muted">
-          Closing an event prevents users from voting and submitting new runs. Existing votes and submissions remain visible.
+          Admin can open or close this event anytime. Auto-close still closes normal expired events, but manually reopening lets members key in Event KM again.
         </p>
 
         <div className="row">

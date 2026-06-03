@@ -5154,3 +5154,184 @@ select:focus {
   line-height: 1.45;
 }
 
+
+
+/* Premium loading screen refresh */
+.premium-loading-overlay {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 176, 0, 0.22), transparent 24rem),
+    radial-gradient(circle at 78% 16%, rgba(255, 90, 31, 0.24), transparent 26rem),
+    rgba(10, 8, 6, 0.84) !important;
+  backdrop-filter: blur(18px) saturate(1.1) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.1) !important;
+}
+
+.premium-loading-card {
+  width: min(90vw, 380px);
+  border-radius: 34px;
+  padding: 26px;
+  color: #fff;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(28, 22, 17, 0.92), rgba(18, 14, 10, 0.94)),
+    radial-gradient(circle at 50% 0%, rgba(255, 90, 31, 0.32), transparent 70%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 34px 120px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-loading-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto;
+  height: 210px;
+  background: radial-gradient(circle, rgba(255, 90, 31, 0.32), transparent 65%);
+  pointer-events: none;
+}
+
+.premium-loading-mark {
+  width: 78px;
+  height: 78px;
+  border-radius: 28px;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, #ffb000, #ff5a1f 56%, #e11d48),
+    linear-gradient(135deg, rgba(255,255,255,.18), transparent);
+  box-shadow: 0 20px 46px rgba(255, 90, 31, 0.36);
+  position: relative;
+  z-index: 1;
+}
+
+.premium-loading-mark span {
+  width: 30px;
+  height: 30px;
+  border: 4px solid rgba(255, 255, 255, 0.38);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .72s linear infinite;
+}
+
+.premium-loading-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+}
+
+.premium-loading-kicker {
+  color: #ffd18a;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.premium-loading-copy strong {
+  font-size: 24px;
+  line-height: 1.05;
+  letter-spacing: -.04em;
+}
+
+.premium-loading-copy p {
+  margin: 0 auto;
+  max-width: 280px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.premium-loading-track {
+  width: 100%;
+  height: 92px;
+  border-radius: 26px;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02)),
+    linear-gradient(135deg, rgba(255, 90, 31, .24), rgba(255, 176, 0, .12));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  z-index: 1;
+}
+
+.premium-loading-track .lane {
+  position: absolute;
+  left: -18%;
+  right: -18%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.26), transparent);
+  transform: rotate(-7deg);
+}
+
+.premium-loading-track .lane-1 { top: 28px; }
+.premium-loading-track .lane-2 { top: 48px; opacity: .72; }
+.premium-loading-track .lane-3 { top: 68px; opacity: .5; }
+
+.runner-dot {
+  position: absolute;
+  left: 12px;
+  top: 36px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, #fff 0 14%, transparent 15%),
+    linear-gradient(135deg, #fff7ed, #ffb000);
+  box-shadow:
+    0 0 0 8px rgba(255, 176, 0, 0.10),
+    0 0 26px rgba(255, 176, 0, .55);
+  animation: runnerLane 1.65s ease-in-out infinite;
+}
+
+@keyframes runnerLane {
+  0% { transform: translate3d(0, 18px, 0) scale(.85); }
+  45% { transform: translate3d(132px, -6px, 0) scale(1.08); }
+  100% { transform: translate3d(300px, -22px, 0) scale(.92); }
+}
+
+.premium-loading-progress {
+  width: 100%;
+  height: 9px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+  position: relative;
+  z-index: 1;
+}
+
+.premium-loading-progress span {
+  display: block;
+  height: 100%;
+  width: 42%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ffb000, #ff5a1f, #fff0c2);
+  animation: progressSweep 1.25s ease-in-out infinite;
+}
+
+@keyframes progressSweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(260%); }
+}
+
+@media (max-width: 520px) {
+  .premium-loading-card {
+    padding: 22px;
+    border-radius: 28px;
+  }
+
+  .premium-loading-mark {
+    width: 68px;
+    height: 68px;
+    border-radius: 24px;
+  }
+
+  .premium-loading-copy strong {
+    font-size: 21px;
+  }
+}

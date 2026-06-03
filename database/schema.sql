@@ -74,6 +74,7 @@ CREATE TABLE "Event" (
   "startAt" TIMESTAMPTZ NOT NULL,
   "endAt" TIMESTAMPTZ NOT NULL,
   "status" "EventStatus" NOT NULL DEFAULT 'OPEN',
+  "manualOpenAt" TIMESTAMPTZ,
   "createdById" TEXT NOT NULL REFERENCES "User"("id"),
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
   "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()

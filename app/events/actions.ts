@@ -5,20 +5,20 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { calculateScore, getScoreSettings } from "@/lib/scoring";
-import { isAfterAutoClose, isEventAcceptingResponses } from "@/lib/event-window";
+import { isEventAcceptingResponses, shouldAutoCloseEvent } from "@/lib/event-window";
 
 const voteSchema = z.object({
   eventId: z.string().min(1),
   status: z.enum(["ATTEND", "NOT_ATTEND"]),
 });
 
-async function autoCloseEventIfNeeded(event: { id: string; status: string; endAt: Date }) {
-  if (event.status === "OPEN" && isAfterAutoClose(event)) {
+async function autoCloseEventIfNeeded<T extends { id: string; status: string; endAt: Date; manualOpenAt?: Date | null }>(event: T) {
+  if (shouldAutoCloseEvent(event)) {
     await prisma.event.update({
       where: { id: event.id },
-      data: { status: "CLOSED" },
+      data: { status: "CLOSED", manualOpenAt: null },
     });
-    return { ...event, status: "CLOSED" };
+    return { ...event, status: "CLOSED" as const, manualOpenAt: null };
   }
 
   return event;

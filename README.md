@@ -340,3 +340,18 @@ EVENT_AUTO_CLOSE_AFTER_HOURS=8
 ```
 
 This means admin will no longer see an expired event as `OPEN` after the auto-close window has passed.
+
+
+## Latest update: manual reopen and premium loading
+
+- Admin can still manually set an event to `OPEN` after the normal auto-close window.
+- Auto-close still works for normal events: `endAt + EVENT_AUTO_CLOSE_AFTER_HOURS`.
+- When admin manually reopens an expired event, members can vote ATTEND and key in Event KM/manual distance again.
+- If admin sets the event to `CLOSED`, `DRAFT`, or `ARCHIVED`, submissions are blocked again.
+- Added a cleaner premium full-screen loading overlay that locks all clicks while actions are saving.
+
+Database note: this update adds `Event.manualOpenAt`. Keep Vercel build command:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

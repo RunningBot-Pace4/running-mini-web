@@ -73,36 +73,26 @@ export function PageLoadingOverlay({
   if (!show || !mounted) return null;
 
   return createPortal(
-    <div className="page-loading-overlay cn-loading-overlay" role="status" aria-live="polite" aria-busy="true">
-      <div className="cn-loading-ambient" aria-hidden="true">
-        <span className="cn-ambient-dot dot-1" />
-        <span className="cn-ambient-dot dot-2" />
-        <span className="cn-ambient-dot dot-3" />
-      </div>
-
-      <div className="cn-loading-phone">
-        <div className="cn-loading-top">
-          <span className="phone-avatar">↗</span>
-          <div>
-            <span className="loading-kicker">RUN MINI</span>
-            <strong>{label}</strong>
-          </div>
-          <span className="cn-loading-live">LIVE</span>
+    <div className="page-loading-overlay premium-loading-overlay" role="status" aria-live="polite" aria-busy="true">
+      <div className="premium-loading-card">
+        <div className="premium-loading-mark" aria-hidden="true">
+          <span />
         </div>
 
-        <div className="cn-loading-track" aria-hidden="true">
-          <span className="cn-track-line line-a" />
-          <span className="cn-track-line line-b" />
-          <span className="cn-track-line line-c" />
-          <span className="cn-track-runner">🏃‍♂️</span>
+        <div className="premium-loading-copy">
+          <span className="premium-loading-kicker">Run Mini</span>
+          <strong>{label}</strong>
+          <p>Please wait. We are saving your action and locking the screen.</p>
         </div>
 
-        <div className="cn-loading-copy">
-          <span>Updating your challenge board</span>
-          <small>Please wait. The lane is locked so nothing is clicked twice.</small>
+        <div className="premium-loading-track" aria-hidden="true">
+          <i className="lane lane-1" />
+          <i className="lane lane-2" />
+          <i className="lane lane-3" />
+          <span className="runner-dot" />
         </div>
 
-        <div className="cn-progress-bar" aria-hidden="true">
+        <div className="premium-loading-progress" aria-hidden="true">
           <span />
         </div>
       </div>

@@ -3,6 +3,7 @@ export const DEFAULT_AUTO_CLOSE_AFTER_HOURS = 8;
 type EventTiming = {
   status: string;
   endAt: Date | string;
+  manualOpenAt?: Date | string | null;
 };
 
 export function autoCloseAfterHours() {
@@ -11,31 +12,47 @@ export function autoCloseAfterHours() {
   return raw;
 }
 
-export function eventAutoCloseAt(event: EventTiming) {
+export function eventAutoCloseAt(event: Pick<EventTiming, "endAt">) {
   return new Date(new Date(event.endAt).getTime() + autoCloseAfterHours() * 60 * 60 * 1000);
 }
 
-export function isAfterAutoClose(event: EventTiming, now = new Date()) {
+export function isAfterAutoClose(event: Pick<EventTiming, "endAt">, now = new Date()) {
   return now.getTime() > eventAutoCloseAt(event).getTime();
+}
+
+export function wasManuallyOpenedAfterAutoClose(event: EventTiming) {
+  if (!event.manualOpenAt) return false;
+  return new Date(event.manualOpenAt).getTime() >= eventAutoCloseAt(event).getTime();
+}
+
+export function shouldAutoCloseEvent(event: EventTiming, now = new Date()) {
+  return (
+    event.status === "OPEN" &&
+    isAfterAutoClose(event, now) &&
+    !wasManuallyOpenedAfterAutoClose(event)
+  );
 }
 
 export function statusAfterAutoClose<TStatus extends string>(
   status: TStatus,
   endAt: Date | string,
   now = new Date(),
+  manualOpenAt?: Date | string | null,
 ): TStatus | "CLOSED" {
-  if (status === "OPEN" && isAfterAutoClose({ status, endAt }, now)) return "CLOSED";
+  if (shouldAutoCloseEvent({ status, endAt, manualOpenAt }, now)) return "CLOSED";
   return status;
 }
 
 export function isEventAcceptingResponses(event: EventTiming, now = new Date()) {
-  return event.status === "OPEN" && !isAfterAutoClose(event, now);
+  if (event.status !== "OPEN") return false;
+  if (wasManuallyOpenedAfterAutoClose(event)) return true;
+  return !isAfterAutoClose(event, now);
 }
 
 export function eventDisplayStatus(event: EventTiming, now = new Date()) {
-  return statusAfterAutoClose(event.status, event.endAt, now);
+  return statusAfterAutoClose(event.status, event.endAt, now, event.manualOpenAt);
 }
 
 export function autoCloseNotice(event: EventTiming) {
-  return `Attendance voting and run submissions close automatically ${autoCloseAfterHours()} hours after event end time (${eventAutoCloseAt(event).toLocaleString("en-GB")}).`;
+  return `Attendance voting and run submissions close automatically ${autoCloseAfterHours()} hours after event end time. Admin can reopen the event manually when members need to key in Event KM.`;
 }
