@@ -16,13 +16,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
-        <header className="topbar">
-          <div className="topbar-inner">
-            <LoadingLink className="brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
-              <span className="brand-mark">↗</span>
+        <header className="topbar cn-topbar">
+          <div className="topbar-inner cn-topbar-inner">
+            <LoadingLink className="brand cn-brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
+              <span className="brand-mark cn-brand-mark">跑</span>
               <span>Run Mini</span>
             </LoadingLink>
-            <nav className="nav">
+            <nav className="nav cn-nav">
               <LoadingLink href="/">Events</LoadingLink>
               {user && <LoadingLink href="/account">Account</LoadingLink>}
               {user?.role === "ADMIN" && <LoadingLink href="/admin">Admin</LoadingLink>}
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               ) : (
                 <>
                   <LoadingLink href="/login">Login</LoadingLink>
-                  <LoadingLink className="button nav-button" href="/register">
+                  <LoadingLink className="button nav-button cn-register-pill" href="/register">
                     Register
                   </LoadingLink>
                 </>
@@ -39,7 +39,37 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </nav>
           </div>
         </header>
-        <main className="container">{children}</main>
+
+        <main className="container cn-container">{children}</main>
+
+        <nav className="cn-mobile-tabbar" aria-label="Mobile app navigation">
+          <LoadingLink href="/" loadingLabel="Opening events...">
+            <span>🏃</span>
+            Events
+          </LoadingLink>
+          {user ? (
+            <LoadingLink href="/account" loadingLabel="Opening account...">
+              <span>🎽</span>
+              Account
+            </LoadingLink>
+          ) : (
+            <LoadingLink href="/login" loadingLabel="Opening login...">
+              <span>🔐</span>
+              Login
+            </LoadingLink>
+          )}
+          {user?.role === "ADMIN" ? (
+            <LoadingLink href="/admin" loadingLabel="Opening admin...">
+              <span>🛠️</span>
+              Admin
+            </LoadingLink>
+          ) : (
+            <LoadingLink href="/register" loadingLabel="Opening registration...">
+              <span>🔥</span>
+              Join
+            </LoadingLink>
+          )}
+        </nav>
       </body>
     </html>
   );

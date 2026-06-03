@@ -305,3 +305,18 @@ This version refreshes the public/member home page and loading experience with a
 - More interactive event cards
 - Full-screen creative loading screen that blocks repeat clicks
 - No database change required
+
+## Latest UI Update: China-Inspired Mini App Experience
+
+This package includes a full visual redesign inspired by China mobile mini-program patterns:
+
+- App-like top navigation and mobile bottom tab bar
+- Premium running club hero section
+- Reward/red-packet style scoring cards
+- Mission map: Vote → Run → Submit → Share
+- Interactive event cards with stronger hover and mobile polish
+- Event detail page redesigned as a challenge mission board
+- More creative full-screen loading overlay
+- Existing features remain unchanged: admin event creation, Strava/manual distance, voting, scoring, account, change password, and admin controls
+
+No database migration is required for this UI-only update.
