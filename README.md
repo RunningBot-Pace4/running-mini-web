@@ -355,3 +355,9 @@ Database note: this update adds `Event.manualOpenAt`. Keep Vercel build command:
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+
+### Admin status sync fix
+
+The event detail page now keeps the **Edit event details** status dropdown synced with the quick status buttons.
+If admin clicks **OPEN**, **CLOSED**, **DRAFT**, or **ARCHIVED** in the quick status controls, the dropdown below updates to the same value after the page refreshes.

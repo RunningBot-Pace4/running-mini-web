@@ -1,7 +1,7 @@
 "use client";
 
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
 type State = { error?: string; success?: string } | undefined;
@@ -23,6 +23,11 @@ export function EditEventForm({
   action: (state: State, formData: FormData) => Promise<State>;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const [status, setStatus] = useState<EditableEvent["status"]>(event.status);
+
+  useEffect(() => {
+    setStatus(event.status);
+  }, [event.status]);
 
   return (
     <>
@@ -75,7 +80,12 @@ export function EditEventForm({
 
       <div>
         <label htmlFor="edit-status">Status</label>
-        <select id="edit-status" name="status" defaultValue={event.status}>
+        <select
+          id="edit-status"
+          name="status"
+          value={status}
+          onChange={(event) => setStatus(event.target.value as EditableEvent["status"])}
+        >
           <option value="DRAFT">Draft</option>
           <option value="OPEN">Open</option>
           <option value="CLOSED">Closed</option>

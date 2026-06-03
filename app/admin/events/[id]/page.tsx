@@ -90,6 +90,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
           Update draft descriptions, event date/time, title, or status. The public event link remains the same.
         </p>
         <EditEventForm
+          key={`${event.id}-${event.status}-${event.updatedAt.getTime()}`}
           action={updateEventDetailsAction}
           event={{
             id: event.id,
