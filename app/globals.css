@@ -6952,6 +6952,36 @@ body::before {
   background: rgba(255,255,255,0.72);
 }
 
+/* Fix logo remove checkbox: keep it as a normal checkbox, not a full-width text input */
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid rgba(11, 31, 51, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  font-weight: 850;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  padding: 0;
+  margin: 0;
+  border-radius: 6px;
+  accent-color: var(--brand-primary, #1d6fa3);
+  cursor: pointer;
+}
+
 /* Full-screen coastal loading */
 .coastal-loading-overlay {
   position: fixed !important;

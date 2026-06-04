@@ -555,3 +555,8 @@ Keep Vercel build command:
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+
+## UI Fix
+
+- Fixed admin logo remove checkbox so it appears as a normal checkbox instead of a large full-width tick box.
