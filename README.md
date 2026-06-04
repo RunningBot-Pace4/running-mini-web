@@ -479,3 +479,39 @@ Database note: this update adds new columns to `SiteContent`, so the Vercel buil
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+
+## Option A design update: Sky + Sea + Sweat
+
+This package includes a premium coastal running theme:
+
+- Sky / sea / sunrise color palette
+- Animated coastal hero section
+- Sweat / route / wave loading screen
+- Premium event cards with coastal scenery
+- Admin editable brand colors
+- Admin logo image upload
+
+### Admin logo image
+
+Go to:
+
+```text
+/admin → Edit home page hero → Brand logo & coastal theme
+```
+
+You can upload a PNG/JPG/WebP/SVG logo image. The app stores the image as a small data URL in the database for easy Vercel deployment. Recommended logo size: square image under 500KB.
+
+### Database change
+
+This update adds:
+
+```text
+SiteContent.logoImageDataUrl
+```
+
+Keep the Vercel build command:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

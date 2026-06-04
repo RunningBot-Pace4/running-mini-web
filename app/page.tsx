@@ -4,7 +4,7 @@ import { formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
 import { LoadingLink } from "@/components/LoadingLink";
 import { getHomeContent } from "@/lib/site-content";
-import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
+import { getScoreSettings, scoringDescription } from "@/lib/scoring";
 import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 
@@ -25,87 +25,110 @@ function GuestIntro({
     heroDescription: string;
   };
 }) {
-  const cultureCards = [
-    { icon: "⚡", title: "Fast action flow", text: "Simple tap cards, quick decisions, and no confusing navigation." },
-    { icon: "🏆", title: "Reward energy", text: "Points, badges, and challenge progress make every session feel valuable." },
-    { icon: "📌", title: "Live club board", text: "Members see tasks, votes, runs, and leaderboard in one mobile-first screen." },
+  const lifestyleCards = [
+    {
+      icon: "💧",
+      title: "Sweat with purpose",
+      text: "Every vote, run, and kilometre feeds the club scoreboard.",
+    },
+    {
+      icon: "🌤️",
+      title: "Sunrise discipline",
+      text: "Turn scheduled workouts into a simple mobile mission flow.",
+    },
+    {
+      icon: "🌊",
+      title: "Sea-level calm",
+      text: "Clean cards, fast actions, and clear progress keep members focused.",
+    },
   ];
 
   return (
     <>
-      <section className="cn-app-hero guest-cn-app-hero" aria-label="Running club introduction">
-        <div className="cn-hero-noise" aria-hidden="true" />
-        <div className="cn-hero-left">
-          <div className="cn-live-pill">
+      <section className="coastal-hero guest-coastal-hero" aria-label="Running club introduction">
+        <div className="coastal-sky" aria-hidden="true">
+          <span className="coastal-sun" />
+          <span className="coastal-cloud cloud-one" />
+          <span className="coastal-cloud cloud-two" />
+          <span className="coastal-wave wave-one" />
+          <span className="coastal-wave wave-two" />
+        </div>
+
+        <div className="coastal-hero-copy">
+          <div className="coastal-live-chip">
             <span className="pulse-dot" />
-            {homeContent.heroEyebrow || "Mobile running challenge"}
+            {homeContent.heroEyebrow || "Coastal running challenge"}
           </div>
 
           <h1>{homeContent.heroTitle}</h1>
 
-          <div className="cn-hero-rich">
+          <div className="coastal-rich-copy">
             <EventDescription text={homeContent.heroDescription} />
           </div>
 
-          <div className="cn-hero-actions">
-            <LoadingLink className="button cn-main-cta" href="/register" loadingLabel="Opening registration...">
-              Join challenge
+          <div className="coastal-hero-actions">
+            <LoadingLink className="button coastal-primary-btn" href="/register" loadingLabel="Opening registration...">
+              Join the club
             </LoadingLink>
-            <LoadingLink className="button cn-glass-cta" href="/login" loadingLabel="Opening login...">
+            <LoadingLink className="button coastal-secondary-btn" href="/login" loadingLabel="Opening login...">
               Member login
             </LoadingLink>
           </div>
 
-          <div className="cn-proof-strip" aria-label="Club features">
-            <span>🏃 Club sessions</span>
-            <span>✅ Attendance vote</span>
-            <span>🔥 Points race</span>
-            <span>📣 Share result</span>
+          <div className="coastal-proof-strip" aria-label="Club features">
+            <span>Morning sessions</span>
+            <span>Attendance vote</span>
+            <span>KM scoring</span>
+            <span>Share results</span>
           </div>
         </div>
 
-        <div className="cn-miniapp-phone" aria-label="Mini app preview">
-          <div className="cn-phone-header">
-            <span className="phone-avatar">↗</span>
+        <div className="coastal-phone-card" aria-label="Mobile challenge preview">
+          <div className="coastal-phone-top">
+            <span className="coastal-avatar">🏃</span>
             <div>
               <strong>Run Mini</strong>
-              <small>Club challenge board</small>
+              <small>Coastal challenge pass</small>
             </div>
-            <span className="cn-phone-pill">LIVE</span>
+            <em>LIVE</em>
           </div>
 
-          <div className="cn-redpacket-card">
-            <span>Today unlock</span>
-            <strong>Vote · Run · Score</strong>
+          <div className="coastal-ticket">
+            <span>Today’s focus</span>
+            <strong>Sweat · Run · Score</strong>
             <small>Complete missions and climb the club board.</small>
           </div>
 
-          <div className="cn-task-wallet">
-            <div><span>01</span><strong>Register</strong><small>Create runner pass</small></div>
-            <div><span>02</span><strong>Vote</strong><small>Attend or not attend</small></div>
-            <div><span>03</span><strong>Submit</strong><small>Strava or manual</small></div>
+          <div className="coastal-mini-route" aria-hidden="true">
+            <span className="route-dot start" />
+            <span className="route-dot mid" />
+            <span className="route-dot end" />
+            <span className="route-runner">🏃‍♂️</span>
           </div>
 
-          <div className="cn-phone-runner" aria-hidden="true">🏃‍♂️</div>
-          <div className="cn-orbit-ring" aria-hidden="true" />
+          <div className="coastal-task-list">
+            <div><strong>01</strong><span>Register</span></div>
+            <div><strong>02</strong><span>Vote</span></div>
+            <div><strong>03</strong><span>Submit KM</span></div>
+          </div>
         </div>
       </section>
 
-      <section className="cn-marquee" aria-label="Running club motto">
-        <span>Run strong</span>
-        <strong>Sweat · Push · Repeat · Champion</strong>
-        <span>Finish proud</span>
+      <section className="coastal-motto" aria-label="Running club motto">
+        <span>Sweat</span>
+        <strong>Sky energy. Sea rhythm. Team effort.</strong>
+        <span>Repeat</span>
       </section>
 
-      <section className="cn-section-title">
-        <span className="eyebrow">Premium mobile challenge</span>
-        <h2>Built like a high-energy challenge app, not a normal event page.</h2>
-        <p>Designed for mobile members: quick decisions, visual rewards, clear tasks, and strong running-club identity.</p>
+      <section className="coastal-section-title">
+        <span className="eyebrow">Premium mobile running club</span>
+        <h2>A website that feels like a fitness app.</h2>
+        <p>Designed for mobile members with strong visuals, fast actions, reward scoring, and a club-first experience.</p>
       </section>
 
-      <div className="cn-culture-grid">
-        {cultureCards.map((card) => (
-          <article className="cn-culture-card" key={card.title}>
+      <div className="coastal-lifestyle-grid">
+        {lifestyleCards.map((card) => (
+          <article className="coastal-lifestyle-card" key={card.title}>
             <span>{card.icon}</span>
             <h3>{card.title}</h3>
             <p>{card.text}</p>
@@ -113,16 +136,16 @@ function GuestIntro({
         ))}
       </div>
 
-      <section className="cn-join-panel">
+      <section className="coastal-join-panel">
         <div>
           <span className="eyebrow">Members only</span>
-          <h2>Login unlocks the live race board.</h2>
-          <p>Events, attendance status, distance submission, points, and account progress are shown after login.</p>
+          <h2>Login unlocks the live event board.</h2>
+          <p>Members can vote attendance, connect Strava or submit manual KM, track points, and share results.</p>
         </div>
-        <div className="cn-feed-stack" aria-hidden="true">
-          <span>New workout opened</span>
-          <span>Attendance vote updated</span>
-          <span>Leaderboard refreshed</span>
+        <div className="coastal-feed-stack" aria-hidden="true">
+          <span>Workout opened</span>
+          <span>Attendance updated</span>
+          <span>Distance submitted</span>
         </div>
       </section>
     </>
@@ -162,75 +185,83 @@ export default async function HomePage() {
 
   const myDistanceKm = mySubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const myPoints = mySubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
-  const momentum = Math.min(100, Math.max(16, openEvents * 22 + totalVotes * 6 + totalRuns * 12));
+  const momentum = Math.min(100, Math.max(18, openEvents * 22 + totalVotes * 6 + totalRuns * 12));
   const nextEvent = events.find((event) => isEventAcceptingResponses(event)) || events[0];
 
   return (
     <>
-      <section className="cn-app-hero member-cn-app-hero">
-        <div className="cn-hero-noise" aria-hidden="true" />
-        <div className="cn-hero-left">
-          <div className="cn-live-pill"><span className="pulse-dot" />{homeContent.heroEyebrow}</div>
+      <section className="coastal-hero member-coastal-hero">
+        <div className="coastal-sky" aria-hidden="true">
+          <span className="coastal-sun" />
+          <span className="coastal-cloud cloud-one" />
+          <span className="coastal-cloud cloud-two" />
+          <span className="coastal-wave wave-one" />
+          <span className="coastal-wave wave-two" />
+        </div>
+
+        <div className="coastal-hero-copy">
+          <div className="coastal-live-chip"><span className="pulse-dot" />{homeContent.heroEyebrow}</div>
           <h1>{homeContent.heroTitle}</h1>
-          <div className="cn-hero-rich">
+          <div className="coastal-rich-copy">
             <EventDescription text={homeContent.heroDescription} />
           </div>
 
-          <div className="cn-hero-actions">
-            <LoadingLink className="button cn-main-cta" href="#events">
+          <div className="coastal-hero-actions">
+            <LoadingLink className="button coastal-primary-btn" href="#events">
               View events
             </LoadingLink>
-            <LoadingLink className="button cn-glass-cta" href="/account" loadingLabel="Opening account...">
+            <LoadingLink className="button coastal-secondary-btn" href="/account" loadingLabel="Opening account...">
               My account
             </LoadingLink>
           </div>
 
-          <div className="cn-proof-strip">
+          <div className="coastal-proof-strip">
             <span>{myPoints} pts</span>
             <span>{myDistanceKm.toFixed(1)} km</span>
             <span>{myVoteCount} votes</span>
           </div>
         </div>
 
-        <div className="cn-miniapp-phone member-cn-phone">
-          <div className="cn-phone-header">
-            <span className="phone-avatar">↗</span>
+        <div className="coastal-phone-card member-coastal-card">
+          <div className="coastal-phone-top">
+            <span className="coastal-avatar">🏃</span>
             <div>
               <strong>{user.name}</strong>
               <small>Runner pass active</small>
             </div>
-            <span className="cn-phone-pill">LIVE</span>
+            <em>LIVE</em>
           </div>
 
-          <div className="cn-redpacket-card">
+          <div className="coastal-ticket">
             <span>My score wallet</span>
             <strong>{myPoints} pts</strong>
             <small>{myDistanceKm.toFixed(1)}km submitted · {myVoteCount} votes</small>
           </div>
 
-          <div className="cn-mini-progress">
+          <div className="coastal-stat-row">
             <div><strong>{openEvents}</strong><span>Open</span></div>
             <div><strong>{totalVotes}</strong><span>Votes</span></div>
             <div><strong>{totalRuns}</strong><span>Runs</span></div>
           </div>
 
-          <div className="cn-next-focus">
-            <span>Next focus</span>
+          <div className="coastal-next-focus">
+            <span>Next tide</span>
             <strong>{nextEvent?.title || "Create your first event"}</strong>
             <small>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add one from the dashboard."}</small>
           </div>
         </div>
       </section>
 
-      <section className="cn-dashboard-row" aria-label="Runner dashboard">
-        <div className="cn-dashboard-card hot">
+      <section className="coastal-dashboard-row" aria-label="Runner dashboard">
+        <div className="coastal-dashboard-card hot">
           <span>Club momentum</span>
           <strong>{momentum}%</strong>
-          <div className="momentum-meter" aria-label={`Club momentum ${momentum}%`}>
+          <div className="coastal-meter" aria-label={`Club momentum ${momentum}%`}>
             <span style={{ width: `${momentum}%` }} />
           </div>
         </div>
-        <div className="cn-dashboard-card score-rule-card">
+
+        <div className="coastal-dashboard-card score-rule-card">
           <div className="score-rule-top">
             <span>Points rule</span>
             <em>Admin editable</em>
@@ -243,14 +274,15 @@ export default async function HomePage() {
           </div>
           <small>{scoringDescription(scoreSettings)}</small>
         </div>
-        <div className="cn-dashboard-card">
+
+        <div className="coastal-dashboard-card">
           <span>Flow</span>
           <strong>Vote → Run → Submit</strong>
           <small>Strava or manual distance accepted after ATTEND vote.</small>
         </div>
       </section>
 
-      <section className="cn-mission-map" aria-label="How the challenge works">
+      <section className="coastal-mission-map" aria-label="How the challenge works">
         <article>
           <span>01</span>
           <strong>Vote</strong>
@@ -273,42 +305,52 @@ export default async function HomePage() {
         </article>
       </section>
 
-      <section id="events" className="cn-section-title">
+      <section id="events" className="coastal-section-title">
         <span className="eyebrow">Member event board</span>
-        <h2>Choose your next mission.</h2>
+        <h2>Choose your next coastal mission.</h2>
         <p>Tap an event to vote, submit distance, view leaderboard, and share your result.</p>
       </section>
 
-      <div className="cn-event-grid">
+      <div className="coastal-event-grid">
         {events.map((event, index) => {
           const displayStatus = eventDisplayStatus(event);
 
           return (
-            <article className="cn-event-card" key={event.id}>
-              <div className="cn-event-rank">#{String(index + 1).padStart(2, "0")}</div>
-              <div className="cn-event-top">
+            <article className="coastal-event-card" key={event.id}>
+              <div className="coastal-event-scenery" aria-hidden="true">
+                <span className="coastal-event-sun" />
+                <span className="coastal-event-wave one" />
+                <span className="coastal-event-wave two" />
+              </div>
+
+              <div className="coastal-event-top">
+                <span className="coastal-event-rank">#{String(index + 1).padStart(2, "0")}</span>
                 <span className={statusClass(displayStatus)}>{displayStatus}</span>
-                <span className="event-meta">{event._count.votes} votes · {event._count.submissions} runs</span>
               </div>
 
               <h2>{event.title}</h2>
               <p className="date-pill">{formatDateTimeRange(event.startAt, event.endAt)}</p>
 
               {event.description && (
-                <div className="workout-preview">
+                <div className="workout-preview coastal-workout-preview">
                   <EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} />
                 </div>
               )}
 
-              <div className="cn-event-footer">
+              <div className="coastal-event-footer">
+                <div>
+                  <strong>{event._count.votes}</strong>
+                  <span>votes</span>
+                </div>
                 <div>
                   <strong>{event._count.submissions}</strong>
-                  <span>runs submitted</span>
+                  <span>runs</span>
                 </div>
-                <LoadingLink className="button full cn-main-cta" href={`/events/${event.slug}`}>
-                  Enter workout →
-                </LoadingLink>
               </div>
+
+              <LoadingLink className="button full coastal-primary-btn" href={`/events/${event.slug}`}>
+                Enter workout →
+              </LoadingLink>
             </article>
           );
         })}

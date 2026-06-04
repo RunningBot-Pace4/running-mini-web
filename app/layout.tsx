@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Run Mini Web",
   description: "Mobile running event, Strava sync, scoring and sharing.",
   manifest: "/manifest.webmanifest",
-  themeColor: "#ff5a1f",
+  themeColor: "#1d6fa3",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
 type ThemeStyle = CSSProperties & Record<`--${string}`, string>;
 
 function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): ThemeStyle {
-  const primary = content.themePrimary || "#ff5a1f";
-  const secondary = content.themeSecondary || "#ffb000";
-  const background = content.themeBackground || "#fff8ec";
-  const dark = content.themeDark || "#15120f";
+  const primary = content.themePrimary || "#1d6fa3";
+  const secondary = content.themeSecondary || "#ff7a45";
+  const background = content.themeBackground || "#f8fbfd";
+  const dark = content.themeDark || "#0b1f33";
 
   return {
     "--accent": primary,
@@ -45,10 +45,10 @@ function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): T
     "--bg-2": background,
     "--ink": dark,
     "--text": dark,
-    "--cn-red": primary,
+    "--cn-red": secondary,
     "--cn-orange": secondary,
     "--cn-gold": secondary,
-    "--cn-gold-2": secondary,
+    "--cn-gold-2": "#ffd166",
     "--cn-ink": dark,
     "--cn-deep": dark,
     "--cn-paper": background,
@@ -56,6 +56,11 @@ function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): T
     "--brand-secondary": secondary,
     "--brand-background": background,
     "--brand-dark": dark,
+    "--sky": "#6ec6ff",
+    "--sea": primary,
+    "--sunrise": secondary,
+    "--mist": "#dde7f0",
+    "--sand": "#f8fbfd",
   };
 }
 
@@ -63,14 +68,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const [user, siteContent] = await Promise.all([getCurrentUser(), getHomeContent()]);
   const brandName = siteContent.brandName || "Run Mini";
   const brandMark = siteContent.brandMark || "↗";
+  const logoImageDataUrl = siteContent.logoImageDataUrl || "";
 
   return (
     <html lang="en">
       <body style={buildThemeStyle(siteContent)}>
         <header className="topbar cn-topbar">
           <div className="topbar-inner cn-topbar-inner">
-            <LoadingLink className="brand cn-brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
-              <span className="brand-mark cn-brand-mark">{brandMark}</span>
+            <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
+              <span className="brand-mark cn-brand-mark coastal-brand-mark">
+                {logoImageDataUrl ? <img src={logoImageDataUrl} alt="" /> : brandMark}
+              </span>
               <span>{brandName}</span>
             </LoadingLink>
             <nav className="nav cn-nav">

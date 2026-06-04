@@ -186,17 +186,18 @@ model ScoreSetting {
 
 
 model SiteContent {
-  id              String   @id @default(cuid())
-  key             String   @unique
-  brandName       String   @default("Run Mini")
-  brandMark       String   @default("↗")
-  themePrimary    String   @default("#ff5a1f")
-  themeSecondary  String   @default("#ffb000")
-  themeBackground String   @default("#fff8ec")
-  themeDark       String   @default("#15120f")
-  heroEyebrow     String
-  heroTitle       String
-  heroDescription String   @db.Text
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String   @id @default(cuid())
+  key              String   @unique
+  brandName        String   @default("Run Mini")
+  brandMark        String   @default("↗")
+  logoImageDataUrl String?  @db.Text
+  themePrimary     String   @default("#1d6fa3")
+  themeSecondary   String   @default("#ff7a45")
+  themeBackground  String   @default("#f8fbfd")
+  themeDark        String   @default("#0b1f33")
+  heroEyebrow      String
+  heroTitle        String
+  heroDescription  String   @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

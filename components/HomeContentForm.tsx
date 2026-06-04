@@ -2,6 +2,7 @@
 
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState, useState } from "react";
+import type { ChangeEvent } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 
 type State = { error?: string; success?: string } | undefined;
@@ -9,6 +10,7 @@ type State = { error?: string; success?: string } | undefined;
 type HomeContent = {
   brandName: string;
   brandMark: string;
+  logoImageDataUrl?: string | null;
   themePrimary: string;
   themeSecondary: string;
   themeBackground: string;
@@ -19,10 +21,10 @@ type HomeContent = {
 };
 
 const colorFields = [
-  { id: "themePrimary", label: "Primary color" },
-  { id: "themeSecondary", label: "Highlight color" },
-  { id: "themeBackground", label: "Background color" },
-  { id: "themeDark", label: "Dark text / header color" },
+  { id: "themePrimary", label: "Sea primary" },
+  { id: "themeSecondary", label: "Sunrise accent" },
+  { id: "themeBackground", label: "Sky background" },
+  { id: "themeDark", label: "Deep navy" },
 ] as const;
 
 export function HomeContentForm({
@@ -33,6 +35,9 @@ export function HomeContentForm({
   action: (state: State, formData: FormData) => Promise<State>;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const [logoImageDataUrl, setLogoImageDataUrl] = useState(content.logoImageDataUrl || "");
+  const [logoError, setLogoError] = useState("");
+  const [removeLogo, setRemoveLogo] = useState(false);
   const [colors, setColors] = useState({
     themePrimary: content.themePrimary,
     themeSecondary: content.themeSecondary,
@@ -44,15 +49,75 @@ export function HomeContentForm({
     setColors((current) => ({ ...current, [id]: value }));
   }
 
+  async function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
+    setLogoError("");
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setLogoError("Please upload an image file.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 500 * 1024) {
+      setLogoError("Logo image should be below 500KB for fast mobile loading.");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setLogoImageDataUrl(String(reader.result || ""));
+      setRemoveLogo(false);
+    };
+    reader.onerror = () => setLogoError("Could not read the logo file. Please try another image.");
+    reader.readAsDataURL(file);
+  }
+
   return (
     <>
       <PageLoadingOverlay show={pending} label="Saving home content..." />
       <form className="form-stack" action={formAction}>
-        <div className="theme-editor-card">
+        <div className="theme-editor-card coastal-admin-card">
           <div>
-            <span className="eyebrow">Brand logo</span>
-            <h3>Header logo and theme</h3>
-            <p className="muted">Change the logo text, icon mark, and main colors used across the web.</p>
+            <span className="eyebrow">Brand logo & coastal theme</span>
+            <h3>Make the club feel premium</h3>
+            <p className="muted">
+              Upload a logo image, keep a text fallback, and tune the sky/sea/sunrise colors used across the web.
+            </p>
+          </div>
+
+          <div className="logo-upload-panel">
+            <div className="logo-preview-card">
+              {logoImageDataUrl && !removeLogo ? (
+                <img src={logoImageDataUrl} alt="Current logo preview" />
+              ) : (
+                <span>{content.brandMark || "↗"}</span>
+              )}
+            </div>
+
+            <div className="logo-upload-controls">
+              <label htmlFor="logoImage">Logo image</label>
+              <input
+                id="logoImage"
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                onChange={handleLogoChange}
+              />
+              <input type="hidden" name="logoImageDataUrl" value={removeLogo ? "" : logoImageDataUrl} />
+              <p className="muted editor-help">Recommended: transparent PNG/WebP, square, below 500KB.</p>
+              {logoError && <p className="error">{logoError}</p>}
+              <label className="checkbox-row">
+                <input
+                  type="checkbox"
+                  name="removeLogoImage"
+                  checked={removeLogo}
+                  onChange={(event) => setRemoveLogo(event.target.checked)}
+                />
+                Remove uploaded image and use text logo
+              </label>
+            </div>
           </div>
 
           <div className="grid grid-2">
@@ -68,7 +133,7 @@ export function HomeContentForm({
             </div>
 
             <div>
-              <label htmlFor="brandMark">Logo mark / emoji</label>
+              <label htmlFor="brandMark">Logo mark / fallback icon</label>
               <input
                 id="brandMark"
                 name="brandMark"
@@ -76,7 +141,7 @@ export function HomeContentForm({
                 maxLength={4}
                 defaultValue={content.brandMark}
               />
-              <p className="muted editor-help">Example: ↗, 🏃, ⚡, R</p>
+              <p className="muted editor-help">Used if no image logo is uploaded.</p>
             </div>
           </div>
 

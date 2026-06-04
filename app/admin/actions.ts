@@ -73,13 +73,15 @@ const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 const updateHomeContentSchema = z.object({
   brandName: z.string().min(2).max(40),
   brandMark: z.string().min(1).max(4),
+  logoImageDataUrl: z.string().max(800000).optional(),
+  removeLogoImage: z.coerce.boolean().default(false),
   themePrimary: hexColorSchema,
   themeSecondary: hexColorSchema,
   themeBackground: hexColorSchema,
   themeDark: hexColorSchema,
   heroEyebrow: z.string().min(2).max(80),
-  heroTitle: z.string().min(3).max(160),
-  heroDescription: z.string().min(3).max(2000),
+  heroTitle: z.string().min(3).max(180),
+  heroDescription: z.string().min(3).max(3000),
 });
 
 export async function updateHomeContentAction(_: unknown, formData: FormData) {
@@ -88,6 +90,8 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
   const parsed = updateHomeContentSchema.safeParse({
     brandName: formData.get("brandName"),
     brandMark: formData.get("brandMark"),
+    logoImageDataUrl: String(formData.get("logoImageDataUrl") || ""),
+    removeLogoImage: formData.get("removeLogoImage") === "on",
     themePrimary: formData.get("themePrimaryText") || formData.get("themePrimary"),
     themeSecondary: formData.get("themeSecondaryText") || formData.get("themeSecondary"),
     themeBackground: formData.get("themeBackgroundText") || formData.get("themeBackground"),
@@ -97,13 +101,18 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
     heroDescription: formData.get("heroDescription"),
   });
 
-  if (!parsed.success) return { error: "Please enter valid home content." };
+  if (!parsed.success) return { error: "Please enter valid home content. Logo image must be a small PNG/JPG/WebP under about 500KB." };
+
+  const logoImageDataUrl = parsed.data.removeLogoImage
+    ? null
+    : parsed.data.logoImageDataUrl || null;
 
   await prisma.siteContent.upsert({
     where: { key: HOME_CONTENT_KEY },
     update: {
       brandName: parsed.data.brandName,
       brandMark: parsed.data.brandMark,
+      logoImageDataUrl,
       themePrimary: parsed.data.themePrimary,
       themeSecondary: parsed.data.themeSecondary,
       themeBackground: parsed.data.themeBackground,
@@ -116,6 +125,7 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
       key: HOME_CONTENT_KEY,
       brandName: parsed.data.brandName,
       brandMark: parsed.data.brandMark,
+      logoImageDataUrl,
       themePrimary: parsed.data.themePrimary,
       themeSecondary: parsed.data.themeSecondary,
       themeBackground: parsed.data.themeBackground,

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 export function PageLoadingOverlay({
   show,
-  label = "Preparing your run...",
+  label = "Warming up your run...",
 }: {
   show?: boolean;
   label?: string;
@@ -82,72 +82,49 @@ export function PageLoadingOverlay({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="page-loading-overlay route-loading-overlay"
+      className="page-loading-overlay coastal-loading-overlay"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <div className="route-loading-ambient" aria-hidden="true">
-        <span className="route-orb route-orb-one" />
-        <span className="route-orb route-orb-two" />
-        <span className="route-orb route-orb-three" />
-        <span className="route-grid" />
+      <div className="coastal-loading-scene" aria-hidden="true">
+        <span className="coastal-loading-sun" />
+        <span className="coastal-loading-cloud cloud-a" />
+        <span className="coastal-loading-cloud cloud-b" />
+        <span className="coastal-loading-sweat sweat-a" />
+        <span className="coastal-loading-sweat sweat-b" />
+        <span className="coastal-loading-sweat sweat-c" />
+        <span className="coastal-loading-wave wave-a" />
+        <span className="coastal-loading-wave wave-b" />
       </div>
 
-      <section className="route-loading-card" aria-label={label}>
-        <div className="route-loading-topline">
-          <span className="route-loading-brand">RUN MINI</span>
-          <span className="route-loading-live">
-            <i /> Processing
-          </span>
+      <section className="coastal-loading-card" aria-label={label}>
+        <div className="coastal-loading-badge">
+          <span className="pulse-dot" />
+          Run Mini
         </div>
 
-        <div className="route-map-panel" aria-hidden="true">
-          <svg className="route-map-svg" viewBox="0 0 360 210" fill="none">
-            <path
-              className="route-map-shadow"
-              d="M28 158 C76 52, 130 154, 178 86 S271 42, 328 122"
-            />
-            <path
-              className="route-map-base"
-              d="M28 158 C76 52, 130 154, 178 86 S271 42, 328 122"
-            />
-            <path
-              className="route-map-active"
-              d="M28 158 C76 52, 130 154, 178 86 S271 42, 328 122"
-            />
-            <circle className="route-check route-check-one" cx="28" cy="158" r="8" />
-            <circle className="route-check route-check-two" cx="178" cy="86" r="8" />
-            <circle className="route-check route-check-three" cx="328" cy="122" r="8" />
-          </svg>
-
-          <div className="route-runner-chip">
-            <span className="route-runner-emoji">🏃</span>
-          </div>
-
-          <div className="route-map-stat route-map-stat-left">
-            <strong>PACE</strong>
-            <span>Locked</span>
-          </div>
-          <div className="route-map-stat route-map-stat-right">
-            <strong>SYNC</strong>
-            <span>Live</span>
-          </div>
+        <div className="coastal-loading-track" aria-hidden="true">
+          <span className="coastal-loading-runner">🏃‍♂️</span>
+          <span className="coastal-loading-path" />
+          <span className="coastal-loading-check check-one" />
+          <span className="coastal-loading-check check-two" />
+          <span className="coastal-loading-check check-three" />
         </div>
 
-        <div className="route-loading-copy">
-          <span className="route-loading-kicker">Please wait</span>
+        <div className="coastal-loading-copy">
+          <span>Sky · Sea · Sweat</span>
           <h2>{label}</h2>
-          <p>The screen is locked while we save your action and move you to the next step.</p>
+          <p>Locking the screen while we save your action and prepare the next step.</p>
         </div>
 
-        <div className="route-loading-progress" aria-hidden="true">
+        <div className="coastal-loading-progress" aria-hidden="true">
           <span />
         </div>
 
-        <div className="route-loading-steps" aria-hidden="true">
-          <span className="is-active">Secure</span>
-          <span>Update</span>
+        <div className="coastal-loading-status" aria-hidden="true">
+          <span>Warm up</span>
+          <span>Sync</span>
           <span>Ready</span>
         </div>
       </section>
