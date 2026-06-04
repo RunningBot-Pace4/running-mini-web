@@ -7,6 +7,7 @@ import "./globals.css";
 import { getCurrentUser } from "@/lib/session";
 import { logoutAction } from "@/app/auth/actions";
 import { getHomeContent } from "@/lib/site-content";
+import { getThemePreset } from "@/lib/theme-presets";
 
 export const metadata: Metadata = {
   title: "Run Mini Web",
@@ -32,10 +33,11 @@ export const metadata: Metadata = {
 type ThemeStyle = CSSProperties & Record<`--${string}`, string>;
 
 function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): ThemeStyle {
-  const primary = content.themePrimary || "#1d6fa3";
-  const secondary = content.themeSecondary || "#ff7a45";
-  const background = content.themeBackground || "#f8fbfd";
-  const dark = content.themeDark || "#0b1f33";
+  const preset = getThemePreset(content.themePreset);
+  const primary = content.themePrimary || preset.primary;
+  const secondary = content.themeSecondary || preset.secondary;
+  const background = content.themeBackground || preset.background;
+  const dark = content.themeDark || preset.dark;
 
   return {
     "--accent": primary,
@@ -72,7 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en">
-      <body style={buildThemeStyle(siteContent)}>
+      <body style={buildThemeStyle(siteContent)} data-theme-preset={siteContent.themePreset || "coastal-sunrise"}>
         <header className="topbar cn-topbar">
           <div className="topbar-inner cn-topbar-inner">
             <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">

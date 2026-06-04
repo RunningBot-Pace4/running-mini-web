@@ -515,3 +515,43 @@ Keep the Vercel build command:
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+
+## Latest update: fixed 10-theme selector and new loading screen
+
+Admin no longer needs to manually tune theme colors one by one.
+
+Open:
+
+```text
+/admin → Edit home page hero
+```
+
+Then choose one of the 10 fixed themes:
+
+1. Coastal Sunrise
+2. Ocean Velocity
+3. Sweat Orange
+4. Midnight Run
+5. Forest Trail
+6. Desert Dawn
+7. Neon Track
+8. Clean Sky
+9. Coral Energy
+10. Royal Marathon
+
+The selected theme automatically applies the correct primary, accent, background, and dark/header colors.
+
+The loading screen has also been redesigned again with a route-map ocean launch animation, moving runner marker, sky/sea/sweat background, progress bar, and full click blocking.
+
+Database note: this update adds:
+
+```text
+SiteContent.themePreset
+```
+
+Keep Vercel build command:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

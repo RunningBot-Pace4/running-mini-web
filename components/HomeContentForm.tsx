@@ -1,9 +1,10 @@
 "use client";
 
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
-import { useActionState, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useActionState, useMemo, useState } from "react";
+import type { CSSProperties, ChangeEvent } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
+import { getThemePreset, THEME_PRESETS } from "@/lib/theme-presets";
 
 type State = { error?: string; success?: string } | undefined;
 
@@ -11,6 +12,7 @@ type HomeContent = {
   brandName: string;
   brandMark: string;
   logoImageDataUrl?: string | null;
+  themePreset?: string | null;
   themePrimary: string;
   themeSecondary: string;
   themeBackground: string;
@@ -19,13 +21,6 @@ type HomeContent = {
   heroTitle: string;
   heroDescription: string;
 };
-
-const colorFields = [
-  { id: "themePrimary", label: "Sea primary" },
-  { id: "themeSecondary", label: "Sunrise accent" },
-  { id: "themeBackground", label: "Sky background" },
-  { id: "themeDark", label: "Deep navy" },
-] as const;
 
 export function HomeContentForm({
   content,
@@ -38,16 +33,9 @@ export function HomeContentForm({
   const [logoImageDataUrl, setLogoImageDataUrl] = useState(content.logoImageDataUrl || "");
   const [logoError, setLogoError] = useState("");
   const [removeLogo, setRemoveLogo] = useState(false);
-  const [colors, setColors] = useState({
-    themePrimary: content.themePrimary,
-    themeSecondary: content.themeSecondary,
-    themeBackground: content.themeBackground,
-    themeDark: content.themeDark,
-  });
+  const [selectedTheme, setSelectedTheme] = useState(getThemePreset(content.themePreset).key);
 
-  function setColor(id: keyof typeof colors, value: string) {
-    setColors((current) => ({ ...current, [id]: value }));
-  }
+  const previewTheme = useMemo(() => getThemePreset(selectedTheme), [selectedTheme]);
 
   async function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
     setLogoError("");
@@ -77,19 +65,24 @@ export function HomeContentForm({
 
   return (
     <>
-      <PageLoadingOverlay show={pending} label="Saving home content..." />
+      <PageLoadingOverlay show={pending} label="Saving theme..." />
       <form className="form-stack" action={formAction}>
         <div className="theme-editor-card coastal-admin-card">
           <div>
-            <span className="eyebrow">Brand logo & coastal theme</span>
-            <h3>Make the club feel premium</h3>
+            <span className="eyebrow">Brand logo & theme</span>
+            <h3>Choose one fixed design theme</h3>
             <p className="muted">
-              Upload a logo image, keep a text fallback, and tune the sky/sea/sunrise colors used across the web.
+              No more difficult color tuning. Pick one of the 10 ready-made themes below. The web will apply the matching colors automatically.
             </p>
           </div>
 
           <div className="logo-upload-panel">
-            <div className="logo-preview-card">
+            <div
+              className="logo-preview-card"
+              style={{
+                background: `linear-gradient(135deg, ${previewTheme.primary}, ${previewTheme.secondary})`,
+              }}
+            >
               {logoImageDataUrl && !removeLogo ? (
                 <img src={logoImageDataUrl} alt="Current logo preview" />
               ) : (
@@ -145,29 +138,46 @@ export function HomeContentForm({
             </div>
           </div>
 
-          <div className="theme-color-grid">
-            {colorFields.map((field) => (
-              <div className="theme-color-field" key={field.id}>
-                <label htmlFor={field.id}>{field.label}</label>
-                <div className="color-input-row">
-                  <input
-                    id={field.id}
-                    name={field.id}
-                    type="color"
-                    value={colors[field.id]}
-                    onChange={(event) => setColor(field.id, event.target.value)}
-                    aria-label={field.label}
-                  />
-                  <input
-                    name={`${field.id}Text`}
-                    value={colors[field.id]}
-                    onChange={(event) => setColor(field.id, event.target.value)}
-                    pattern="^#[0-9a-fA-F]{6}$"
-                    aria-label={`${field.label} hex code`}
-                  />
-                </div>
+          <div className="fixed-theme-picker">
+            <div className="fixed-theme-picker-head">
+              <div>
+                <label>Website theme</label>
+                <p className="muted editor-help">Choose one. Admin no longer needs to manually adjust four separate colors.</p>
               </div>
-            ))}
+              <strong>{previewTheme.name}</strong>
+            </div>
+
+            <div className="theme-preset-grid">
+              {THEME_PRESETS.map((theme) => (
+                <label
+                  className={`theme-preset-card ${selectedTheme === theme.key ? "is-selected" : ""}`}
+                  key={theme.key}
+                  style={{
+                    "--preset-primary": theme.primary,
+                    "--preset-secondary": theme.secondary,
+                    "--preset-bg": theme.background,
+                    "--preset-dark": theme.dark,
+                  } as CSSProperties}
+                >
+                  <input
+                    type="radio"
+                    name="themePreset"
+                    value={theme.key}
+                    checked={selectedTheme === theme.key}
+                    onChange={() => setSelectedTheme(theme.key)}
+                  />
+                  <span className="theme-preset-swatch" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="theme-preset-copy">
+                    <strong>{theme.name}</strong>
+                    <small>{theme.tagline}</small>
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
 

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 export function PageLoadingOverlay({
   show,
-  label = "Warming up your run...",
+  label = "Preparing your run...",
 }: {
   show?: boolean;
   label?: string;
@@ -82,50 +82,61 @@ export function PageLoadingOverlay({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="page-loading-overlay coastal-loading-overlay"
+      className="page-loading-overlay pace-loading-overlay"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <div className="coastal-loading-scene" aria-hidden="true">
-        <span className="coastal-loading-sun" />
-        <span className="coastal-loading-cloud cloud-a" />
-        <span className="coastal-loading-cloud cloud-b" />
-        <span className="coastal-loading-sweat sweat-a" />
-        <span className="coastal-loading-sweat sweat-b" />
-        <span className="coastal-loading-sweat sweat-c" />
-        <span className="coastal-loading-wave wave-a" />
-        <span className="coastal-loading-wave wave-b" />
+      <div className="pace-loading-sky" aria-hidden="true">
+        <span className="pace-loading-sun" />
+        <span className="pace-loading-cloud cloud-one" />
+        <span className="pace-loading-cloud cloud-two" />
+        <span className="pace-loading-sweat sweat-one" />
+        <span className="pace-loading-sweat sweat-two" />
+        <span className="pace-loading-sweat sweat-three" />
+        <span className="pace-loading-wave wave-one" />
+        <span className="pace-loading-wave wave-two" />
       </div>
 
-      <section className="coastal-loading-card" aria-label={label}>
-        <div className="coastal-loading-badge">
-          <span className="pulse-dot" />
-          Run Mini
+      <section className="pace-loading-card" aria-label={label}>
+        <div className="pace-loading-topline">
+          <span className="pace-live-dot" />
+          Run Mini is working
         </div>
 
-        <div className="coastal-loading-track" aria-hidden="true">
-          <span className="coastal-loading-runner">🏃‍♂️</span>
-          <span className="coastal-loading-path" />
-          <span className="coastal-loading-check check-one" />
-          <span className="coastal-loading-check check-two" />
-          <span className="coastal-loading-check check-three" />
+        <div className="pace-loading-route" aria-hidden="true">
+          <svg viewBox="0 0 320 150" role="img">
+            <path
+              className="pace-route-shadow"
+              d="M18 116 C58 42 100 44 130 94 S206 142 236 76 S292 40 306 82"
+              fill="none"
+            />
+            <path
+              className="pace-route-line"
+              d="M18 116 C58 42 100 44 130 94 S206 142 236 76 S292 40 306 82"
+              fill="none"
+            />
+          </svg>
+          <span className="pace-runner-dot">
+            <span>🏃</span>
+          </span>
+          <span className="pace-finish-flag">🏁</span>
         </div>
 
-        <div className="coastal-loading-copy">
-          <span>Sky · Sea · Sweat</span>
+        <div className="pace-loading-copy">
+          <span className="pace-kicker">Sky · Sea · Sweat</span>
           <h2>{label}</h2>
-          <p>Locking the screen while we save your action and prepare the next step.</p>
+          <p>Please hold on. We are locking the screen, saving your action, and moving you to the next step.</p>
         </div>
 
-        <div className="coastal-loading-progress" aria-hidden="true">
+        <div className="pace-loading-progress" aria-hidden="true">
           <span />
         </div>
 
-        <div className="coastal-loading-status" aria-hidden="true">
-          <span>Warm up</span>
-          <span>Sync</span>
-          <span>Ready</span>
+        <div className="pace-loading-steps" aria-hidden="true">
+          <span>Secure</span>
+          <span>Save</span>
+          <span>Refresh</span>
         </div>
       </section>
     </div>,

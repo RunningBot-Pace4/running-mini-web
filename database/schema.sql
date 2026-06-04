@@ -51,6 +51,7 @@ CREATE TABLE "SiteContent" (
   "brandName" TEXT NOT NULL DEFAULT 'Run Mini',
   "brandMark" TEXT NOT NULL DEFAULT '↗',
   "logoImageDataUrl" TEXT,
+  "themePreset" TEXT NOT NULL DEFAULT 'coastal-sunrise',
   "themePrimary" TEXT NOT NULL DEFAULT '#1d6fa3',
   "themeSecondary" TEXT NOT NULL DEFAULT '#ff7a45',
   "themeBackground" TEXT NOT NULL DEFAULT '#f8fbfd',

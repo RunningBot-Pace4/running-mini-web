@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/session";
 import { slugify } from "@/lib/slug";
 import { parseDateTimeLocal } from "@/lib/datetime";
 import { HOME_CONTENT_KEY } from "@/lib/site-content";
+import { getThemePreset, isThemePresetKey } from "@/lib/theme-presets";
 import { SCORE_SETTING_KEY } from "@/lib/score-config";
 import { calculateScore, getScoreSettings } from "@/lib/scoring";
 
@@ -68,17 +69,12 @@ export async function createEventAction(_: unknown, formData: FormData) {
 }
 
 
-const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
-
 const updateHomeContentSchema = z.object({
   brandName: z.string().min(2).max(40),
   brandMark: z.string().min(1).max(4),
   logoImageDataUrl: z.string().max(800000).optional(),
   removeLogoImage: z.coerce.boolean().default(false),
-  themePrimary: hexColorSchema,
-  themeSecondary: hexColorSchema,
-  themeBackground: hexColorSchema,
-  themeDark: hexColorSchema,
+  themePreset: z.string().refine(isThemePresetKey, "Please choose one of the fixed themes."),
   heroEyebrow: z.string().min(2).max(80),
   heroTitle: z.string().min(3).max(180),
   heroDescription: z.string().min(3).max(3000),
@@ -92,17 +88,15 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
     brandMark: formData.get("brandMark"),
     logoImageDataUrl: String(formData.get("logoImageDataUrl") || ""),
     removeLogoImage: formData.get("removeLogoImage") === "on",
-    themePrimary: formData.get("themePrimaryText") || formData.get("themePrimary"),
-    themeSecondary: formData.get("themeSecondaryText") || formData.get("themeSecondary"),
-    themeBackground: formData.get("themeBackgroundText") || formData.get("themeBackground"),
-    themeDark: formData.get("themeDarkText") || formData.get("themeDark"),
+    themePreset: formData.get("themePreset"),
     heroEyebrow: formData.get("heroEyebrow"),
     heroTitle: formData.get("heroTitle"),
     heroDescription: formData.get("heroDescription"),
   });
 
-  if (!parsed.success) return { error: "Please enter valid home content. Logo image must be a small PNG/JPG/WebP under about 500KB." };
+  if (!parsed.success) return { error: "Please enter valid home content. Choose one of the 10 themes and use a small PNG/JPG/WebP logo under about 500KB." };
 
+  const selectedTheme = getThemePreset(parsed.data.themePreset);
   const logoImageDataUrl = parsed.data.removeLogoImage
     ? null
     : parsed.data.logoImageDataUrl || null;
@@ -113,10 +107,11 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
       brandName: parsed.data.brandName,
       brandMark: parsed.data.brandMark,
       logoImageDataUrl,
-      themePrimary: parsed.data.themePrimary,
-      themeSecondary: parsed.data.themeSecondary,
-      themeBackground: parsed.data.themeBackground,
-      themeDark: parsed.data.themeDark,
+      themePreset: selectedTheme.key,
+      themePrimary: selectedTheme.primary,
+      themeSecondary: selectedTheme.secondary,
+      themeBackground: selectedTheme.background,
+      themeDark: selectedTheme.dark,
       heroEyebrow: parsed.data.heroEyebrow,
       heroTitle: parsed.data.heroTitle,
       heroDescription: parsed.data.heroDescription,
@@ -126,10 +121,11 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
       brandName: parsed.data.brandName,
       brandMark: parsed.data.brandMark,
       logoImageDataUrl,
-      themePrimary: parsed.data.themePrimary,
-      themeSecondary: parsed.data.themeSecondary,
-      themeBackground: parsed.data.themeBackground,
-      themeDark: parsed.data.themeDark,
+      themePreset: selectedTheme.key,
+      themePrimary: selectedTheme.primary,
+      themeSecondary: selectedTheme.secondary,
+      themeBackground: selectedTheme.background,
+      themeDark: selectedTheme.dark,
       heroEyebrow: parsed.data.heroEyebrow,
       heroTitle: parsed.data.heroTitle,
       heroDescription: parsed.data.heroDescription,

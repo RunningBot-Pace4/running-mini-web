@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { DEFAULT_THEME_PRESET, getThemePreset } from "./theme-presets";
 
 export const HOME_CONTENT_KEY = "home";
 
@@ -6,10 +7,11 @@ export const DEFAULT_HOME_CONTENT = {
   brandName: "Run Mini",
   brandMark: "↗",
   logoImageDataUrl: null as string | null,
-  themePrimary: "#1d6fa3",
-  themeSecondary: "#ff7a45",
-  themeBackground: "#f8fbfd",
-  themeDark: "#0b1f33",
+  themePreset: DEFAULT_THEME_PRESET,
+  themePrimary: getThemePreset(DEFAULT_THEME_PRESET).primary,
+  themeSecondary: getThemePreset(DEFAULT_THEME_PRESET).secondary,
+  themeBackground: getThemePreset(DEFAULT_THEME_PRESET).background,
+  themeDark: getThemePreset(DEFAULT_THEME_PRESET).dark,
   heroEyebrow: "Coastal running challenge",
   heroTitle: "Sweat with the sunrise.\nRun by the sea.",
   heroDescription:

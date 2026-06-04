@@ -44,7 +44,7 @@ export default async function AdminPage() {
       <div className="card">
         <h2>Edit home page hero</h2>
         <p className="muted">
-          Upload the logo image, update the public home title, intro text, and sky/sea/sunrise theme colors. The description supports the toolbar formatting.
+          Upload the logo image, update the public home title and intro text, then choose one of 10 fixed ready-made themes. The description supports the toolbar formatting.
         </p>
         <HomeContentForm content={homeContent} action={updateHomeContentAction} />
       </div>

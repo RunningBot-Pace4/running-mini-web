@@ -191,6 +191,7 @@ model SiteContent {
   brandName        String   @default("Run Mini")
   brandMark        String   @default("↗")
   logoImageDataUrl String?  @db.Text
+  themePreset      String   @default("coastal-sunrise")
   themePrimary     String   @default("#1d6fa3")
   themeSecondary   String   @default("#ff7a45")
   themeBackground  String   @default("#f8fbfd")
