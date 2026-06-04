@@ -430,3 +430,52 @@ npx prisma db push --accept-data-loss && npm run seed && npm run build
 ## Loading Overlay Redesign
 
 The loading screen has been redesigned into a route-map style full-screen experience. It blocks user clicks, touch, scrolling, and keyboard input while an action is processing.
+
+
+## Home screen shortcut / PWA install
+
+The app includes a Progressive Web App manifest, icons, a lightweight service worker, and an install prompt.
+
+After deployment over HTTPS, users can add Run Mini to their phone home screen.
+
+### Android Chrome
+
+1. Open the public website.
+2. Tap the **Add Run Mini to Home Screen** prompt, or open browser menu **⋮**.
+3. Choose **Install app** or **Add to Home screen**.
+
+### iPhone Safari
+
+1. Open the public website in Safari.
+2. Tap the **Share** button.
+3. Choose **Add to Home Screen**.
+4. Tap **Add**.
+
+If the prompt does not show, check that the public URL is HTTPS and the manifest loads at `/manifest.webmanifest`.
+
+
+## Latest update: mobile logout, editable logo, editable theme colors
+
+This version adds:
+
+- Mobile bottom-tab logout button for logged-in users.
+- Admin-editable header logo name and logo mark.
+- Admin-editable theme colors:
+  - Primary color
+  - Highlight color
+  - Background color
+  - Dark/header color
+
+Admin path:
+
+```text
+/admin → Edit home page hero → Brand logo and theme
+```
+
+After saving, the header logo and main theme colors update across the web.
+
+Database note: this update adds new columns to `SiteContent`, so the Vercel build command should remain:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

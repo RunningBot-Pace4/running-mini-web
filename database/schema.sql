@@ -48,6 +48,12 @@ CREATE TABLE "ScoreSetting" (
 CREATE TABLE "SiteContent" (
   "id" TEXT PRIMARY KEY,
   "key" TEXT NOT NULL UNIQUE,
+  "brandName" TEXT NOT NULL DEFAULT 'Run Mini',
+  "brandMark" TEXT NOT NULL DEFAULT '↗',
+  "themePrimary" TEXT NOT NULL DEFAULT '#ff5a1f',
+  "themeSecondary" TEXT NOT NULL DEFAULT '#ffb000',
+  "themeBackground" TEXT NOT NULL DEFAULT '#fff8ec',
+  "themeDark" TEXT NOT NULL DEFAULT '#15120f',
   "heroEyebrow" TEXT NOT NULL,
   "heroTitle" TEXT NOT NULL,
   "heroDescription" TEXT NOT NULL,

@@ -68,7 +68,15 @@ export async function createEventAction(_: unknown, formData: FormData) {
 }
 
 
+const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+
 const updateHomeContentSchema = z.object({
+  brandName: z.string().min(2).max(40),
+  brandMark: z.string().min(1).max(4),
+  themePrimary: hexColorSchema,
+  themeSecondary: hexColorSchema,
+  themeBackground: hexColorSchema,
+  themeDark: hexColorSchema,
   heroEyebrow: z.string().min(2).max(80),
   heroTitle: z.string().min(3).max(160),
   heroDescription: z.string().min(3).max(2000),
@@ -78,6 +86,12 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
   await requireAdmin();
 
   const parsed = updateHomeContentSchema.safeParse({
+    brandName: formData.get("brandName"),
+    brandMark: formData.get("brandMark"),
+    themePrimary: formData.get("themePrimaryText") || formData.get("themePrimary"),
+    themeSecondary: formData.get("themeSecondaryText") || formData.get("themeSecondary"),
+    themeBackground: formData.get("themeBackgroundText") || formData.get("themeBackground"),
+    themeDark: formData.get("themeDarkText") || formData.get("themeDark"),
     heroEyebrow: formData.get("heroEyebrow"),
     heroTitle: formData.get("heroTitle"),
     heroDescription: formData.get("heroDescription"),
@@ -88,12 +102,24 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
   await prisma.siteContent.upsert({
     where: { key: HOME_CONTENT_KEY },
     update: {
+      brandName: parsed.data.brandName,
+      brandMark: parsed.data.brandMark,
+      themePrimary: parsed.data.themePrimary,
+      themeSecondary: parsed.data.themeSecondary,
+      themeBackground: parsed.data.themeBackground,
+      themeDark: parsed.data.themeDark,
       heroEyebrow: parsed.data.heroEyebrow,
       heroTitle: parsed.data.heroTitle,
       heroDescription: parsed.data.heroDescription,
     },
     create: {
       key: HOME_CONTENT_KEY,
+      brandName: parsed.data.brandName,
+      brandMark: parsed.data.brandMark,
+      themePrimary: parsed.data.themePrimary,
+      themeSecondary: parsed.data.themeSecondary,
+      themeBackground: parsed.data.themeBackground,
+      themeDark: parsed.data.themeDark,
       heroEyebrow: parsed.data.heroEyebrow,
       heroTitle: parsed.data.heroTitle,
       heroDescription: parsed.data.heroDescription,

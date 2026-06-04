@@ -3,6 +3,12 @@ import { prisma } from "./prisma";
 export const HOME_CONTENT_KEY = "home";
 
 export const DEFAULT_HOME_CONTENT = {
+  brandName: "Run Mini",
+  brandMark: "↗",
+  themePrimary: "#ff5a1f",
+  themeSecondary: "#ffb000",
+  themeBackground: "#fff8ec",
+  themeDark: "#15120f",
   heroEyebrow: "Mobile running challenge",
   heroTitle: "Run. Vote. Sync. Score.",
   heroDescription:

@@ -44,7 +44,7 @@ export default async function AdminPage() {
       <div className="card">
         <h2>Edit home page hero</h2>
         <p className="muted">
-          Update the public home page title and intro text. The description supports the toolbar formatting.
+          Update the logo, public home page title, intro text, and theme colors. The description supports the toolbar formatting.
         </p>
         <HomeContentForm content={homeContent} action={updateHomeContentAction} />
       </div>

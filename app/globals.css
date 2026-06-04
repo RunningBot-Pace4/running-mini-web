@@ -5895,3 +5895,242 @@ body.is-page-loading > *:not(.page-loading-overlay) {
     font-size: 11px;
   }
 }
+
+
+/* PWA install shortcut prompt */
+.pwa-install-card {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 70;
+  width: min(calc(100vw - 24px), 480px);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 44px 14px 14px;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(23, 18, 13, 0.94), rgba(48, 27, 15, 0.94)),
+    radial-gradient(circle at top right, rgba(255, 90, 31, 0.48), transparent 9rem);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 26px 80px rgba(23, 18, 13, 0.42);
+  backdrop-filter: blur(16px);
+}
+
+.pwa-icon-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.pwa-icon-wrap img {
+  border-radius: 14px;
+}
+
+.pwa-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pwa-copy strong {
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+
+.pwa-copy span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.pwa-steps {
+  margin-top: 8px;
+  display: grid;
+  gap: 3px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pwa-install-button {
+  min-height: 40px;
+  padding: 0 16px;
+  background: linear-gradient(135deg, #ffb000, #ff5a1f);
+  color: #16100c;
+  border: 0;
+  box-shadow: none;
+}
+
+.pwa-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .pwa-install-card {
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    grid-template-columns: auto 1fr;
+  }
+
+  .pwa-install-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+
+/* Admin-editable brand and mobile logout update */
+.cn-brand-mark,
+.brand-mark {
+  background: linear-gradient(135deg, var(--brand-dark, var(--ink)), var(--brand-primary, var(--accent))) !important;
+}
+
+.cn-register-pill,
+.cn-main-cta,
+.button,
+button[type="submit"]:not(.ghost):not(.cn-mobile-logout-button) {
+  background-color: var(--brand-primary, var(--accent));
+}
+
+.cn-app-hero,
+.guest-cn-app-hero {
+  background:
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--brand-secondary, #ffb000) 86%, white 14%), transparent 10rem),
+    radial-gradient(circle at 78% 66%, color-mix(in srgb, var(--brand-primary, #ff5a1f) 82%, transparent), transparent 12rem),
+    linear-gradient(135deg, var(--brand-dark, #15120f) 0%, color-mix(in srgb, var(--brand-dark, #15120f) 72%, var(--brand-primary, #ff5a1f)) 58%, var(--brand-primary, #ff5a1f) 100%) !important;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 8%, color-mix(in srgb, var(--brand-secondary, #ffb000) 22%, transparent), transparent 28rem),
+    radial-gradient(circle at 90% 12%, color-mix(in srgb, var(--brand-primary, #ff5a1f) 18%, transparent), transparent 30rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-background, #fff8ec) 88%, white 12%) 0%, var(--brand-background, #fff8ec) 100%) !important;
+}
+
+.theme-editor-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--brand-secondary, #ffb000) 28%, transparent), transparent 10rem),
+    rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border);
+}
+
+.theme-editor-card h3 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  letter-spacing: -0.04em;
+}
+
+.theme-color-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.theme-color-field label {
+  margin-bottom: 6px;
+}
+
+.color-input-row {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.color-input-row input[type="color"] {
+  min-height: 48px;
+  width: 54px;
+  padding: 4px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.color-input-row input[type="text"],
+.color-input-row input:not([type]) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  text-transform: uppercase;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.cn-mobile-tabbar {
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important;
+}
+
+.cn-mobile-tabbar a,
+.cn-mobile-tabbar .logout-form,
+.cn-mobile-tabbar .cn-mobile-logout-button {
+  min-width: 0;
+}
+
+.cn-mobile-tabbar .logout-form {
+  display: grid;
+}
+
+.cn-mobile-tabbar .cn-mobile-logout-button {
+  min-height: 54px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  border-radius: 22px;
+  color: #76543d;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 950;
+  padding: 0;
+}
+
+.cn-mobile-tabbar .cn-mobile-logout-button:hover,
+.cn-mobile-tabbar .cn-mobile-logout-button:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, #b42318, #ef4444);
+}
+
+.cn-mobile-tabbar .cn-mobile-logout-button span {
+  display: block;
+}
+
+@media (max-width: 780px) {
+  .theme-color-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cn-mobile-tabbar {
+    width: min(calc(100% - 18px), 520px);
+    gap: 4px;
+    padding: 7px;
+  }
+
+  .cn-mobile-tabbar a,
+  .cn-mobile-tabbar .cn-mobile-logout-button {
+    min-height: 50px;
+    border-radius: 20px;
+    font-size: 11px;
+  }
+}

@@ -188,6 +188,12 @@ model ScoreSetting {
 model SiteContent {
   id              String   @id @default(cuid())
   key             String   @unique
+  brandName       String   @default("Run Mini")
+  brandMark       String   @default("↗")
+  themePrimary    String   @default("#ff5a1f")
+  themeSecondary  String   @default("#ffb000")
+  themeBackground String   @default("#fff8ec")
+  themeDark       String   @default("#15120f")
   heroEyebrow     String
   heroTitle       String
   heroDescription String   @db.Text
