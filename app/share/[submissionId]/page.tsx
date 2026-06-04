@@ -15,7 +15,7 @@ export async function generateMetadata({
     include: { user: true, event: true, activity: true },
   });
 
-  if (!submission) return {};
+  if (!submission || submission.status !== "APPROVED") return {};
 
   const title = `${submission.user.name} scored ${submission.totalPoints} points`;
   const description = `${submission.activity.name} · ${submission.distanceKm.toString()}km · ${submission.event.title}`;
@@ -43,7 +43,7 @@ export default async function SharePage({ params }: { params: Promise<{ submissi
     include: { user: true, event: true, activity: true },
   });
 
-  if (!submission) notFound();
+  if (!submission || submission.status !== "APPROVED") notFound();
 
   const shareText = `${submission.user.name} scored ${submission.totalPoints} points in ${submission.event.title}: ${submission.distanceKm.toString()}km run!`;
 

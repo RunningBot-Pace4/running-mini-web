@@ -3,7 +3,7 @@ import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
-import { updateEventDetailsAction, updateEventStatusAction } from "@/app/admin/actions";
+import { updateEventDetailsAction, updateEventStatusAction, updateSubmissionStatusAction } from "@/app/admin/actions";
 import { formatDateTime, formatDateTimeLocalInput, formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
 import { EditEventForm } from "@/components/EditEventForm";
@@ -40,6 +40,9 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
 
   const attendCount = event.votes.filter((vote) => vote.status === "ATTEND").length;
   const notAttendCount = event.votes.filter((vote) => vote.status === "NOT_ATTEND").length;
+  const pendingSubmissionCount = event.submissions.filter((submission) => submission.status === "PENDING").length;
+  const approvedSubmissionCount = event.submissions.filter((submission) => submission.status === "APPROVED").length;
+  const rejectedSubmissionCount = event.submissions.filter((submission) => submission.status === "REJECTED").length;
 
   return (
     <>
@@ -110,7 +113,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
         </div>
       )}
 
-      <div className="grid grid-2">
+      <div className="grid grid-3">
         <div className="card">
           <h2>{attendCount}</h2>
           <p className="muted">Attend votes</p>
@@ -118,6 +121,21 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
         <div className="card">
           <h2>{notAttendCount}</h2>
           <p className="muted">Not attend votes</p>
+        </div>
+        <div className="card">
+          <h2>{pendingSubmissionCount}</h2>
+          <p className="muted">Pending approvals</p>
+        </div>
+      </div>
+
+      <div className="grid grid-2">
+        <div className="card">
+          <h2>{approvedSubmissionCount}</h2>
+          <p className="muted">Approved submissions</p>
+        </div>
+        <div className="card">
+          <h2>{rejectedSubmissionCount}</h2>
+          <p className="muted">Rejected submissions</p>
         </div>
       </div>
 
@@ -162,8 +180,10 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
                 <th>Email</th>
                 <th>Run</th>
                 <th>Distance</th>
+                <th>Status</th>
                 <th>Points</th>
                 <th>Submitted</th>
+                <th>Approval</th>
               </tr>
             </thead>
             <tbody>
@@ -173,8 +193,35 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
                   <td>{submission.user.email}</td>
                   <td>{submission.activity.name}</td>
                   <td>{submission.distanceKm.toString()}km</td>
-                  <td>{submission.totalPoints}</td>
+                  <td>
+                    <span className={submission.status === "APPROVED" ? "badge success" : submission.status === "PENDING" ? "badge warning" : "badge danger"}>
+                      {submission.status}
+                    </span>
+                  </td>
+                  <td>{submission.status === "APPROVED" ? submission.totalPoints : "—"}</td>
                   <td>{formatDateTime(submission.createdAt)}</td>
+                  <td>
+                    <div className="row compact-actions">
+                      {submission.status !== "APPROVED" && (
+                        <form action={updateSubmissionStatusAction}>
+                          <input type="hidden" name="submissionId" value={submission.id} />
+                          <input type="hidden" name="status" value="APPROVED" />
+                          <FormSubmitButton className="secondary" pendingLabel="Approving...">
+                            Approve
+                          </FormSubmitButton>
+                        </form>
+                      )}
+                      {submission.status !== "REJECTED" && (
+                        <form action={updateSubmissionStatusAction}>
+                          <input type="hidden" name="submissionId" value={submission.id} />
+                          <input type="hidden" name="status" value="REJECTED" />
+                          <FormSubmitButton className="ghost danger-action" pendingLabel="Rejecting...">
+                            Reject
+                          </FormSubmitButton>
+                        </form>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -36,7 +36,7 @@ export function getStravaAuthorizeUrl(state: string, redirectUri: string) {
   url.searchParams.set("client_id", stravaClientId());
   url.searchParams.set("redirect_uri", redirectUri);
   url.searchParams.set("response_type", "code");
-  url.searchParams.set("approval_prompt", "auto");
+  url.searchParams.set("approval_prompt", process.env.STRAVA_APPROVAL_PROMPT || "force");
   url.searchParams.set("scope", "read,activity:read_all");
   url.searchParams.set("state", state);
   return url;

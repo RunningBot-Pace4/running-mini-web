@@ -113,6 +113,7 @@ export async function submitActivityAction(_: unknown, formData: FormData) {
 
   const scoreSettings = await getScoreSettings();
   const score = calculateScore(activity.distanceMeters, scoreSettings);
+  const submissionStatus = scoreSettings.requireSubmissionApproval ? "PENDING" : "APPROVED";
 
   await prisma.submission.upsert({
     where: {
@@ -127,7 +128,7 @@ export async function submitActivityAction(_: unknown, formData: FormData) {
       attendancePoints: score.attendancePoints,
       distancePoints: score.distancePoints,
       totalPoints: score.totalPoints,
-      status: "APPROVED",
+      status: submissionStatus,
     },
     create: {
       eventId: context.event.id,
@@ -137,13 +138,13 @@ export async function submitActivityAction(_: unknown, formData: FormData) {
       attendancePoints: score.attendancePoints,
       distancePoints: score.distancePoints,
       totalPoints: score.totalPoints,
-      status: "APPROVED",
+      status: submissionStatus,
     },
   });
 
   revalidatePath(`/events/${context.event.slug}`);
   revalidatePath("/account");
-  return { success: "Strava run submitted and scored." };
+  return { success: submissionStatus === "PENDING" ? "Strava run submitted. Waiting for admin approval before points count." : "Strava run submitted and scored." };
 }
 
 export async function submitManualDistanceAction(_: unknown, formData: FormData) {
@@ -162,6 +163,7 @@ export async function submitManualDistanceAction(_: unknown, formData: FormData)
   const distanceMeters = Math.round(parsed.data.distanceKm * 1000);
   const scoreSettings = await getScoreSettings();
   const score = calculateScore(distanceMeters, scoreSettings);
+  const submissionStatus = scoreSettings.requireSubmissionApproval ? "PENDING" : "APPROVED";
 
   const existingManualSubmission = await prisma.submission.findFirst({
     where: {
@@ -197,7 +199,7 @@ export async function submitManualDistanceAction(_: unknown, formData: FormData)
           attendancePoints: score.attendancePoints,
           distancePoints: score.distancePoints,
           totalPoints: score.totalPoints,
-          status: "APPROVED",
+          status: submissionStatus,
         },
       }),
     ]);
@@ -231,12 +233,12 @@ export async function submitManualDistanceAction(_: unknown, formData: FormData)
         attendancePoints: score.attendancePoints,
         distancePoints: score.distancePoints,
         totalPoints: score.totalPoints,
-        status: "APPROVED",
+        status: submissionStatus,
       },
     });
   }
 
   revalidatePath(`/events/${context.event.slug}`);
   revalidatePath("/account");
-  return { success: "Manual distance submitted and scored." };
+  return { success: submissionStatus === "PENDING" ? "Manual distance submitted. Waiting for admin approval before points count." : "Manual distance submitted and scored." };
 }

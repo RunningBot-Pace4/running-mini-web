@@ -14,6 +14,7 @@ export async function getScoreSettings(): Promise<ScoreSettingValues> {
   return {
     attendancePoints: setting.attendancePoints,
     perKmPoints: setting.perKmPoints,
+    requireSubmissionApproval: setting.requireSubmissionApproval,
   };
 }
 

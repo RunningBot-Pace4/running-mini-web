@@ -18,15 +18,16 @@ export default async function AccountPage() {
       orderBy: { updatedAt: "desc" },
     }),
     prisma.submission.findMany({
-      where: { userId: user.id, status: "APPROVED" },
+      where: { userId: user.id },
       include: { event: true, activity: true },
       orderBy: { createdAt: "desc" },
     }),
     prisma.stravaToken.findUnique({ where: { userId: user.id } }),
   ]);
 
-  const totalPoints = submissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
-  const totalDistance = submissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
+  const approvedSubmissions = submissions.filter((submission) => submission.status === "APPROVED");
+  const totalPoints = approvedSubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
+  const totalDistance = approvedSubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const attendVotes = votes.filter((vote) => vote.status === "ATTEND").length;
 
   return (
@@ -52,7 +53,7 @@ export default async function AccountPage() {
         </div>
         <div className="card stat-card">
           <span className="eyebrow">Runs</span>
-          <h2>{submissions.length}</h2>
+          <h2>{approvedSubmissions.length}</h2>
           <p className="muted">{totalDistance.toFixed(2)}km total distance</p>
         </div>
         <div className="card stat-card">
@@ -131,6 +132,7 @@ export default async function AccountPage() {
                 <th>Event</th>
                 <th>Run</th>
                 <th>Distance</th>
+                <th>Status</th>
                 <th>Points</th>
                 <th>Submitted</th>
               </tr>
@@ -143,14 +145,19 @@ export default async function AccountPage() {
                   </td>
                   <td>{submission.activity.name}</td>
                   <td>{submission.distanceKm.toString()}km</td>
-                  <td>{submission.totalPoints}</td>
+                  <td>
+                    <span className={submission.status === "APPROVED" ? "badge success" : submission.status === "PENDING" ? "badge warning" : "badge danger"}>
+                      {submission.status}
+                    </span>
+                  </td>
+                  <td>{submission.status === "APPROVED" ? submission.totalPoints : "—"}</td>
                   <td>{formatDateTime(submission.createdAt)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {submissions.length === 0 && <p className="muted">No approved run submissions yet.</p>}
+        {submissions.length === 0 && <p className="muted">No run submissions yet.</p>}
       </div>
     </>
   );

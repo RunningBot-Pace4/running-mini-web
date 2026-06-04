@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { syncStravaActivities } from "@/lib/strava";
+import { appBaseUrl } from "@/lib/strava-config";
 
 export async function GET(request: NextRequest) {
-  const appUrl = process.env.APP_URL || "http://localhost:3000";
+  const appUrl = appBaseUrl(request.nextUrl.origin);
   const user = await getCurrentUser();
   if (!user) return NextResponse.redirect(new URL("/login", appUrl));
 

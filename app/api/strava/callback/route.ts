@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/session";
+import { verifySignedOAuthState } from "@/lib/oauth-state";
 import { exchangeCodeForToken } from "@/lib/strava";
+import { appBaseUrl } from "@/lib/strava-config";
 
 function safeNext(value?: string) {
   if (!value || !value.startsWith("/") || value.startsWith("//")) return "/";
@@ -16,27 +16,23 @@ function redirectBack(appUrl: string, nextPath: string, key: string, value: stri
 }
 
 export async function GET(request: NextRequest) {
-  const appUrl = process.env.APP_URL || request.nextUrl.origin;
-  const user = await getCurrentUser();
-
-  const store = await cookies();
-  const expectedState = store.get("strava_oauth_state")?.value;
-  const nextPath = safeNext(store.get("strava_oauth_next")?.value);
-  store.delete("strava_oauth_state");
-  store.delete("strava_oauth_next");
-
-  if (!user) return NextResponse.redirect(new URL("/login", appUrl));
+  const appUrl = appBaseUrl(request.nextUrl.origin);
 
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const error = searchParams.get("error");
+  const verifiedState = verifySignedOAuthState(state);
+  const nextPath = safeNext(verifiedState?.nextPath);
 
   if (error) return redirectBack(appUrl, nextPath, "strava_error", error);
 
-  if (!code || !state || !expectedState || state !== expectedState) {
+  if (!code || !verifiedState) {
     return redirectBack(appUrl, nextPath, "strava_error", "invalid_state");
   }
+
+  const user = await prisma.user.findUnique({ where: { id: verifiedState.userId } });
+  if (!user) return NextResponse.redirect(new URL("/login", appUrl));
 
   try {
     const token = await exchangeCodeForToken(code);

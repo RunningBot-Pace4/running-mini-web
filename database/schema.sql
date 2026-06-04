@@ -4,7 +4,7 @@
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 CREATE TYPE "EventStatus" AS ENUM ('DRAFT', 'OPEN', 'CLOSED', 'ARCHIVED');
 CREATE TYPE "VoteStatus" AS ENUM ('ATTEND', 'NOT_ATTEND');
-CREATE TYPE "SubmissionStatus" AS ENUM ('APPROVED', 'REJECTED');
+CREATE TYPE "SubmissionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 CREATE TABLE "User" (
   "id" TEXT PRIMARY KEY,
@@ -40,6 +40,7 @@ CREATE TABLE "ScoreSetting" (
   "key" TEXT NOT NULL UNIQUE,
   "attendancePoints" INTEGER NOT NULL DEFAULT 1,
   "perKmPoints" INTEGER NOT NULL DEFAULT 2,
+  "requireSubmissionApproval" BOOLEAN NOT NULL DEFAULT false,
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
   "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
 );

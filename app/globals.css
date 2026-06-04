@@ -5335,3 +5335,563 @@ select:focus {
     font-size: 21px;
   }
 }
+
+
+
+.badge.warning {
+  color: #b45309;
+  background: #fff7d6;
+}
+
+.pending-text {
+  color: #b45309;
+  font-weight: 850;
+}
+
+.approval-setting-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 90, 31, 0.16);
+  background: linear-gradient(135deg, rgba(255, 247, 232, 0.95), rgba(255, 255, 255, 0.9));
+  cursor: pointer;
+}
+
+.approval-setting-card input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--cn-red, #ff4d1c);
+}
+
+.approval-setting-card span {
+  display: grid;
+  gap: 4px;
+}
+
+.approval-setting-card strong {
+  color: var(--cn-ink, #15110d);
+}
+
+.approval-setting-card small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.compact-actions {
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.compact-actions form {
+  margin: 0;
+}
+
+.compact-actions .button,
+.compact-actions button {
+  min-height: 38px;
+  padding: 9px 12px;
+  font-size: 12px;
+}
+
+.danger-action {
+  color: var(--danger) !important;
+  border-color: rgba(244, 63, 94, .22) !important;
+}
+
+.strava-config-card strong {
+  overflow-wrap: anywhere;
+}
+
+
+/* Route-map loading overlay redesign */
+html.is-page-loading,
+body.is-page-loading {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+body.is-page-loading > *:not(.page-loading-overlay) {
+  pointer-events: none !important;
+}
+
+.route-loading-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  display: grid !important;
+  place-items: center !important;
+  min-height: 100dvh !important;
+  padding: 22px !important;
+  pointer-events: auto !important;
+  touch-action: none !important;
+  user-select: none !important;
+  cursor: wait !important;
+  isolation: isolate !important;
+  background:
+    radial-gradient(circle at 14% 14%, rgba(255, 122, 0, 0.28), transparent 30rem),
+    radial-gradient(circle at 86% 18%, rgba(255, 45, 85, 0.26), transparent 28rem),
+    radial-gradient(circle at 52% 88%, rgba(7, 193, 96, 0.16), transparent 28rem),
+    linear-gradient(145deg, rgba(13, 9, 7, 0.96), rgba(34, 14, 8, 0.98) 48%, rgba(6, 6, 10, 0.98)) !important;
+  backdrop-filter: blur(20px) saturate(1.35);
+}
+
+.route-loading-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(255,255,255,0.07) 19%, transparent 20% 43%, rgba(255,255,255,0.045) 44%, transparent 45%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 30px);
+  opacity: 0.44;
+  animation: route-bg-drift 7s linear infinite;
+}
+
+.route-loading-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle, transparent 42%, rgba(0,0,0,0.46) 100%);
+}
+
+.route-loading-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.route-orb {
+  position: absolute;
+  width: 220px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  filter: blur(14px);
+  opacity: 0.34;
+  animation: route-orb-float 5.5s ease-in-out infinite alternate;
+}
+
+.route-orb-one {
+  left: -50px;
+  top: 12%;
+  background: #ff7a00;
+}
+
+.route-orb-two {
+  right: -70px;
+  bottom: 12%;
+  background: #ff2d55;
+  animation-delay: 0.6s;
+}
+
+.route-orb-three {
+  width: 160px;
+  left: 45%;
+  bottom: -60px;
+  background: #07c160;
+  animation-delay: 1s;
+}
+
+.route-grid {
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  background:
+    linear-gradient(rgba(255,255,255,0.10), transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.08), transparent 1px);
+  background-size: 48px 26px;
+  transform: perspective(540px) rotateX(64deg) translateY(28%);
+  transform-origin: bottom;
+  opacity: 0.36;
+  animation: route-grid-run 1.25s linear infinite;
+}
+
+.route-loading-card {
+  position: relative;
+  width: min(94vw, 470px);
+  padding: 18px;
+  border-radius: 36px;
+  color: #fff;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.17), rgba(255,255,255,0.06)),
+    rgba(16, 11, 9, 0.72);
+  border: 1px solid rgba(255,255,255,0.24);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.52),
+    inset 0 1px 0 rgba(255,255,255,0.28);
+  backdrop-filter: blur(24px) saturate(1.24);
+  display: grid;
+  gap: 16px;
+  overflow: hidden;
+  pointer-events: auto !important;
+  animation: route-card-in 0.32s ease-out both;
+}
+
+.route-loading-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 201, 74, 0.2), transparent 16rem),
+    linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transform: translateX(-120%);
+  animation: route-card-shine 2.2s ease-in-out infinite;
+}
+
+.route-loading-topline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.route-loading-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 13px;
+  border-radius: 999px;
+  color: #1d1008;
+  background: linear-gradient(135deg, #ffd36a, #ff9f1c);
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: 0.14em;
+  box-shadow: 0 12px 28px rgba(255, 159, 28, 0.28);
+}
+
+.route-loading-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 13px;
+  border-radius: 999px;
+  color: rgba(255,255,255,0.88);
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.route-loading-live i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #07c160;
+  box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.76);
+  animation: route-live-pulse 1.2s ease-out infinite;
+}
+
+.route-map-panel {
+  position: relative;
+  z-index: 1;
+  min-height: 220px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(255, 211, 106, 0.24), transparent 15rem),
+    linear-gradient(145deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.16);
+  overflow: hidden;
+}
+
+.route-map-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.16) 1px, transparent 1.5px),
+    linear-gradient(120deg, rgba(255, 122, 0, 0.12), transparent 40%, rgba(7, 193, 96, 0.10));
+  background-size: 24px 24px, auto;
+  opacity: 0.7;
+}
+
+.route-map-svg {
+  position: absolute;
+  inset: 8px 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 16px);
+  overflow: visible;
+}
+
+.route-map-shadow,
+.route-map-base,
+.route-map-active {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.route-map-shadow {
+  stroke: rgba(0,0,0,0.36);
+  stroke-width: 22;
+  filter: blur(8px);
+  transform: translateY(8px);
+}
+
+.route-map-base {
+  stroke: rgba(255,255,255,0.24);
+  stroke-width: 12;
+  stroke-dasharray: 2 20;
+}
+
+.route-map-active {
+  stroke: url("#unused");
+  stroke: #ffb000;
+  stroke-width: 8;
+  stroke-dasharray: 90 420;
+  animation: route-dash-run 1.25s ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(255, 176, 0, 0.72));
+}
+
+.route-check {
+  fill: #111;
+  stroke: #ffd36a;
+  stroke-width: 5;
+  filter: drop-shadow(0 0 12px rgba(255, 211, 106, 0.76));
+}
+
+.route-check-two {
+  stroke: #ff7a00;
+}
+
+.route-check-three {
+  stroke: #07c160;
+}
+
+.route-runner-chip {
+  position: absolute;
+  left: 12%;
+  top: 62%;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ff7a00, #ff2d55);
+  box-shadow: 0 18px 44px rgba(255, 77, 28, 0.44);
+  animation: route-runner-move 2.2s ease-in-out infinite;
+}
+
+.route-runner-chip::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,0.36);
+  animation: route-chip-pulse 1s ease-out infinite;
+}
+
+.route-runner-emoji {
+  font-size: 30px;
+  transform-origin: 50% 80%;
+  animation: route-runner-bounce 0.42s ease-in-out infinite alternate;
+}
+
+.route-map-stat {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  min-width: 80px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(9, 7, 5, 0.54);
+  border: 1px solid rgba(255,255,255,0.16);
+  backdrop-filter: blur(12px);
+}
+
+.route-map-stat strong {
+  color: #ffd36a;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+
+.route-map-stat span {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 950;
+}
+
+.route-map-stat-left {
+  left: 14px;
+  bottom: 14px;
+}
+
+.route-map-stat-right {
+  right: 14px;
+  top: 14px;
+  text-align: right;
+}
+
+.route-loading-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+}
+
+.route-loading-kicker {
+  color: #ffd36a;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.route-loading-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(28px, 7vw, 46px);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+.route-loading-copy p {
+  margin: 0;
+  max-width: 34rem;
+  color: rgba(255,255,255,0.72);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.route-loading-progress {
+  position: relative;
+  z-index: 1;
+  height: 12px;
+  padding: 2px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.16);
+}
+
+.route-loading-progress span {
+  display: block;
+  width: 44%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff2d55, #ff7a00, #ffd36a, #07c160);
+  box-shadow: 0 0 22px rgba(255, 159, 28, 0.54);
+  animation: route-progress-sweep 1s ease-in-out infinite alternate;
+}
+
+.route-loading-steps {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.route-loading-steps span {
+  display: grid;
+  place-items: center;
+  min-height: 38px;
+  border-radius: 16px;
+  color: rgba(255,255,255,0.64);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.route-loading-steps .is-active {
+  color: #1d1008;
+  background: linear-gradient(135deg, #ffd36a, #ff9f1c);
+}
+
+@keyframes route-bg-drift {
+  from { transform: translate3d(-2%, -1%, 0); }
+  to { transform: translate3d(2%, 1%, 0); }
+}
+
+@keyframes route-orb-float {
+  from { transform: translate3d(0, -10px, 0) scale(0.95); }
+  to { transform: translate3d(20px, 18px, 0) scale(1.08); }
+}
+
+@keyframes route-grid-run {
+  from { background-position: 0 0; }
+  to { background-position: 0 26px; }
+}
+
+@keyframes route-card-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes route-card-shine {
+  0%, 28% { transform: translateX(-140%); }
+  62%, 100% { transform: translateX(140%); }
+}
+
+@keyframes route-live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.76); }
+  100% { box-shadow: 0 0 0 12px rgba(7, 193, 96, 0); }
+}
+
+@keyframes route-dash-run {
+  from { stroke-dashoffset: 320; }
+  to { stroke-dashoffset: -120; }
+}
+
+@keyframes route-runner-move {
+  0% { left: 9%; top: 63%; transform: rotate(-9deg); }
+  34% { left: 42%; top: 34%; transform: rotate(8deg); }
+  68% { left: 69%; top: 23%; transform: rotate(-4deg); }
+  100% { left: 82%; top: 50%; transform: rotate(8deg); }
+}
+
+@keyframes route-runner-bounce {
+  from { transform: translateY(2px) rotate(-4deg); }
+  to { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes route-chip-pulse {
+  from { opacity: 0.9; transform: scale(0.86); }
+  to { opacity: 0; transform: scale(1.25); }
+}
+
+@keyframes route-progress-sweep {
+  from { transform: translateX(-14%); }
+  to { transform: translateX(142%); }
+}
+
+@media (max-width: 560px) {
+  .route-loading-overlay {
+    padding: 14px !important;
+  }
+
+  .route-loading-card {
+    width: min(96vw, 390px);
+    padding: 14px;
+    border-radius: 30px;
+    gap: 14px;
+  }
+
+  .route-map-panel {
+    min-height: 190px;
+    border-radius: 26px;
+  }
+
+  .route-loading-copy h2 {
+    font-size: clamp(30px, 10vw, 42px);
+  }
+
+  .route-loading-copy p {
+    font-size: 13px;
+  }
+
+  .route-loading-steps span {
+    min-height: 34px;
+    font-size: 11px;
+  }
+}

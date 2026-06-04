@@ -8,6 +8,7 @@ type State = { error?: string; success?: string } | undefined;
 type ScoreSettings = {
   attendancePoints: number;
   perKmPoints: number;
+  requireSubmissionApproval: boolean;
 };
 
 export function ScoreSettingsForm({
@@ -23,46 +24,62 @@ export function ScoreSettingsForm({
     <>
       <PageLoadingOverlay show={pending} label="Saving scoring rules..." />
       <form className="form-stack" action={formAction}>
-      <div className="grid grid-2">
-        <div>
-          <label htmlFor="attendancePoints">Attendance vote points</label>
-          <input
-            id="attendancePoints"
-            name="attendancePoints"
-            type="number"
-            min={0}
-            max={100}
-            step={1}
-            required
-            defaultValue={settings.attendancePoints}
-          />
+        <div className="grid grid-2">
+          <div>
+            <label htmlFor="attendancePoints">Attendance vote points</label>
+            <input
+              id="attendancePoints"
+              name="attendancePoints"
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              required
+              defaultValue={settings.attendancePoints}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="perKmPoints">Points per completed 1km</label>
+            <input
+              id="perKmPoints"
+              name="perKmPoints"
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              required
+              defaultValue={settings.perKmPoints}
+            />
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="perKmPoints">Points per completed 1km</label>
+        <label className="approval-setting-card">
           <input
-            id="perKmPoints"
-            name="perKmPoints"
-            type="number"
-            min={0}
-            max={100}
-            step={1}
-            required
-            defaultValue={settings.perKmPoints}
+            name="requireSubmissionApproval"
+            type="checkbox"
+            defaultChecked={settings.requireSubmissionApproval}
           />
-        </div>
-      </div>
+          <span>
+            <strong>Require admin approval before points count</strong>
+            <small>
+              When enabled, Strava/manual KM submissions become Pending. Admin must approve before they appear in
+              leaderboard, account totals, and share pages.
+            </small>
+          </span>
+        </label>
 
-      <p className="muted">
-        Example: attendance {settings.attendancePoints} + floor(distance km) × {settings.perKmPoints}. This applies to new or resubmitted runs.
-      </p>
+        <p className="muted">
+          Example: attendance {settings.attendancePoints} + floor(distance km) × {settings.perKmPoints}. Existing
+          approved scores stay unchanged; pending submissions are recalculated with current rules when admin approves.
+        </p>
 
-      {state?.error && <p className="error">{state.error}</p>}
-      {state?.success && <p className="success-text">{state.success}</p>}
+        {state?.error && <p className="error">{state.error}</p>}
+        {state?.success && <p className="success-text">{state.success}</p>}
 
-      <button type="submit" disabled={pending}>
-        {pending ? "Saving..." : "Save scoring rules"}
-      </button>
+        <button type="submit" disabled={pending}>
+          {pending ? "Saving..." : "Save scoring rules"}
+        </button>
       </form>
     </>
   );

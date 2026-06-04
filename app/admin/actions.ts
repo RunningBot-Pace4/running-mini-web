@@ -8,6 +8,7 @@ import { slugify } from "@/lib/slug";
 import { parseDateTimeLocal } from "@/lib/datetime";
 import { HOME_CONTENT_KEY } from "@/lib/site-content";
 import { SCORE_SETTING_KEY } from "@/lib/score-config";
+import { calculateScore, getScoreSettings } from "@/lib/scoring";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -108,6 +109,7 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
 const updateScoreSettingsSchema = z.object({
   attendancePoints: z.coerce.number().int().min(0).max(100),
   perKmPoints: z.coerce.number().int().min(0).max(100),
+  requireSubmissionApproval: z.coerce.boolean().default(false),
 });
 
 export async function updateScoreSettingsAction(_: unknown, formData: FormData) {
@@ -116,6 +118,7 @@ export async function updateScoreSettingsAction(_: unknown, formData: FormData) 
   const parsed = updateScoreSettingsSchema.safeParse({
     attendancePoints: formData.get("attendancePoints"),
     perKmPoints: formData.get("perKmPoints"),
+    requireSubmissionApproval: formData.get("requireSubmissionApproval") === "on",
   });
 
   if (!parsed.success) return { error: "Please enter valid scoring values from 0 to 100." };
@@ -125,11 +128,13 @@ export async function updateScoreSettingsAction(_: unknown, formData: FormData) 
     update: {
       attendancePoints: parsed.data.attendancePoints,
       perKmPoints: parsed.data.perKmPoints,
+      requireSubmissionApproval: parsed.data.requireSubmissionApproval,
     },
     create: {
       key: SCORE_SETTING_KEY,
       attendancePoints: parsed.data.attendancePoints,
       perKmPoints: parsed.data.perKmPoints,
+      requireSubmissionApproval: parsed.data.requireSubmissionApproval,
     },
   });
 
@@ -228,3 +233,54 @@ export async function updateEventStatusAction(formData: FormData) {
   revalidatePath(`/events/${currentEvent.slug}`);
 }
 
+
+
+const updateSubmissionStatusSchema = z.object({
+  submissionId: z.string().min(1),
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
+});
+
+export async function updateSubmissionStatusAction(formData: FormData) {
+  await requireAdmin();
+
+  const parsed = updateSubmissionStatusSchema.safeParse({
+    submissionId: formData.get("submissionId"),
+    status: formData.get("status"),
+  });
+
+  if (!parsed.success) throw new Error("Invalid submission status.");
+
+  const submission = await prisma.submission.findUnique({
+    where: { id: parsed.data.submissionId },
+    include: { activity: true, event: true },
+  });
+
+  if (!submission) throw new Error("Submission not found.");
+
+  if (parsed.data.status === "APPROVED") {
+    const scoreSettings = await getScoreSettings();
+    const score = calculateScore(submission.activity.distanceMeters, scoreSettings);
+
+    await prisma.submission.update({
+      where: { id: submission.id },
+      data: {
+        distanceKm: score.distanceKm,
+        attendancePoints: score.attendancePoints,
+        distancePoints: score.distancePoints,
+        totalPoints: score.totalPoints,
+        status: "APPROVED",
+      },
+    });
+  } else {
+    await prisma.submission.update({
+      where: { id: submission.id },
+      data: { status: parsed.data.status },
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/account");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/events/${submission.eventId}`);
+  revalidatePath(`/events/${submission.event.slug}`);
+}

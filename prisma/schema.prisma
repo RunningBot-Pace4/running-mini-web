@@ -25,6 +25,7 @@ enum VoteStatus {
 }
 
 enum SubmissionStatus {
+  PENDING
   APPROVED
   REJECTED
 }
@@ -178,6 +179,7 @@ model ScoreSetting {
   key              String   @unique
   attendancePoints Int      @default(1)
   perKmPoints      Int      @default(2)
+  requireSubmissionApproval Boolean @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

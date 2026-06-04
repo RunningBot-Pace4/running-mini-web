@@ -11,6 +11,7 @@ import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
+import { stravaConfigStatus } from "@/lib/strava-config";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,7 @@ export default async function AdminPage() {
 
   const homeContent = await getHomeContent();
   const scoreSettings = await getScoreSettings();
+  const stravaConfig = stravaConfigStatus();
 
   const events = await prisma.event.findMany({
     orderBy: { createdAt: "desc" },
@@ -45,6 +47,31 @@ export default async function AdminPage() {
           Update the public home page title and intro text. The description supports the toolbar formatting.
         </p>
         <HomeContentForm content={homeContent} action={updateHomeContentAction} />
+      </div>
+
+
+      <div className="card strava-config-card">
+        <h2>Strava connection check</h2>
+        <p className="muted">Use this to verify why users cannot connect Strava.</p>
+        <div className="profile-list">
+          <div>
+            <span>Client ID</span>
+            <strong>{stravaConfig.hasClientId ? "Set" : "Missing"}</strong>
+          </div>
+          <div>
+            <span>Client Secret</span>
+            <strong>{stravaConfig.hasClientSecret ? "Set" : "Missing"}</strong>
+          </div>
+          <div>
+            <span>Redirect URI</span>
+            <strong>{stravaConfig.redirectUri}</strong>
+          </div>
+          <div>
+            <span>Strava callback domain</span>
+            <strong>{stravaConfig.callbackDomain || "Missing"}</strong>
+          </div>
+        </div>
+        {!stravaConfig.ready && <p className="error">Strava is not ready. Add STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, APP_URL, and STRAVA_REDIRECT_URI in Vercel.</p>}
       </div>
 
       <div className="card">

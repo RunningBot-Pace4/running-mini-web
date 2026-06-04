@@ -361,3 +361,72 @@ npx prisma db push --accept-data-loss && npm run seed && npm run build
 
 The event detail page now keeps the **Edit event details** status dropdown synced with the quick status buttons.
 If admin clicks **OPEN**, **CLOSED**, **DRAFT**, or **ARCHIVED** in the quick status controls, the dropdown below updates to the same value after the page refreshes.
+
+
+## Latest update: Strava diagnostic + admin approval setting
+
+### Strava connection
+
+Admin dashboard now includes **Strava connection check**. It shows:
+
+- whether `STRAVA_CLIENT_ID` is set
+- whether `STRAVA_CLIENT_SECRET` is set
+- the exact redirect URI used by the app
+- the exact callback domain to put into Strava
+
+For Vercel, make sure these values are configured:
+
+```env
+APP_URL=https://your-fixed-vercel-domain.vercel.app
+STRAVA_REDIRECT_URI=https://your-fixed-vercel-domain.vercel.app/api/strava/callback
+STRAVA_CLIENT_ID=your_strava_client_id
+STRAVA_CLIENT_SECRET=your_strava_client_secret
+STRAVA_APPROVAL_PROMPT=force
+SESSION_SECRET=use-a-long-random-secret
+```
+
+In Strava API settings, the **Authorization Callback Domain** must be only:
+
+```text
+your-fixed-vercel-domain.vercel.app
+```
+
+Do not include `https://` and do not include `/api/strava/callback`.
+
+### Submission approval setting
+
+Admin can now choose whether submitted KM needs approval before points count.
+
+Open:
+
+```text
+/admin → Edit scoring rules
+```
+
+Enable:
+
+```text
+Require admin approval before points count
+```
+
+When enabled:
+
+- Strava/manual submissions become `PENDING`
+- pending submissions do not count in leaderboard/account totals/share pages
+- admin approves/rejects from `/admin → Manage event`
+- approving recalculates points using the current scoring rules
+
+Database note: this update adds:
+
+- `SubmissionStatus.PENDING`
+- `ScoreSetting.requireSubmissionApproval`
+
+Keep Vercel build command:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```
+
+## Loading Overlay Redesign
+
+The loading screen has been redesigned into a route-map style full-screen experience. It blocks user clicks, touch, scrolling, and keyboard input while an action is processing.

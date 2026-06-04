@@ -38,7 +38,6 @@ export default async function EventPage({
     where: { slug },
     include: {
       submissions: {
-        where: { status: "APPROVED" },
         include: { user: true, activity: true },
         orderBy: { totalPoints: "desc" },
       },
@@ -70,6 +69,8 @@ export default async function EventPage({
       })
     : [];
 
+  const approvedSubmissions = event.submissions.filter((submission) => submission.status === "APPROVED");
+
   const mySubmissions = user
     ? event.submissions.filter((submission) => submission.userId === user.id)
     : [];
@@ -82,8 +83,8 @@ export default async function EventPage({
       ? "You selected NOT_ATTEND, so distance submission is disabled."
       : "Please vote ATTEND before submitting your distance.";
 
-  const totalDistance = event.submissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
-  const totalPoints = event.submissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
+  const totalDistance = approvedSubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
+  const totalPoints = approvedSubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
 
   return (
     <>
@@ -93,7 +94,7 @@ export default async function EventPage({
           <h1>{event.title}</h1>
           <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
           <div className="cn-event-chips">
-            <span>🧾 {event.submissions.length} submissions</span>
+            <span>🧾 {approvedSubmissions.length} approved</span>
             <span>📏 {totalDistance.toFixed(1)}km total</span>
             <span>🏆 {totalPoints} points</span>
           </div>
@@ -124,7 +125,10 @@ export default async function EventPage({
         ) : (
           <p className="muted">No event description yet.</p>
         )}
-        <div className="score-note">{scoringDescription(scoreSettings)}</div>
+        <div className="score-note">
+          {scoringDescription(scoreSettings)}
+          {scoreSettings.requireSubmissionApproval ? " · Admin approval required before points count." : ""}
+        </div>
       </section>
 
       {(stravaError || syncError || stravaConnected) && (
@@ -215,14 +219,20 @@ export default async function EventPage({
               <div className="cn-submission-grid">
                 {mySubmissions.map((submission) => (
                   <article className="cn-submission-card" key={submission.id}>
-                    <span>Approved</span>
-                    <strong>{submission.totalPoints} pts</strong>
+                    <span className={submission.status === "APPROVED" ? "success-text" : submission.status === "PENDING" ? "pending-text" : "error"}>
+                      {submission.status}
+                    </span>
+                    <strong>{submission.status === "APPROVED" ? `${submission.totalPoints} pts` : "Waiting review"}</strong>
                     <p>
                       {submission.activity.name} · {submission.distanceKm.toString()}km
                     </p>
-                    <LoadingLink className="button full" href={`/share/${submission.id}`}>
-                      Share result
-                    </LoadingLink>
+                    {submission.status === "APPROVED" ? (
+                      <LoadingLink className="button full" href={`/share/${submission.id}`}>
+                        Share result
+                      </LoadingLink>
+                    ) : (
+                      <p className="muted">Admin approval is required before points count and sharing unlocks.</p>
+                    )}
                   </article>
                 ))}
               </div>
@@ -250,7 +260,7 @@ export default async function EventPage({
               </tr>
             </thead>
             <tbody>
-              {event.submissions.map((submission, index) => (
+              {approvedSubmissions.map((submission, index) => (
                 <tr key={submission.id}>
                   <td><strong>#{index + 1}</strong> {submission.user.name}</td>
                   <td>{submission.activity.name}</td>
@@ -261,7 +271,7 @@ export default async function EventPage({
             </tbody>
           </table>
         </div>
-        {event.submissions.length === 0 && <p className="muted">No approved submissions yet.</p>}
+        {approvedSubmissions.length === 0 && <p className="muted">No approved submissions yet.</p>}
       </section>
 
       <LoadingLink className="button ghost full" href="/">
