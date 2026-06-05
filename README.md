@@ -625,3 +625,8 @@ The loading overlay is also simplified:
 - short loading message
 - clean progress bar
 - full-screen click blocking while loading
+
+
+## Latest update: loading logo sync
+
+The loading overlay now uses the same logo image/mark and brand name shown in the top navigation.

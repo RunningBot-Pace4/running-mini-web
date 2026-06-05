@@ -3,6 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+type BrandSnapshot = {
+  name: string;
+  mark: string;
+  imageSrc: string;
+};
+
+function readCurrentBrand(): BrandSnapshot {
+  const brandElement = document.querySelector<HTMLElement>(".brand");
+  const markElement = brandElement?.querySelector<HTMLElement>(".brand-mark");
+  const imageElement = markElement?.querySelector<HTMLImageElement>("img");
+  const nameElement = brandElement?.querySelector<HTMLElement>(".brand-name");
+
+  return {
+    name: nameElement?.textContent?.trim() || "Run Mini",
+    mark: markElement?.textContent?.trim() || "↗",
+    imageSrc: imageElement?.getAttribute("src") || "",
+  };
+}
+
 export function PageLoadingOverlay({
   show,
   label = "Loading...",
@@ -11,11 +30,21 @@ export function PageLoadingOverlay({
   label?: string;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [brand, setBrand] = useState<BrandSnapshot>({
+    name: "Run Mini",
+    mark: "↗",
+    imageSrc: "",
+  });
   const overlayRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    setBrand(readCurrentBrand());
+  }, [mounted, show]);
 
   useEffect(() => {
     if (!show || !mounted) return;
@@ -89,11 +118,11 @@ export function PageLoadingOverlay({
     >
       <section className="simple-loader-card" aria-label={label}>
         <div className="simple-loader-logo" aria-hidden="true">
-          <span>↗</span>
+          {brand.imageSrc ? <img src={brand.imageSrc} alt="" /> : <span>{brand.mark}</span>}
         </div>
 
         <strong>{label}</strong>
-        <p>Please wait while Run Mini updates your board.</p>
+        <p>Please wait while {brand.name} updates your running board.</p>
 
         <div className="simple-loader-progress" aria-hidden="true">
           <span />

@@ -9545,6 +9545,15 @@ body[data-theme-preset="royal-marathon"] .coastal-event-card {
   animation: simpleLoaderPulse 1.15s ease-in-out infinite;
 }
 
+.simple-loader-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
+
 .simple-loader-card strong {
   margin-top: 4px;
   font-size: 21px;

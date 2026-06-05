@@ -85,7 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <span className="brand-mark cn-brand-mark coastal-brand-mark">
                 {logoImageDataUrl ? <img src={logoImageDataUrl} alt="" /> : brandMark}
               </span>
-              <span>{brandName}</span>
+              <span className="brand-name">{brandName}</span>
             </LoadingLink>
             <nav className="nav cn-nav">
               <LoadingLink href="/">Events</LoadingLink>
