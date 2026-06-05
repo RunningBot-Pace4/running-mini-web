@@ -114,7 +114,7 @@ export function HomeContentForm({
             <span className="eyebrow">Brand logo & theme</span>
             <h3>Choose one fixed design theme</h3>
             <p className="muted">
-              No more difficult color tuning. Pick one of the 10 ready-made themes below. The web will apply the matching colors automatically.
+              Pick a complete design style, not only colors. Each theme changes the background, hero artwork, card shape, button feel, and loading page mood automatically.
             </p>
           </div>
 
@@ -184,7 +184,7 @@ export function HomeContentForm({
             <div className="fixed-theme-picker-head">
               <div>
                 <label>Website theme</label>
-                <p className="muted editor-help">Tap a theme to preview instantly on this page, then click Save home content to publish it for everyone.</p>
+                <p className="muted editor-help">Tap a theme to preview the full design instantly. Click Save home content to publish it for everyone.</p>
               </div>
               <strong>{previewTheme.name}</strong>
             </div>
@@ -212,6 +212,11 @@ export function HomeContentForm({
                     <i />
                     <i />
                     <i />
+                  </span>
+                  <span className="theme-layout-preview" data-preset={theme.key} aria-hidden="true">
+                    <b />
+                    <b />
+                    <b />
                   </span>
                   <span className="theme-preset-copy">
                     <strong>{theme.name}</strong>

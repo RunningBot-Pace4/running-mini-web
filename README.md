@@ -567,3 +567,33 @@ npx prisma db push --accept-data-loss && npm run seed && npm run build
 Admin can preview a fixed theme immediately by tapping a theme card in `/admin`.
 To publish the theme for all users, click **Save home content** and redeploy/refresh open member tabs if needed.
 The visible theme is now derived from `SiteContent.themePreset` so stale manual color fields cannot block the selected preset.
+
+
+## Latest update: design-based theme presets
+
+Admin theme selection now changes the full website design, not only colors.
+
+Each fixed theme updates:
+
+- page background artwork
+- hero visual style
+- card shape and surface
+- button style
+- event scenery artwork
+- loading page mood
+- mobile navigation feel
+
+Themes available:
+
+1. Coastal Sunrise
+2. Ocean Velocity
+3. Sweat Orange
+4. Midnight Run
+5. Forest Trail
+6. Desert Dawn
+7. Neon Track
+8. Clean Sky
+9. Coral Energy
+10. Royal Marathon
+
+Go to `/admin` → `Edit home page hero` → choose a theme → `Save home content`.

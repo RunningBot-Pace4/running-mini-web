@@ -124,9 +124,9 @@ export function PageLoadingOverlay({
         </div>
 
         <div className="pace-loading-copy">
-          <span className="pace-kicker">Sky · Sea · Sweat</span>
+          <span className="pace-kicker">Run · Save · Score</span>
           <h2>{label}</h2>
-          <p>Please hold on. We are locking the screen, saving your action, and moving you to the next step.</p>
+          <p>Please hold on. We are saving your action and preparing the next step.</p>
         </div>
 
         <div className="pace-loading-progress" aria-hidden="true">

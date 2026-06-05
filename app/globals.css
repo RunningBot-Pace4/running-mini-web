@@ -8004,3 +8004,524 @@ button:not(.ghost) {
   background: linear-gradient(135deg, var(--preset-primary), var(--preset-secondary));
   box-shadow: 0 10px 26px color-mix(in srgb, var(--preset-primary) 30%, transparent 70%);
 }
+
+
+/* =========================================================
+   Theme preset v2: each preset now changes DESIGN + COLOR.
+   The previous version mostly changed palette. These rules
+   switch visual mood: background artwork, hero shape, card
+   surfaces, scenery, button style, and loading screen.
+   ========================================================= */
+
+body[data-theme-preset] {
+  --design-text: var(--brand-dark, #0b1f33);
+  --design-muted: color-mix(in srgb, var(--brand-dark, #0b1f33) 60%, white 40%);
+  --design-body-bg:
+    radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 22%, transparent 78%), transparent 24rem),
+    radial-gradient(circle at 88% 2%, color-mix(in srgb, var(--brand-primary, #1d6fa3) 20%, transparent 80%), transparent 26rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-background, #f8fbfd) 92%, white 8%) 0%, var(--brand-background, #f8fbfd) 100%);
+  --design-pattern:
+    radial-gradient(circle at 18px 18px, color-mix(in srgb, var(--brand-primary, #1d6fa3) 12%, transparent 88%) 0 1.5px, transparent 2.5px),
+    linear-gradient(90deg, transparent 0 54px, color-mix(in srgb, var(--brand-primary, #1d6fa3) 8%, transparent 92%) 55px 56px, transparent 57px 100%);
+  --design-pattern-size: 88px 88px, 150px 150px;
+  --design-pattern-opacity: 0.12;
+  --design-hero-bg:
+    radial-gradient(circle at 78% 12%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 42%, transparent 58%), transparent 16rem),
+    radial-gradient(circle at 18% 8%, color-mix(in srgb, var(--brand-primary, #1d6fa3) 32%, transparent 68%), transparent 20rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-background, #f8fbfd) 92%, white 8%), color-mix(in srgb, var(--brand-primary, #1d6fa3) 10%, white 90%));
+  --design-hero-radius: clamp(28px, 5vw, 54px);
+  --design-hero-text: var(--brand-dark, #0b1f33);
+  --design-hero-title: color-mix(in srgb, var(--brand-dark, #0b1f33) 92%, black 8%);
+  --design-hero-copy: color-mix(in srgb, var(--brand-dark, #0b1f33) 72%, white 28%);
+  --design-hero-shadow: 0 38px 110px color-mix(in srgb, var(--brand-primary, #1d6fa3) 16%, transparent 84%);
+  --design-card-bg: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.76));
+  --design-card-border: rgba(255,255,255,.78);
+  --design-card-radius: 32px;
+  --design-card-shadow: 0 24px 70px color-mix(in srgb, var(--brand-primary, #1d6fa3) 10%, transparent 90%);
+  --design-button-bg: linear-gradient(135deg, var(--brand-primary, #1d6fa3), var(--brand-secondary, #ff7a45));
+  --design-button-shadow: 0 16px 34px color-mix(in srgb, var(--brand-primary, #1d6fa3) 24%, transparent 76%);
+  --design-sun-bg: radial-gradient(circle at 35% 35%, #fff8d8 0 16%, #ffd166 42%, var(--brand-secondary, #ff7a45) 78%);
+  --design-wave-bg:
+    radial-gradient(65px 32px at 65px 0, transparent 65px, color-mix(in srgb, var(--brand-primary, #1d6fa3) 18%, transparent 82%) 66px),
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-primary, #1d6fa3) 28%, transparent 72%), color-mix(in srgb, var(--brand-primary, #1d6fa3) 20%, transparent 80%));
+  --design-event-art:
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 54%, transparent 46%), transparent 7rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-primary, #1d6fa3) 20%, white 80%), color-mix(in srgb, var(--brand-background, #f8fbfd) 90%, white 10%));
+  --design-loading-bg:
+    radial-gradient(circle at 22% 14%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 35%, transparent 65%), transparent 18rem),
+    radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--brand-primary, #1d6fa3) 46%, transparent 54%), transparent 22rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-dark, #0b1f33) 92%, #ffffff 8%) 0%, #071827 56%, color-mix(in srgb, var(--brand-primary, #1d6fa3) 38%, #05111c 62%) 100%);
+}
+
+body[data-theme-preset] {
+  background: var(--design-body-bg) !important;
+  color: var(--design-text) !important;
+}
+
+body[data-theme-preset]::before {
+  opacity: var(--design-pattern-opacity) !important;
+  background-image: var(--design-pattern) !important;
+  background-size: var(--design-pattern-size) !important;
+}
+
+body[data-theme-preset] .topbar.cn-topbar,
+body[data-theme-preset] .cn-mobile-tabbar {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-background, #f8fbfd) 78%, white 22%), color-mix(in srgb, var(--brand-background, #f8fbfd) 54%, transparent 46%)) !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #1d6fa3) 18%, transparent 82%) !important;
+  box-shadow: 0 18px 60px color-mix(in srgb, var(--brand-primary, #1d6fa3) 10%, transparent 90%) !important;
+}
+
+body[data-theme-preset] .brand,
+body[data-theme-preset] .cn-nav {
+  border-color: color-mix(in srgb, var(--brand-primary, #1d6fa3) 12%, transparent 88%) !important;
+  box-shadow: 0 14px 40px color-mix(in srgb, var(--brand-primary, #1d6fa3) 9%, transparent 91%) !important;
+}
+
+body[data-theme-preset] .brand-mark,
+body[data-theme-preset] .coastal-brand-mark,
+body[data-theme-preset] .cn-brand-mark {
+  background: var(--design-button-bg) !important;
+  box-shadow: var(--design-button-shadow) !important;
+}
+
+body[data-theme-preset] .coastal-hero,
+body[data-theme-preset] .run-hero,
+body[data-theme-preset] .cn-app-hero {
+  color: var(--design-hero-text) !important;
+  background: var(--design-hero-bg) !important;
+  border-radius: var(--design-hero-radius) !important;
+  box-shadow: var(--design-hero-shadow) !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #1d6fa3) 14%, rgba(255,255,255,.78) 86%) !important;
+}
+
+body[data-theme-preset] .coastal-hero h1,
+body[data-theme-preset] .run-hero h1,
+body[data-theme-preset] .china-title,
+body[data-theme-preset] .coastal-section-title h2 {
+  color: var(--design-hero-title) !important;
+}
+
+body[data-theme-preset] .coastal-rich-copy,
+body[data-theme-preset] .coastal-hero p,
+body[data-theme-preset] .coastal-section-title p,
+body[data-theme-preset] .muted {
+  color: var(--design-hero-copy) !important;
+}
+
+body[data-theme-preset] .coastal-live-chip,
+body[data-theme-preset] .eyebrow,
+body[data-theme-preset] .china-badge {
+  color: var(--brand-primary, #1d6fa3) !important;
+}
+
+body[data-theme-preset] .coastal-sun,
+body[data-theme-preset] .pace-loading-sun {
+  background: var(--design-sun-bg) !important;
+  box-shadow:
+    0 0 70px color-mix(in srgb, var(--brand-secondary, #ff7a45) 45%, transparent 55%),
+    0 0 130px color-mix(in srgb, var(--brand-primary, #1d6fa3) 20%, transparent 80%) !important;
+}
+
+body[data-theme-preset] .coastal-wave,
+body[data-theme-preset] .pace-loading-wave {
+  background: var(--design-wave-bg) !important;
+}
+
+body[data-theme-preset] .coastal-phone-card,
+body[data-theme-preset] .coastal-dashboard-card,
+body[data-theme-preset] .coastal-mission-map article,
+body[data-theme-preset] .coastal-event-card,
+body[data-theme-preset] .coastal-join-panel,
+body[data-theme-preset] .coastal-lifestyle-card,
+body[data-theme-preset] .card,
+body[data-theme-preset] .event-card,
+body[data-theme-preset] .cn-workout-board,
+body[data-theme-preset] .cn-locked-panel,
+body[data-theme-preset] .cn-flow-card,
+body[data-theme-preset] .cn-submission-wallet,
+body[data-theme-preset] .cn-leaderboard-card {
+  background: var(--design-card-bg) !important;
+  border-color: var(--design-card-border) !important;
+  border-radius: var(--design-card-radius) !important;
+  box-shadow: var(--design-card-shadow) !important;
+}
+
+body[data-theme-preset] .coastal-event-scenery,
+body[data-theme-preset] .coastal-ticket,
+body[data-theme-preset] .coastal-next-focus,
+body[data-theme-preset] .score-rule-card {
+  background: var(--design-event-art) !important;
+}
+
+body[data-theme-preset] .button:not(.ghost),
+body[data-theme-preset] button:not(.ghost),
+body[data-theme-preset] .coastal-primary-btn,
+body[data-theme-preset] .cn-register-pill {
+  background: var(--design-button-bg) !important;
+  box-shadow: var(--design-button-shadow) !important;
+}
+
+body[data-theme-preset] .pace-loading-overlay {
+  background: var(--design-loading-bg) !important;
+}
+
+/* 1. Coastal Sunrise — open sky, waves, rounded glass. */
+body[data-theme-preset="coastal-sunrise"] {
+  --design-body-bg:
+    radial-gradient(circle at 18% 10%, rgba(110,198,255,.32), transparent 24rem),
+    radial-gradient(circle at 88% 10%, rgba(255,122,69,.24), transparent 24rem),
+    linear-gradient(180deg, #f8fbfd 0%, #edf8ff 50%, #fff5ec 100%);
+  --design-hero-bg:
+    linear-gradient(135deg, rgba(248,251,253,.96), rgba(234,248,255,.84) 44%, rgba(255,245,233,.94)),
+    radial-gradient(circle at 74% 12%, rgba(255,122,69,.52), transparent 14rem),
+    radial-gradient(circle at 20% 8%, rgba(110,198,255,.62), transparent 18rem);
+  --design-card-radius: 36px;
+}
+
+/* 2. Ocean Velocity — deep water, speed lines, aqua glass. */
+body[data-theme-preset="ocean-velocity"] {
+  --design-body-bg:
+    radial-gradient(circle at 8% 12%, rgba(0,180,216,.22), transparent 22rem),
+    linear-gradient(120deg, #e6fbff 0%, #f7fdff 34%, #dff7ff 100%);
+  --design-pattern:
+    repeating-linear-gradient(120deg, transparent 0 38px, rgba(0,119,182,.09) 39px 41px, transparent 42px 88px);
+  --design-pattern-opacity: .18;
+  --design-hero-bg:
+    radial-gradient(circle at 76% 20%, rgba(0,180,216,.4), transparent 16rem),
+    linear-gradient(135deg, #e9fbff 0%, #ffffff 44%, #d7f3ff 100%);
+  --design-wave-bg:
+    radial-gradient(72px 28px at 72px 0, transparent 70px, rgba(0,119,182,.22) 72px),
+    linear-gradient(180deg, rgba(0,180,216,.28), rgba(0,119,182,.22));
+  --design-card-radius: 28px;
+  --design-event-art:
+    repeating-linear-gradient(120deg, rgba(0,180,216,.16) 0 10px, transparent 11px 28px),
+    linear-gradient(135deg, #e6fbff, #fff);
+}
+
+/* 3. Sweat Orange — hot effort, angled track, bold cards. */
+body[data-theme-preset="sweat-orange"] {
+  --design-body-bg:
+    radial-gradient(circle at 18% 10%, rgba(251,146,60,.38), transparent 24rem),
+    radial-gradient(circle at 86% 3%, rgba(249,115,22,.26), transparent 24rem),
+    linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
+  --design-pattern:
+    repeating-linear-gradient(112deg, transparent 0 44px, rgba(249,115,22,.12) 45px 49px, transparent 50px 96px);
+  --design-pattern-opacity: .22;
+  --design-hero-bg:
+    radial-gradient(circle at 82% 18%, rgba(255,184,77,.72), transparent 14rem),
+    linear-gradient(135deg, #fffaf2 0%, #ffedd5 42%, #fed7aa 100%);
+  --design-card-radius: 22px;
+  --design-button-bg: linear-gradient(135deg, #431407 0%, #f97316 56%, #fb923c 100%);
+  --design-event-art:
+    repeating-linear-gradient(112deg, rgba(249,115,22,.18) 0 12px, transparent 13px 30px),
+    linear-gradient(135deg, #fff7ed, #fed7aa);
+}
+
+/* 4. Midnight Run — dark premium night route. */
+body[data-theme-preset="midnight-run"] {
+  --design-text: #eef6ff;
+  --design-muted: rgba(238,246,255,.68);
+  --design-body-bg:
+    radial-gradient(circle at 20% 4%, rgba(34,211,238,.22), transparent 24rem),
+    radial-gradient(circle at 90% 10%, rgba(167,139,250,.2), transparent 26rem),
+    linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  --design-pattern:
+    linear-gradient(90deg, transparent 0 48px, rgba(34,211,238,.11) 49px 50px, transparent 51px 100%),
+    linear-gradient(180deg, transparent 0 48px, rgba(167,139,250,.10) 49px 50px, transparent 51px 100%);
+  --design-pattern-opacity: .22;
+  --design-hero-bg:
+    radial-gradient(circle at 80% 18%, rgba(34,211,238,.24), transparent 14rem),
+    radial-gradient(circle at 20% 70%, rgba(167,139,250,.18), transparent 18rem),
+    linear-gradient(135deg, rgba(2,6,23,.96), rgba(15,23,42,.94));
+  --design-hero-title: #f8fbff;
+  --design-hero-copy: rgba(238,246,255,.76);
+  --design-card-bg: linear-gradient(180deg, rgba(15,23,42,.92), rgba(2,6,23,.78));
+  --design-card-border: rgba(125,211,252,.18);
+  --design-card-radius: 26px;
+  --design-card-shadow: 0 28px 90px rgba(2,6,23,.58);
+  --design-button-bg: linear-gradient(135deg, #22d3ee, #a78bfa);
+  --design-event-art:
+    linear-gradient(90deg, rgba(34,211,238,.18), rgba(167,139,250,.18)),
+    repeating-linear-gradient(90deg, transparent 0 20px, rgba(255,255,255,.05) 21px 22px);
+}
+
+/* 5. Forest Trail — natural, rounded, route through green. */
+body[data-theme-preset="forest-trail"] {
+  --design-body-bg:
+    radial-gradient(circle at 12% 8%, rgba(132,204,22,.26), transparent 24rem),
+    linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+  --design-pattern:
+    radial-gradient(ellipse at 24px 12px, rgba(22,163,74,.14) 0 6px, transparent 7px);
+  --design-pattern-size: 80px 60px;
+  --design-pattern-opacity: .24;
+  --design-hero-bg:
+    radial-gradient(circle at 80% 12%, rgba(132,204,22,.34), transparent 14rem),
+    linear-gradient(135deg, #f7fee7, #f0fdf4 46%, #dcfce7);
+  --design-sun-bg: radial-gradient(circle, #f7fee7 0 20%, #bef264 46%, #16a34a 86%);
+  --design-wave-bg:
+    radial-gradient(120px 46px at 80px 8px, rgba(22,163,74,.2) 0 60px, transparent 61px),
+    linear-gradient(180deg, rgba(132,204,22,.22), rgba(22,163,74,.18));
+  --design-card-radius: 34px 18px 34px 18px;
+  --design-event-art:
+    radial-gradient(ellipse at 16% 70%, rgba(22,163,74,.22), transparent 9rem),
+    linear-gradient(135deg, #f0fdf4, #ecfccb);
+}
+
+/* 6. Desert Dawn — dunes and warm sunrise. */
+body[data-theme-preset="desert-dawn"] {
+  --design-body-bg:
+    radial-gradient(circle at 76% 8%, rgba(250,204,21,.32), transparent 22rem),
+    linear-gradient(180deg, #fffbeb 0%, #fef3c7 60%, #fde68a 100%);
+  --design-pattern:
+    radial-gradient(ellipse at 30px 22px, rgba(194,65,12,.12) 0 2px, transparent 3px);
+  --design-pattern-size: 96px 52px;
+  --design-pattern-opacity: .18;
+  --design-hero-bg:
+    radial-gradient(circle at 75% 18%, rgba(250,204,21,.56), transparent 14rem),
+    linear-gradient(135deg, #fffbeb, #fef3c7 48%, #fed7aa);
+  --design-wave-bg:
+    radial-gradient(130px 44px at 95px 0, transparent 90px, rgba(194,65,12,.14) 92px),
+    linear-gradient(180deg, rgba(250,204,21,.25), rgba(194,65,12,.16));
+  --design-card-radius: 42px 26px 42px 26px;
+  --design-event-art:
+    radial-gradient(circle at 82% 14%, rgba(250,204,21,.42), transparent 7rem),
+    linear-gradient(135deg, #fffbeb, #fed7aa);
+}
+
+/* 7. Neon Track — arcade sport, glowing grid. */
+body[data-theme-preset="neon-track"] {
+  --design-text: #fdf2ff;
+  --design-muted: rgba(253,242,255,.70);
+  --design-body-bg:
+    radial-gradient(circle at 8% 16%, rgba(236,72,153,.24), transparent 25rem),
+    radial-gradient(circle at 88% 8%, rgba(6,182,212,.22), transparent 24rem),
+    linear-gradient(180deg, #030712 0%, #111827 100%);
+  --design-pattern:
+    linear-gradient(90deg, transparent 0 44px, rgba(6,182,212,.16) 45px 46px, transparent 47px 100%),
+    linear-gradient(180deg, transparent 0 44px, rgba(236,72,153,.13) 45px 46px, transparent 47px 100%);
+  --design-pattern-opacity: .3;
+  --design-hero-bg:
+    radial-gradient(circle at 80% 16%, rgba(236,72,153,.36), transparent 14rem),
+    radial-gradient(circle at 20% 70%, rgba(6,182,212,.24), transparent 18rem),
+    linear-gradient(135deg, rgba(3,7,18,.96), rgba(17,24,39,.9));
+  --design-hero-title: #fff;
+  --design-hero-copy: rgba(253,242,255,.76);
+  --design-card-bg: linear-gradient(180deg, rgba(17,24,39,.9), rgba(3,7,18,.78));
+  --design-card-border: rgba(236,72,153,.24);
+  --design-card-radius: 18px;
+  --design-card-shadow: 0 0 0 1px rgba(6,182,212,.10), 0 28px 90px rgba(236,72,153,.15);
+  --design-button-bg: linear-gradient(135deg, #ec4899, #06b6d4);
+  --design-event-art:
+    repeating-linear-gradient(90deg, rgba(6,182,212,.14) 0 2px, transparent 3px 18px),
+    linear-gradient(135deg, rgba(236,72,153,.18), rgba(6,182,212,.18));
+}
+
+/* 8. Clean Sky — minimalist SaaS-style fitness app. */
+body[data-theme-preset="clean-sky"] {
+  --design-body-bg:
+    linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+  --design-pattern:
+    linear-gradient(90deg, transparent 0 80px, rgba(37,99,235,.06) 81px 82px, transparent 83px 100%);
+  --design-pattern-opacity: .12;
+  --design-hero-bg:
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 55%, #e0f2fe 100%);
+  --design-hero-radius: 28px;
+  --design-card-bg: #ffffff;
+  --design-card-border: rgba(15,23,42,.08);
+  --design-card-radius: 24px;
+  --design-card-shadow: 0 20px 60px rgba(15,23,42,.08);
+  --design-event-art:
+    linear-gradient(135deg, rgba(37,99,235,.10), rgba(56,189,248,.14));
+}
+
+/* 9. Coral Energy — social lifestyle, soft bubbles. */
+body[data-theme-preset="coral-energy"] {
+  --design-body-bg:
+    radial-gradient(circle at 15% 10%, rgba(251,113,133,.32), transparent 23rem),
+    radial-gradient(circle at 84% 12%, rgba(244,63,94,.22), transparent 25rem),
+    linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%);
+  --design-pattern:
+    radial-gradient(circle at 20px 20px, rgba(244,63,94,.13) 0 7px, transparent 8px);
+  --design-pattern-size: 92px 92px;
+  --design-pattern-opacity: .2;
+  --design-hero-bg:
+    radial-gradient(circle at 80% 10%, rgba(251,113,133,.46), transparent 14rem),
+    linear-gradient(135deg, #fff1f2, #ffffff 42%, #ffe4e6);
+  --design-card-radius: 38px;
+  --design-button-bg: linear-gradient(135deg, #f43f5e, #fb7185);
+  --design-event-art:
+    radial-gradient(circle at 82% 18%, rgba(251,113,133,.34), transparent 8rem),
+    radial-gradient(circle at 20% 82%, rgba(244,63,94,.16), transparent 8rem),
+    linear-gradient(135deg, #fff1f2, #fff);
+}
+
+/* 10. Royal Marathon — elite medal and deep prestige. */
+body[data-theme-preset="royal-marathon"] {
+  --design-body-bg:
+    radial-gradient(circle at 12% 12%, rgba(245,158,11,.24), transparent 22rem),
+    radial-gradient(circle at 86% 6%, rgba(124,58,237,.22), transparent 24rem),
+    linear-gradient(180deg, #faf5ff 0%, #f3e8ff 100%);
+  --design-pattern:
+    radial-gradient(circle at 24px 24px, rgba(124,58,237,.13) 0 2px, transparent 3px),
+    radial-gradient(circle at 60px 60px, rgba(245,158,11,.12) 0 2px, transparent 3px);
+  --design-pattern-size: 96px 96px;
+  --design-pattern-opacity: .18;
+  --design-hero-bg:
+    radial-gradient(circle at 82% 18%, rgba(245,158,11,.45), transparent 13rem),
+    linear-gradient(135deg, #faf5ff 0%, #f5f3ff 42%, #ede9fe 100%);
+  --design-sun-bg: radial-gradient(circle, #fff7ed 0 16%, #f59e0b 45%, #7c3aed 86%);
+  --design-card-radius: 30px;
+  --design-button-bg: linear-gradient(135deg, #7c3aed, #f59e0b);
+  --design-event-art:
+    radial-gradient(circle at 82% 18%, rgba(245,158,11,.34), transparent 8rem),
+    linear-gradient(135deg, #faf5ff, #ede9fe);
+}
+
+/* Dark theme text fixes */
+body[data-theme-preset="midnight-run"] .coastal-phone-card,
+body[data-theme-preset="midnight-run"] .coastal-dashboard-card,
+body[data-theme-preset="midnight-run"] .coastal-mission-map article,
+body[data-theme-preset="midnight-run"] .coastal-event-card,
+body[data-theme-preset="neon-track"] .coastal-phone-card,
+body[data-theme-preset="neon-track"] .coastal-dashboard-card,
+body[data-theme-preset="neon-track"] .coastal-mission-map article,
+body[data-theme-preset="neon-track"] .coastal-event-card {
+  color: #f8fbff !important;
+}
+
+body[data-theme-preset="midnight-run"] .coastal-event-card h2,
+body[data-theme-preset="midnight-run"] .coastal-dashboard-card strong,
+body[data-theme-preset="midnight-run"] .coastal-ticket strong,
+body[data-theme-preset="neon-track"] .coastal-event-card h2,
+body[data-theme-preset="neon-track"] .coastal-dashboard-card strong,
+body[data-theme-preset="neon-track"] .coastal-ticket strong {
+  color: #fff !important;
+}
+
+body[data-theme-preset="midnight-run"] input,
+body[data-theme-preset="midnight-run"] textarea,
+body[data-theme-preset="midnight-run"] select,
+body[data-theme-preset="neon-track"] input,
+body[data-theme-preset="neon-track"] textarea,
+body[data-theme-preset="neon-track"] select {
+  color: #111827;
+  background: rgba(255,255,255,.96);
+}
+
+/* Theme picker now previews layout mood, not only swatches. */
+.theme-preset-card {
+  grid-template-columns: 52px 84px minmax(0, 1fr) !important;
+}
+
+.theme-layout-preview {
+  position: relative;
+  width: 84px;
+  height: 54px;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 20%, var(--preset-secondary), transparent 34%),
+    linear-gradient(135deg, color-mix(in srgb, var(--preset-primary) 24%, white 76%), var(--preset-bg));
+  border: 1px solid color-mix(in srgb, var(--preset-primary) 18%, transparent 82%);
+}
+
+.theme-layout-preview b {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: var(--preset-primary);
+}
+
+.theme-layout-preview b:nth-child(1) { left: 10px; top: 11px; width: 30px; height: 6px; }
+.theme-layout-preview b:nth-child(2) { left: 10px; top: 24px; width: 58px; height: 6px; opacity: .55; }
+.theme-layout-preview b:nth-child(3) { right: 9px; bottom: 8px; width: 28px; height: 16px; background: var(--preset-secondary); border-radius: 12px; }
+
+.theme-layout-preview[data-preset="ocean-velocity"] {
+  background:
+    radial-gradient(42px 16px at 42px 100%, rgba(0,180,216,.38) 0 38px, transparent 39px),
+    repeating-linear-gradient(120deg, transparent 0 12px, rgba(0,119,182,.12) 13px 15px),
+    linear-gradient(135deg, #edfaff, #dff7ff);
+}
+
+.theme-layout-preview[data-preset="sweat-orange"] {
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(112deg, rgba(249,115,22,.2) 0 8px, transparent 9px 20px),
+    linear-gradient(135deg, #fff7ed, #fed7aa);
+}
+
+.theme-layout-preview[data-preset="midnight-run"],
+.theme-layout-preview[data-preset="neon-track"] {
+  background:
+    linear-gradient(90deg, transparent 0 20px, rgba(255,255,255,.10) 21px 22px),
+    linear-gradient(180deg, transparent 0 20px, rgba(255,255,255,.08) 21px 22px),
+    linear-gradient(135deg, #020617, #111827);
+}
+
+.theme-layout-preview[data-preset="forest-trail"] {
+  border-radius: 18px 8px 18px 8px;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(22,163,74,.24), transparent 40%),
+    linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
+.theme-layout-preview[data-preset="desert-dawn"] {
+  border-radius: 22px 12px 22px 12px;
+  background:
+    radial-gradient(circle at 78% 20%, #facc15 0 10px, transparent 11px),
+    radial-gradient(86px 28px at 56px 100%, rgba(194,65,12,.16) 0 40px, transparent 41px),
+    linear-gradient(135deg, #fffbeb, #fde68a);
+}
+
+.theme-layout-preview[data-preset="clean-sky"] {
+  background:
+    linear-gradient(180deg, #ffffff, #f8fafc);
+}
+
+.theme-layout-preview[data-preset="coral-energy"] {
+  background:
+    radial-gradient(circle at 72% 18%, rgba(251,113,133,.48), transparent 28%),
+    radial-gradient(circle at 18% 78%, rgba(244,63,94,.18), transparent 36%),
+    linear-gradient(135deg, #fff1f2, #fff);
+}
+
+.theme-layout-preview[data-preset="royal-marathon"] {
+  background:
+    radial-gradient(circle at 72% 22%, rgba(245,158,11,.38), transparent 26%),
+    linear-gradient(135deg, #faf5ff, #ede9fe);
+}
+
+/* Loading page follows the chosen design theme too. */
+body[data-theme-preset="midnight-run"] .pace-loading-card,
+body[data-theme-preset="neon-track"] .pace-loading-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+    rgba(2,6,23,.82) !important;
+  border-color: color-mix(in srgb, var(--brand-primary) 25%, transparent 75%) !important;
+}
+
+body[data-theme-preset="clean-sky"] .pace-loading-card {
+  color: #0f172a;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.82)) !important;
+}
+
+body[data-theme-preset="clean-sky"] .pace-loading-copy h2,
+body[data-theme-preset="clean-sky"] .pace-loading-copy p,
+body[data-theme-preset="clean-sky"] .pace-loading-topline,
+body[data-theme-preset="clean-sky"] .pace-loading-steps span {
+  color: #0f172a !important;
+}
+
+@media (max-width: 720px) {
+  .theme-preset-card {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+  }
+
+  .theme-layout-preview {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 72px;
+  }
+}
