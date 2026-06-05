@@ -82,36 +82,21 @@ export function PageLoadingOverlay({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="page-loading-overlay premium-route-loader"
+      className="page-loading-overlay simple-page-loader"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <section className="premium-loader-card" aria-label={label}>
-        <div className="premium-loader-map" aria-hidden="true">
-          <span className="loader-map-glow" />
-          <span className="loader-route route-a" />
-          <span className="loader-route route-b" />
-          <span className="loader-checkpoint checkpoint-a" />
-          <span className="loader-checkpoint checkpoint-b" />
-          <span className="loader-checkpoint checkpoint-c" />
-          <span className="loader-runner">🏃</span>
+      <section className="simple-loader-card" aria-label={label}>
+        <div className="simple-loader-logo" aria-hidden="true">
+          <span>↗</span>
         </div>
 
-        <div className="premium-loader-copy">
-          <span className="loader-status-pill">Processing</span>
-          <h2>{label}</h2>
-          <p>Locking the page while your running board updates.</p>
-        </div>
+        <strong>{label}</strong>
+        <p>Please wait while Run Mini updates your board.</p>
 
-        <div className="premium-loader-progress" aria-hidden="true">
+        <div className="simple-loader-progress" aria-hidden="true">
           <span />
-        </div>
-
-        <div className="premium-loader-steps" aria-hidden="true">
-          <span>Save</span>
-          <span>Sync</span>
-          <span>Ready</span>
         </div>
       </section>
     </div>,

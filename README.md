@@ -608,3 +608,20 @@ This update changes three areas:
 - Loading page was redesigned into a cleaner premium route-map loader that blocks interaction while actions are processing.
 
 No database change is required for this update.
+
+
+## Update: simplified theme picker and loading screen
+
+This version simplifies the admin theme selector:
+
+- simple ready-made theme list
+- selected theme preview area
+- no busy design cards
+- click a theme to preview, then save to publish
+
+The loading overlay is also simplified:
+
+- centered Run Mini logo mark
+- short loading message
+- clean progress bar
+- full-screen click blocking while loading

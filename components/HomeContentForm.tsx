@@ -180,19 +180,40 @@ export function HomeContentForm({
             </div>
           </div>
 
-          <div className="fixed-theme-picker">
+          <div className="fixed-theme-picker simple-theme-picker">
             <div className="fixed-theme-picker-head">
               <div>
                 <label>Website design style</label>
-                <p className="muted editor-help">Tap a design to preview it instantly. Click Save home content to publish it for everyone.</p>
+                <p className="muted editor-help">Choose one simple ready-made theme. Preview appears here first; click Save home content to publish.</p>
               </div>
-              <strong>{previewTheme.name}</strong>
             </div>
 
-            <div className="theme-preset-grid">
+            <div
+              className="theme-simple-preview"
+              style={{
+                "--preset-primary": previewTheme.primary,
+                "--preset-secondary": previewTheme.secondary,
+                "--preset-bg": previewTheme.background,
+                "--preset-dark": previewTheme.dark,
+              } as CSSProperties}
+            >
+              <span className="theme-simple-strip" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
+              <div>
+                <strong>{previewTheme.name}</strong>
+                <small>{previewTheme.description}</small>
+              </div>
+              <em>Preview</em>
+            </div>
+
+            <div className="theme-simple-grid">
               {THEME_PRESETS.map((theme) => (
                 <label
-                  className={`theme-preset-card ${selectedTheme === theme.key ? "is-selected" : ""}`}
+                  className={`theme-simple-option ${selectedTheme === theme.key ? "is-selected" : ""}`}
                   key={theme.key}
                   style={{
                     "--preset-primary": theme.primary,
@@ -208,21 +229,12 @@ export function HomeContentForm({
                     checked={selectedTheme === theme.key}
                     onChange={() => setSelectedTheme(theme.key)}
                   />
-                  <span className="theme-preset-swatch" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                  <span className="theme-layout-preview" data-preset={theme.key} aria-hidden="true">
-                    <b />
-                    <b />
-                    <b />
-                  </span>
-                  <span className="theme-preset-copy">
+                  <span className="theme-simple-dot" aria-hidden="true" />
+                  <span className="theme-simple-name">
                     <strong>{theme.name}</strong>
-                    <small>{theme.tagline}</small>
-                    {selectedTheme === theme.key && <em>Selected</em>}
+                    <small>{theme.shortName}</small>
                   </span>
+                  {selectedTheme === theme.key && <em aria-label="Selected">✓</em>}
                 </label>
               ))}
             </div>
