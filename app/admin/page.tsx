@@ -33,110 +33,214 @@ export default async function AdminPage() {
     },
   });
 
+  const openEvents = events.filter((event) => event.status === "OPEN").length;
+  const draftEvents = events.filter((event) => event.status === "DRAFT").length;
+  const closedEvents = events.filter((event) => event.status === "CLOSED").length;
+  const totalVotes = events.reduce((sum, event) => sum + event._count.votes, 0);
+  const totalRuns = events.reduce((sum, event) => sum + event._count.submissions, 0);
+
   return (
     <>
-      <section className="hero admin-hero">
-        <span className="eyebrow">Race control</span>
-        <h1>Admin dashboard</h1>
-        <p>Create sessions, edit workout descriptions, view votes, and manually open or close events.</p>
+      <section className="admin-control-hero">
+        <div>
+          <span className="eyebrow">Race control</span>
+          <h1>Admin cockpit</h1>
+          <p>Manage the website step by step: event board, brand design, scoring rules, and Strava health check.</p>
+        </div>
+
+        <div className="admin-quick-stats" aria-label="Admin overview">
+          <article>
+            <span>Events</span>
+            <strong>{events.length}</strong>
+          </article>
+          <article>
+            <span>Open</span>
+            <strong>{openEvents}</strong>
+          </article>
+          <article>
+            <span>Votes</span>
+            <strong>{totalVotes}</strong>
+          </article>
+          <article>
+            <span>Runs</span>
+            <strong>{totalRuns}</strong>
+          </article>
+        </div>
       </section>
 
-      <div className="card">
-        <h2>Edit home page hero</h2>
-        <p className="muted">
-          Upload the logo image, update the public home title and intro text, then choose one of 10 fixed ready-made themes. The description supports the toolbar formatting.
-        </p>
-        <HomeContentForm content={homeContent} action={updateHomeContentAction} />
-      </div>
+      <nav className="admin-step-nav" aria-label="Admin sections">
+        <a href="#admin-events">01 Events</a>
+        <a href="#admin-design">02 Design</a>
+        <a href="#admin-scoring">03 Scoring</a>
+        <a href="#admin-strava">04 Strava</a>
+      </nav>
 
-
-      <div className="card strava-config-card">
-        <h2>Strava connection check</h2>
-        <p className="muted">Use this to verify why users cannot connect Strava.</p>
-        <div className="profile-list">
+      <section id="admin-events" className="admin-section-card is-primary">
+        <div className="admin-section-head">
           <div>
-            <span>Client ID</span>
-            <strong>{stravaConfig.hasClientId ? "Set" : "Missing"}</strong>
+            <span className="admin-section-number">01</span>
+            <h2>Events</h2>
+            <p>Create workouts, check votes/runs, and manually open or close each event.</p>
           </div>
-          <div>
-            <span>Client Secret</span>
-            <strong>{stravaConfig.hasClientSecret ? "Set" : "Missing"}</strong>
-          </div>
-          <div>
-            <span>Redirect URI</span>
-            <strong>{stravaConfig.redirectUri}</strong>
-          </div>
-          <div>
-            <span>Strava callback domain</span>
-            <strong>{stravaConfig.callbackDomain || "Missing"}</strong>
+          <div className="admin-section-status">
+            <span>{openEvents} open</span>
+            <span>{draftEvents} draft</span>
+            <span>{closedEvents} closed</span>
           </div>
         </div>
-        {!stravaConfig.ready && <p className="error">Strava is not ready. Add STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, APP_URL, and STRAVA_REDIRECT_URI in Vercel.</p>}
-      </div>
 
-      <div className="card">
-        <h2>Edit scoring rules</h2>
-        <p className="muted">
-          Current formula: <strong>{scoringFormulaLabel(scoreSettings)}</strong>. {scoringDescription(scoreSettings)}.
-        </p>
-        <ScoreSettingsForm settings={scoreSettings} action={updateScoreSettingsAction} />
-      </div>
+        <details className="admin-panel">
+          <summary>
+            <span>Create new event</span>
+            <small>Add title, rich workout plan, start/end date and status.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <AdminEventForm action={createEventAction} />
+          </div>
+        </details>
 
-      <div className="card">
-        <h2>Create event</h2>
-        <AdminEventForm action={createEventAction} />
-      </div>
-
-      <div className="card">
-        <h2>Events</h2>
-        <div className="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Event</th>
-                <th>Status</th>
-                <th>Votes</th>
-                <th>Runs</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
+        <details className="admin-panel" open>
+          <summary>
+            <span>Event list</span>
+            <small>Open Manage to view voters, submissions, and edit event details.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <div className="admin-event-list">
               {events.map((event) => (
-                <tr key={event.id}>
-                  <td>
-                    <LoadingLink href={`/events/${event.slug}`}>{event.title}</LoadingLink>
-                    <br />
-                    <span className="muted">
-                      {formatDateTimeRange(event.startAt, event.endAt)}
-                    </span>
-                  </td>
-                  <td>
+                <article className="admin-event-row" key={event.id}>
+                  <div>
+                    <LoadingLink className="admin-event-title" href={`/events/${event.slug}`}>
+                      {event.title}
+                    </LoadingLink>
+                    <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
+                  </div>
+
+                  <div className="admin-event-metrics">
                     <span className={event.status === "OPEN" ? "badge success" : event.status === "CLOSED" ? "badge danger" : "badge"}>
                       {event.status}
                     </span>
-                  </td>
-                  <td>{event._count.votes}</td>
-                  <td>{event._count.submissions}</td>
-                  <td>
-                    <div className="row">
-                      <LoadingLink className="button ghost" href={`/admin/events/${event.id}`}>
-                        Manage
-                      </LoadingLink>
-                      {event.status !== "CLOSED" && (
-                        <form action={updateEventStatusAction}>
-                          <input type="hidden" name="eventId" value={event.id} />
-                          <input type="hidden" name="status" value="CLOSED" />
-                          <FormSubmitButton className="ghost" pendingLabel="Closing event...">Close</FormSubmitButton>
-                        </form>
-                      )}
-                    </div>
-                  </td>
-                </tr>
+                    <span>{event._count.votes} votes</span>
+                    <span>{event._count.submissions} runs</span>
+                  </div>
+
+                  <div className="admin-event-actions">
+                    <LoadingLink className="button ghost" href={`/admin/events/${event.id}`}>
+                      Manage
+                    </LoadingLink>
+                    {event.status !== "CLOSED" && (
+                      <form action={updateEventStatusAction}>
+                        <input type="hidden" name="eventId" value={event.id} />
+                        <input type="hidden" name="status" value="CLOSED" />
+                        <FormSubmitButton className="ghost" pendingLabel="Closing event...">Close</FormSubmitButton>
+                      </form>
+                    )}
+                    {event.status !== "OPEN" && (
+                      <form action={updateEventStatusAction}>
+                        <input type="hidden" name="eventId" value={event.id} />
+                        <input type="hidden" name="status" value="OPEN" />
+                        <FormSubmitButton className="ghost" pendingLabel="Opening event...">Open</FormSubmitButton>
+                      </form>
+                    )}
+                  </div>
+                </article>
               ))}
-            </tbody>
-          </table>
+
+              {events.length === 0 && (
+                <div className="empty-card">
+                  <h3>No events yet</h3>
+                  <p className="muted">Open “Create new event” above to start your first session.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section id="admin-design" className="admin-section-card">
+        <div className="admin-section-head">
+          <div>
+            <span className="admin-section-number">02</span>
+            <h2>Brand & design</h2>
+            <p>Upload logo, update home page wording, and select a ready-made full design theme.</p>
+          </div>
         </div>
-      </div>
+
+        <details className="admin-panel" open>
+          <summary>
+            <span>Website appearance</span>
+            <small>Theme changes layout mood, artwork, buttons, cards, and loading screen style.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <HomeContentForm content={homeContent} action={updateHomeContentAction} />
+          </div>
+        </details>
+      </section>
+
+      <section id="admin-scoring" className="admin-section-card">
+        <div className="admin-section-head">
+          <div>
+            <span className="admin-section-number">03</span>
+            <h2>Scoring & approval</h2>
+            <p>Decide how points are calculated and whether submissions need admin approval.</p>
+          </div>
+          <div className="admin-section-status">
+            <span>{scoringFormulaLabel(scoreSettings)}</span>
+          </div>
+        </div>
+
+        <details className="admin-panel" open>
+          <summary>
+            <span>Point rules</span>
+            <small>{scoringDescription(scoreSettings)}</small>
+          </summary>
+          <div className="admin-panel-body">
+            <ScoreSettingsForm settings={scoreSettings} action={updateScoreSettingsAction} />
+          </div>
+        </details>
+      </section>
+
+      <section id="admin-strava" className="admin-section-card">
+        <div className="admin-section-head">
+          <div>
+            <span className="admin-section-number">04</span>
+            <h2>Strava connection</h2>
+            <p>Check whether the Vercel environment variables and callback domain are ready.</p>
+          </div>
+          <div className="admin-section-status">
+            <span className={stravaConfig.ready ? "status-ok" : "status-warning"}>{stravaConfig.ready ? "Ready" : "Check needed"}</span>
+          </div>
+        </div>
+
+        <details className="admin-panel" open>
+          <summary>
+            <span>Connection health check</span>
+            <small>Use this when members cannot connect Strava.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <div className="profile-list">
+              <div>
+                <span>Client ID</span>
+                <strong>{stravaConfig.hasClientId ? "Set" : "Missing"}</strong>
+              </div>
+              <div>
+                <span>Client Secret</span>
+                <strong>{stravaConfig.hasClientSecret ? "Set" : "Missing"}</strong>
+              </div>
+              <div>
+                <span>Redirect URI</span>
+                <strong>{stravaConfig.redirectUri}</strong>
+              </div>
+              <div>
+                <span>Strava callback domain</span>
+                <strong>{stravaConfig.callbackDomain || "Missing"}</strong>
+              </div>
+            </div>
+            {!stravaConfig.ready && (
+              <p className="error">Strava is not ready. Add STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, APP_URL, and STRAVA_REDIRECT_URI in Vercel.</p>
+            )}
+          </div>
+        </details>
+      </section>
     </>
   );
 }

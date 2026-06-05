@@ -112,9 +112,9 @@ export function HomeContentForm({
         <div className="theme-editor-card coastal-admin-card">
           <div>
             <span className="eyebrow">Brand logo & theme</span>
-            <h3>Choose one fixed design theme</h3>
+            <h3>Choose one full design style</h3>
             <p className="muted">
-              Pick a complete design style, not only colors. Each theme changes the background, hero artwork, card shape, button feel, and loading page mood automatically.
+              Pick a complete visual style. Each option changes the artwork, page mood, card shape, button feel, event board, and loading screen — not only the colors.
             </p>
           </div>
 
@@ -183,8 +183,8 @@ export function HomeContentForm({
           <div className="fixed-theme-picker">
             <div className="fixed-theme-picker-head">
               <div>
-                <label>Website theme</label>
-                <p className="muted editor-help">Tap a theme to preview the full design instantly. Click Save home content to publish it for everyone.</p>
+                <label>Website design style</label>
+                <p className="muted editor-help">Tap a design to preview it instantly. Click Save home content to publish it for everyone.</p>
               </div>
               <strong>{previewTheme.name}</strong>
             </div>

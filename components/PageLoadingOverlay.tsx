@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 export function PageLoadingOverlay({
   show,
-  label = "Preparing your run...",
+  label = "Loading...",
 }: {
   show?: boolean;
   label?: string;
@@ -82,64 +82,39 @@ export function PageLoadingOverlay({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="page-loading-overlay pace-loading-overlay"
+      className="page-loading-overlay premium-route-loader"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <div className="pace-loading-sky" aria-hidden="true">
-        <span className="pace-loading-sun" />
-        <span className="pace-loading-cloud cloud-one" />
-        <span className="pace-loading-cloud cloud-two" />
-        <span className="pace-loading-sweat sweat-one" />
-        <span className="pace-loading-sweat sweat-two" />
-        <span className="pace-loading-sweat sweat-three" />
-        <span className="pace-loading-wave wave-one" />
-        <span className="pace-loading-wave wave-two" />
-      </div>
-
-      <section className="pace-loading-card" aria-label={label}>
-        <div className="pace-loading-topline">
-          <span className="pace-live-dot" />
-          Run Mini is working
+      <section className="premium-loader-card" aria-label={label}>
+        <div className="premium-loader-map" aria-hidden="true">
+          <span className="loader-map-glow" />
+          <span className="loader-route route-a" />
+          <span className="loader-route route-b" />
+          <span className="loader-checkpoint checkpoint-a" />
+          <span className="loader-checkpoint checkpoint-b" />
+          <span className="loader-checkpoint checkpoint-c" />
+          <span className="loader-runner">🏃</span>
         </div>
 
-        <div className="pace-loading-route" aria-hidden="true">
-          <svg viewBox="0 0 320 150" role="img">
-            <path
-              className="pace-route-shadow"
-              d="M18 116 C58 42 100 44 130 94 S206 142 236 76 S292 40 306 82"
-              fill="none"
-            />
-            <path
-              className="pace-route-line"
-              d="M18 116 C58 42 100 44 130 94 S206 142 236 76 S292 40 306 82"
-              fill="none"
-            />
-          </svg>
-          <span className="pace-runner-dot">
-            <span>🏃</span>
-          </span>
-          <span className="pace-finish-flag">🏁</span>
-        </div>
-
-        <div className="pace-loading-copy">
-          <span className="pace-kicker">Run · Save · Score</span>
+        <div className="premium-loader-copy">
+          <span className="loader-status-pill">Processing</span>
           <h2>{label}</h2>
-          <p>Please hold on. We are saving your action and preparing the next step.</p>
+          <p>Locking the page while your running board updates.</p>
         </div>
 
-        <div className="pace-loading-progress" aria-hidden="true">
+        <div className="premium-loader-progress" aria-hidden="true">
           <span />
         </div>
 
-        <div className="pace-loading-steps" aria-hidden="true">
-          <span>Secure</span>
+        <div className="premium-loader-steps" aria-hidden="true">
           <span>Save</span>
-          <span>Refresh</span>
+          <span>Sync</span>
+          <span>Ready</span>
         </div>
       </section>
     </div>,
-    document.body,
+    document.body
   );
 }

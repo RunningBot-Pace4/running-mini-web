@@ -597,3 +597,14 @@ Themes available:
 10. Royal Marathon
 
 Go to `/admin` → `Edit home page hero` → choose a theme → `Save home content`.
+
+
+## Update: design theme v3, cleaner admin dashboard, new loading
+
+This update changes three areas:
+
+- Admin dashboard is separated into clear sections: Events, Brand & Design, Scoring, and Strava.
+- Theme presets now change full visual style: background artwork, hero mood, card shape, button feel, event board, and loading mood.
+- Loading page was redesigned into a cleaner premium route-map loader that blocks interaction while actions are processing.
+
+No database change is required for this update.
