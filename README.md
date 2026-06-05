@@ -560,3 +560,10 @@ npx prisma db push --accept-data-loss && npm run seed && npm run build
 ## UI Fix
 
 - Fixed admin logo remove checkbox so it appears as a normal checkbox instead of a large full-width tick box.
+
+
+### Theme selection behavior
+
+Admin can preview a fixed theme immediately by tapping a theme card in `/admin`.
+To publish the theme for all users, click **Save home content** and redeploy/refresh open member tabs if needed.
+The visible theme is now derived from `SiteContent.themePreset` so stale manual color fields cannot block the selected preset.

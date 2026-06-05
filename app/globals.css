@@ -7974,3 +7974,33 @@ button:not(.ghost) {
 
 
 .cn-mobile-tabbar { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)) !important; }
+
+.theme-preset-copy em {
+  justify-self: start;
+  margin-top: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--preset-primary), var(--preset-secondary));
+}
+
+.theme-preset-card.is-selected::after {
+  content: "✓";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--preset-primary), var(--preset-secondary));
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--preset-primary) 30%, transparent 70%);
+}

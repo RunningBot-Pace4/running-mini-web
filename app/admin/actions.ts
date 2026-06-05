@@ -132,9 +132,10 @@ export async function updateHomeContentAction(_: unknown, formData: FormData) {
     },
   });
 
-  revalidatePath("/");
-  revalidatePath("/admin");
-  return { success: "Home content updated." };
+  revalidatePath("/", "layout");
+  revalidatePath("/", "page");
+  revalidatePath("/admin", "page");
+  return { success: "Home content updated. Theme applied. Refresh any already-open member tabs to see the new theme there too." };
 }
 
 

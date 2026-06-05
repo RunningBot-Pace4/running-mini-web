@@ -1,7 +1,7 @@
 "use client";
 
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ChangeEvent } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
 import { getThemePreset, THEME_PRESETS } from "@/lib/theme-presets";
@@ -22,6 +22,44 @@ type HomeContent = {
   heroDescription: string;
 };
 
+function applyThemePresetToPage(themeKey: string) {
+  const theme = getThemePreset(themeKey);
+  const themeVars: Record<string, string> = {
+    "--accent": theme.primary,
+    "--accent-2": theme.secondary,
+    "--accent-dark": theme.primary,
+    "--bg": theme.background,
+    "--bg-2": theme.background,
+    "--ink": theme.dark,
+    "--text": theme.dark,
+    "--cn-red": theme.secondary,
+    "--cn-orange": theme.secondary,
+    "--cn-gold": theme.secondary,
+    "--cn-gold-2": "#ffd166",
+    "--cn-ink": theme.dark,
+    "--cn-deep": theme.dark,
+    "--cn-paper": theme.background,
+    "--brand-primary": theme.primary,
+    "--brand-secondary": theme.secondary,
+    "--brand-background": theme.background,
+    "--brand-dark": theme.dark,
+    "--sky": theme.primary,
+    "--sea": theme.primary,
+    "--sunrise": theme.secondary,
+    "--mist": "#dde7f0",
+    "--sand": theme.background,
+  };
+
+  const targets = [document.documentElement, document.body].filter(Boolean);
+  for (const target of targets) {
+    for (const [name, value] of Object.entries(themeVars)) {
+      target.style.setProperty(name, value);
+    }
+  }
+
+  document.body.dataset.themePreset = theme.key;
+}
+
 export function HomeContentForm({
   content,
   action,
@@ -36,6 +74,10 @@ export function HomeContentForm({
   const [selectedTheme, setSelectedTheme] = useState(getThemePreset(content.themePreset).key);
 
   const previewTheme = useMemo(() => getThemePreset(selectedTheme), [selectedTheme]);
+
+  useEffect(() => {
+    applyThemePresetToPage(selectedTheme);
+  }, [selectedTheme]);
 
   async function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
     setLogoError("");
@@ -142,7 +184,7 @@ export function HomeContentForm({
             <div className="fixed-theme-picker-head">
               <div>
                 <label>Website theme</label>
-                <p className="muted editor-help">Choose one. Admin no longer needs to manually adjust four separate colors.</p>
+                <p className="muted editor-help">Tap a theme to preview instantly on this page, then click Save home content to publish it for everyone.</p>
               </div>
               <strong>{previewTheme.name}</strong>
             </div>
@@ -174,6 +216,7 @@ export function HomeContentForm({
                   <span className="theme-preset-copy">
                     <strong>{theme.name}</strong>
                     <small>{theme.tagline}</small>
+                    {selectedTheme === theme.key && <em>Selected</em>}
                   </span>
                 </label>
               ))}

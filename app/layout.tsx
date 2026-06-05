@@ -34,10 +34,14 @@ type ThemeStyle = CSSProperties & Record<`--${string}`, string>;
 
 function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): ThemeStyle {
   const preset = getThemePreset(content.themePreset);
-  const primary = content.themePrimary || preset.primary;
-  const secondary = content.themeSecondary || preset.secondary;
-  const background = content.themeBackground || preset.background;
-  const dark = content.themeDark || preset.dark;
+
+  // The site now uses fixed presets. Always derive the visible theme from
+  // themePreset so old/stale color columns cannot prevent the selected theme
+  // from showing on the public pages.
+  const primary = preset.primary;
+  const secondary = preset.secondary;
+  const background = preset.background;
+  const dark = preset.dark;
 
   return {
     "--accent": primary,
