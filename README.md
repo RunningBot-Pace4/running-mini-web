@@ -630,3 +630,10 @@ The loading overlay is also simplified:
 ## Latest update: loading logo sync
 
 The loading overlay now uses the same logo image/mark and brand name shown in the top navigation.
+
+
+## Latest update: collapsed admin panels and modern polish
+
+- Admin dashboard sections now start collapsed by default so admins can manage the site part by part.
+- The overall interface has a cleaner modern glass-card style with softer shadows, smoother buttons, and more polished mobile navigation.
+- No database change is required for this update.

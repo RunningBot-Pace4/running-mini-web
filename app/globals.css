@@ -9616,3 +9616,331 @@ body[data-theme-preset="royal-marathon"] .coastal-event-card {
     justify-self: start;
   }
 }
+
+
+/* =========================================================
+   V4 polish: simpler admin accordions + more modern site feel
+   ========================================================= */
+
+:root {
+  --surface-glass: rgba(255, 255, 255, 0.78);
+  --surface-strong: rgba(255, 255, 255, 0.94);
+  --modern-shadow: 0 22px 70px rgba(11, 31, 51, 0.10);
+  --modern-shadow-soft: 0 12px 36px rgba(11, 31, 51, 0.07);
+}
+
+html,
+body {
+  background:
+    radial-gradient(circle at 10% -10%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 34rem),
+    radial-gradient(circle at 96% 6%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 30rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 84%, white 16%) 0%, color-mix(in srgb, var(--bg) 94%, #eef6fb 6%) 55%, color-mix(in srgb, var(--bg) 88%, white 12%) 100%);
+}
+
+body::before {
+  opacity: 0.08;
+  background-image:
+    linear-gradient(90deg, transparent 0 38px, color-mix(in srgb, var(--accent) 16%, transparent) 39px 40px, transparent 41px 100%),
+    linear-gradient(180deg, transparent 0 38px, color-mix(in srgb, var(--ink) 10%, transparent) 39px 40px, transparent 41px 100%);
+  background-size: 160px 160px;
+}
+
+.topbar {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  padding: 10px 0 4px;
+}
+
+.topbar-inner {
+  width: min(calc(100% - 24px), 1120px);
+  border-radius: 999px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 16px 42px rgba(11, 31, 51, 0.08);
+}
+
+.brand-mark {
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 10px 24px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.nav > a:not(.button),
+.nav button.ghost,
+.nav .button.ghost {
+  border-radius: 999px;
+  font-weight: 850;
+}
+
+.container {
+  width: min(100%, 1120px);
+}
+
+.button,
+button {
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease;
+}
+
+.button:hover,
+button:hover {
+  transform: translateY(-1px);
+}
+
+.button:active,
+button:active {
+  transform: translateY(0) scale(.99);
+}
+
+.card,
+.event-card,
+.coastal-dashboard-card,
+.coastal-event-card,
+.cn-event-card,
+.cn-flow-card,
+.cn-workout-board,
+.cn-leaderboard-card,
+.cn-submission-wallet {
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  box-shadow: var(--modern-shadow-soft);
+}
+
+.coastal-event-card,
+.event-card,
+.card {
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.coastal-event-card:hover,
+.event-card:hover,
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--modern-shadow);
+  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.coastal-hero {
+  border-radius: clamp(30px, 5vw, 46px);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,255,255,.58)),
+    radial-gradient(circle at 82% 14%, color-mix(in srgb, var(--accent-2) 42%, transparent), transparent 15rem),
+    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 18rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--bg) 90%, white 10%), #fff);
+  box-shadow: 0 34px 90px rgba(11, 31, 51, 0.12);
+}
+
+.coastal-phone-card,
+.member-coastal-card {
+  background: rgba(255, 255, 255, 0.76);
+  border-color: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 26px 70px rgba(11, 31, 51, 0.12);
+  backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.coastal-primary-btn,
+button[type="submit"] {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent-2) 82%, #fff 18%));
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.coastal-secondary-btn {
+  background: rgba(255, 255, 255, 0.76) !important;
+  color: var(--ink) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 12px 26px rgba(11, 31, 51, 0.08) !important;
+}
+
+.admin-control-hero {
+  border-radius: 32px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,255,255,.7)),
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--accent-2) 28%, transparent), transparent 15rem),
+    radial-gradient(circle at 8% 18%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 14rem);
+  border-color: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 28px 80px rgba(11, 31, 51, 0.10);
+}
+
+.admin-control-hero h1 {
+  font-size: clamp(40px, 7vw, 68px);
+}
+
+.admin-step-nav {
+  border-radius: 22px;
+  padding: 8px;
+  background: rgba(255, 255, 255, .74);
+  box-shadow: 0 12px 34px rgba(11, 31, 51, 0.06);
+}
+
+.admin-step-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 9px 14px;
+}
+
+.admin-section-card {
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.84);
+  border-color: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 52px rgba(11, 31, 51, 0.075);
+}
+
+.admin-section-head {
+  align-items: start;
+}
+
+.admin-panel {
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid color-mix(in srgb, var(--ink) 9%, transparent);
+  box-shadow: none;
+}
+
+.admin-panel + .admin-panel {
+  margin-top: 12px;
+}
+
+.admin-panel summary {
+  min-height: 74px;
+  padding: 18px 54px 18px 18px;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.86), rgba(255,255,255,.62));
+}
+
+.admin-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-panel summary::after {
+  content: "+";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 9%, #fff 91%);
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+  font-size: 22px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.admin-panel[open] summary::after {
+  content: "–";
+  color: #fff;
+  background: var(--accent);
+}
+
+.admin-panel summary span {
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+
+.admin-panel summary small {
+  max-width: 700px;
+  line-height: 1.45;
+}
+
+.admin-panel-body {
+  padding: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  background: rgba(255,255,255,.42);
+}
+
+.admin-event-row {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.admin-event-row:hover {
+  border-color: color-mix(in srgb, var(--accent) 18%, transparent);
+  box-shadow: 0 14px 34px rgba(11, 31, 51, .07);
+}
+
+.theme-editor-card,
+.theme-simple-preview,
+.theme-simple-option,
+.logo-upload-panel {
+  border-radius: 22px;
+}
+
+.theme-simple-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.theme-simple-option {
+  min-height: 58px;
+  padding: 11px 13px;
+}
+
+.theme-simple-option.is-selected {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--preset-bg) 42%, white 58%), #fff);
+}
+
+.simple-page-loader {
+  background:
+    radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 20rem),
+    rgba(10, 16, 24, 0.62);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.simple-loader-card {
+  width: min(88vw, 300px);
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08)),
+    linear-gradient(135deg, color-mix(in srgb, var(--ink) 92%, #000), color-mix(in srgb, var(--accent) 20%, #0b1220));
+}
+
+.cn-mobile-tabbar {
+  grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
+  background: rgba(255, 255, 255, .9);
+  border-color: rgba(255, 255, 255, .82);
+}
+
+.cn-mobile-tabbar a,
+.cn-mobile-tabbar button {
+  border-radius: 20px;
+}
+
+@media (max-width: 780px) {
+  .topbar {
+    padding-top: 8px;
+  }
+
+  .topbar-inner {
+    width: min(calc(100% - 18px), 1120px);
+  }
+
+  .coastal-hero {
+    border-radius: 30px;
+    padding: 24px 18px;
+  }
+
+  .admin-control-hero,
+  .admin-section-card {
+    border-radius: 24px;
+  }
+
+  .admin-panel summary {
+    min-height: auto;
+    padding: 16px 50px 16px 16px;
+  }
+
+  .admin-panel-body {
+    padding: 14px;
+  }
+}

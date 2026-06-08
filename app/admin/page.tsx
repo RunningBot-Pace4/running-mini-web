@@ -99,7 +99,7 @@ export default async function AdminPage() {
           </div>
         </details>
 
-        <details className="admin-panel" open>
+        <details className="admin-panel">
           <summary>
             <span>Event list</span>
             <small>Open Manage to view voters, submissions, and edit event details.</small>
@@ -165,7 +165,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <details className="admin-panel" open>
+        <details className="admin-panel">
           <summary>
             <span>Website appearance</span>
             <small>Theme changes layout mood, artwork, buttons, cards, and loading screen style.</small>
@@ -188,7 +188,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <details className="admin-panel" open>
+        <details className="admin-panel">
           <summary>
             <span>Point rules</span>
             <small>{scoringDescription(scoreSettings)}</small>
@@ -211,7 +211,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <details className="admin-panel" open>
+        <details className="admin-panel">
           <summary>
             <span>Connection health check</span>
             <small>Use this when members cannot connect Strava.</small>
