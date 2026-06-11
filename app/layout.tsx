@@ -72,8 +72,8 @@ function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): T
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, siteContent] = await Promise.all([getCurrentUser(), getHomeContent()]);
-  const brandName = siteContent.brandName || "Run Mini";
-  const brandMark = siteContent.brandMark || "↗";
+  const brandName = (siteContent.brandName || "").trim() || "Run Mini";
+  const brandMark = (siteContent.brandMark || "").trim() || "↗";
   const logoImageDataUrl = siteContent.logoImageDataUrl || "";
 
   return (
@@ -81,7 +81,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body style={buildThemeStyle(siteContent)} data-theme-preset={siteContent.themePreset || "coastal-sunrise"}>
         <header className="topbar cn-topbar">
           <div className="topbar-inner cn-topbar-inner">
-            <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label="Run Mini home" loadingLabel="Opening home...">
+            <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label={`${brandName} home`} loadingLabel="Opening home...">
               <span className="brand-mark cn-brand-mark coastal-brand-mark">
                 {logoImageDataUrl ? <img src={logoImageDataUrl} alt="" /> : brandMark}
               </span>

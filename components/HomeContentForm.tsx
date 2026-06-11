@@ -163,7 +163,7 @@ export function HomeContentForm({
                 name="brandName"
                 required
                 maxLength={40}
-                defaultValue={content.brandName}
+                defaultValue={(content.brandName || "").trim() || "Run Mini"}
               />
             </div>
 
@@ -174,7 +174,7 @@ export function HomeContentForm({
                 name="brandMark"
                 required
                 maxLength={4}
-                defaultValue={content.brandMark}
+                defaultValue={(content.brandMark || "").trim() || "↗"}
               />
               <p className="muted editor-help">Used if no image logo is uploaded.</p>
             </div>

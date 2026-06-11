@@ -70,13 +70,13 @@ export async function createEventAction(_: unknown, formData: FormData) {
 
 
 const updateHomeContentSchema = z.object({
-  brandName: z.string().min(2).max(40),
-  brandMark: z.string().min(1).max(4),
+  brandName: z.string().trim().min(2).max(40),
+  brandMark: z.string().trim().min(1).max(4),
   logoImageDataUrl: z.string().max(800000).optional(),
   removeLogoImage: z.coerce.boolean().default(false),
   themePreset: z.string().refine(isThemePresetKey, "Please choose one of the fixed themes."),
-  heroEyebrow: z.string().min(2).max(80),
-  heroTitle: z.string().min(3).max(180),
+  heroEyebrow: z.string().trim().min(2).max(80),
+  heroTitle: z.string().trim().min(3).max(180),
   heroDescription: z.string().min(3).max(3000),
 });
 

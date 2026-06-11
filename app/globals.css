@@ -9944,3 +9944,47 @@ button[type="submit"] {
     padding: 14px;
   }
 }
+
+
+/* Brand name mobile visibility fix */
+.brand {
+  min-width: 0;
+}
+
+.brand-name {
+  display: inline-flex !important;
+  align-items: center;
+  min-width: 0;
+  max-width: min(42vw, 240px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  line-height: 1;
+}
+
+@media (max-width: 780px) {
+  .topbar-inner {
+    justify-content: flex-start;
+  }
+
+  .brand,
+  .cn-brand,
+  .coastal-brand {
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  .brand-name {
+    display: inline-flex !important;
+    max-width: calc(100vw - 118px);
+    font-size: 18px;
+    letter-spacing: -0.04em;
+  }
+
+  .brand-mark,
+  .cn-brand-mark,
+  .coastal-brand-mark {
+    flex: 0 0 auto;
+  }
+}

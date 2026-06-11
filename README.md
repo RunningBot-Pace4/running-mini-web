@@ -637,3 +637,8 @@ The loading overlay now uses the same logo image/mark and brand name shown in th
 - Admin dashboard sections now start collapsed by default so admins can manage the site part by part.
 - The overall interface has a cleaner modern glass-card style with softer shadows, smoother buttons, and more polished mobile navigation.
 - No database change is required for this update.
+
+
+### Mobile logo / club name note
+
+The header now always shows the club name on mobile. If the admin saved an empty or space-only logo name, the app falls back to `Run Mini`. Update it from `/admin → Brand & Design → Logo name`.
