@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LoadingLink } from "@/components/LoadingLink";
 import { prisma } from "@/lib/prisma";
 import { ShareButtons } from "@/components/ShareButtons";
+import { SharePosterActions } from "@/components/SharePosterActions";
 
 export async function generateMetadata({
   params,
@@ -45,24 +46,83 @@ export default async function SharePage({ params }: { params: Promise<{ submissi
 
   if (!submission || submission.status !== "APPROVED") notFound();
 
-  const shareText = `${submission.user.name} scored ${submission.totalPoints} points in ${submission.event.title}: ${submission.distanceKm.toString()}km run!`;
+  const distanceKm = Number(submission.distanceKm).toFixed(2).replace(/\.00$/, "");
+  const shareText = `${submission.user.name} scored ${submission.totalPoints} points in ${submission.event.title}: ${distanceKm}km run!`;
 
   return (
     <>
-      <div className="share-card">
-        <p className="muted">{submission.event.title}</p>
-        <h1>{submission.user.name}</h1>
-        <div className="score">{submission.totalPoints} pts</div>
-        <p>
-          {submission.activity.name} · {submission.distanceKm.toString()}km
-        </p>
-        <p className="muted">
-          {submission.attendancePoints} attendance point{submission.attendancePoints === 1 ? "" : "s"} + {submission.distancePoints} distance points
-        </p>
-      </div>
+      <section className="share-hero-section">
+        <div className="share-story-preview" aria-label="Instagram story result preview">
+          <div className="story-sky" aria-hidden="true">
+            <span className="story-sun" />
+            <span className="story-wave one" />
+            <span className="story-wave two" />
+          </div>
+
+          <div className="story-header">
+            <span className="story-logo">🏃</span>
+            <div>
+              <strong>Run Mini</strong>
+              <small>Sweat • Run • Score</small>
+            </div>
+          </div>
+
+          <div className="story-metric-card">
+            <span>FINISH RESULT</span>
+            <strong>{distanceKm}km</strong>
+            <em>{submission.totalPoints} pts</em>
+          </div>
+
+          <div className="story-route" aria-hidden="true">
+            <span className="route-dot start" />
+            <span className="route-dot mid" />
+            <span className="route-dot end" />
+            <span className="route-runner">🏃‍♂️</span>
+          </div>
+
+          <div className="story-runner-card">
+            <span>RUNNER</span>
+            <strong>{submission.user.name}</strong>
+            <small>{submission.event.title}</small>
+          </div>
+
+          <div className="story-points-row">
+            <div>
+              <strong>{submission.attendancePoints}</strong>
+              <span>Attend</span>
+            </div>
+            <div>
+              <strong>{submission.distancePoints}</strong>
+              <span>Distance</span>
+            </div>
+            <div>
+              <strong>{submission.totalPoints}</strong>
+              <span>Total</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="share-control-card">
+          <span className="eyebrow">Share card</span>
+          <h1>Ready for Instagram Story.</h1>
+          <p className="muted">
+            The card is designed in 9:16 story style with large distance, points, route line and runner details.
+          </p>
+          <SharePosterActions
+            userName={submission.user.name}
+            eventTitle={submission.event.title}
+            activityName={submission.activity.name}
+            distanceKm={distanceKm}
+            totalPoints={submission.totalPoints}
+            attendancePoints={submission.attendancePoints}
+            distancePoints={submission.distancePoints}
+            shareText={shareText}
+          />
+        </div>
+      </section>
 
       <div className="card">
-        <h2>Share your result</h2>
+        <h2>Share link</h2>
         <ShareButtons text={shareText} />
       </div>
 

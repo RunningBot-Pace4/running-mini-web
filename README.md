@@ -684,3 +684,14 @@ This package includes a full contrast pass for the main visible screens:
 - Theme-based light/dark card readability
 
 Main rule applied: light cards use dark text, dark themes use light text, and score/stat labels no longer use white text on light backgrounds.
+
+## Update: Vote button standard color + IG Story share card
+
+- Attendance vote buttons now use standard states across all themes:
+  - No vote / unselected: neutral white button.
+  - ATTEND selected: green button.
+  - NOT_ATTEND selected: red button.
+  - Closed/disabled events keep the selected color but do not turn both buttons green.
+- Share result page now includes a 9:16 Instagram Story style result card.
+- Users can generate/share/download a PNG story card with distance, points, route line, event name and runner name.
+- The share card works with mobile native share sheet when supported; otherwise users can download and manually upload to Instagram Story / Xiaohongshu.
