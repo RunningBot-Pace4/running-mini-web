@@ -10439,3 +10439,186 @@ body[data-theme-preset] .pace-loading-steps span {
     min-height: 104px;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* v5 full contrast QA pass                                                   */
+/* Ensures light theme cards never show white text and account summary is      */
+/* readable across all 10 fixed themes.                                       */
+/* -------------------------------------------------------------------------- */
+
+body[data-theme-preset] .mini-score-card span,
+body[data-theme-preset] .mini-score-card small,
+body[data-theme-preset] .coastal-ticket span,
+body[data-theme-preset] .coastal-ticket small,
+body[data-theme-preset] .coastal-next-focus span,
+body[data-theme-preset] .coastal-next-focus small,
+body[data-theme-preset] .coastal-phone-top small,
+body[data-theme-preset] .account-summary-score span,
+body[data-theme-preset] .account-summary-score small {
+  color: var(--contrast-muted, #4d5f70) !important;
+  opacity: 1 !important;
+}
+
+body[data-theme-preset] .mini-score-card strong,
+body[data-theme-preset] .coastal-ticket strong,
+body[data-theme-preset] .coastal-next-focus strong,
+body[data-theme-preset] .account-summary-score strong {
+  color: var(--contrast-heading, #071827) !important;
+  opacity: 1 !important;
+}
+
+body[data-theme-preset] .coastal-ticket,
+body[data-theme-preset] .coastal-next-focus,
+body[data-theme-preset] .mini-score-card,
+body[data-theme-preset] .account-summary-score {
+  color: var(--contrast-text, #10243a) !important;
+  background: var(--contrast-soft-card-bg) !important;
+  border: 1px solid var(--contrast-border) !important;
+}
+
+.account-summary-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: clamp(16px, 4vw, 36px);
+  align-items: stretch;
+  margin: 12px 0 22px;
+  padding: clamp(22px, 5vw, 44px);
+  border-radius: clamp(28px, 4vw, 44px);
+  overflow: hidden;
+  color: var(--contrast-text, var(--text));
+  background:
+    radial-gradient(circle at 86% 20%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 18%, transparent 82%), transparent 16rem),
+    radial-gradient(circle at 12% 86%, color-mix(in srgb, var(--brand-primary, #1d6fa3) 13%, transparent 87%), transparent 18rem),
+    var(--contrast-card-bg, rgba(255, 255, 255, 0.92));
+  border: 1px solid var(--contrast-border, var(--border));
+  box-shadow: var(--contrast-shadow, var(--shadow));
+}
+
+.account-summary-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--brand-primary, #1d6fa3) 6%, transparent 94%) 1px, transparent 1px),
+    linear-gradient(0deg, color-mix(in srgb, var(--brand-primary, #1d6fa3) 5%, transparent 95%) 1px, transparent 1px);
+  background-size: 54px 54px;
+  opacity: .32;
+  mask-image: linear-gradient(90deg, transparent, #000 16%, #000 82%, transparent);
+}
+
+.account-summary-copy,
+.account-summary-score {
+  position: relative;
+  z-index: 1;
+}
+
+.account-summary-copy h1 {
+  margin: 10px 0 12px;
+  color: var(--contrast-heading, var(--text));
+  font-size: clamp(52px, 9vw, 118px);
+  line-height: .88;
+  letter-spacing: -0.075em;
+  overflow-wrap: anywhere;
+}
+
+.account-summary-copy p {
+  margin: 0;
+  color: var(--contrast-muted, var(--muted));
+  font-size: clamp(16px, 2vw, 22px);
+  overflow-wrap: anywhere;
+}
+
+.account-summary-score {
+  min-height: 164px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: clamp(18px, 4vw, 28px);
+  border-radius: 30px;
+  background: var(--contrast-soft-card-bg, rgba(255,255,255,.78));
+  border: 1px solid var(--contrast-border, var(--border));
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--brand-primary, #1d6fa3) 9%, transparent 91%);
+}
+
+.account-summary-score span {
+  font-size: 13px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.account-summary-score strong {
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: .9;
+  letter-spacing: -0.075em;
+}
+
+.account-summary-score small {
+  font-size: 15px;
+  font-weight: 750;
+}
+
+body[data-theme-preset="midnight-run"] .account-summary-hero,
+body[data-theme-preset="neon-track"] .account-summary-hero {
+  background:
+    radial-gradient(circle at 86% 20%, color-mix(in srgb, var(--brand-secondary, #a78bfa) 18%, transparent 82%), transparent 16rem),
+    linear-gradient(135deg, rgba(15, 23, 42, .96), rgba(2, 6, 23, .88));
+}
+
+body[data-theme-preset="midnight-run"] .account-summary-score,
+body[data-theme-preset="neon-track"] .account-summary-score {
+  background: var(--contrast-soft-card-bg, rgba(255, 255, 255, .08));
+}
+
+/* Kill old white-on-light card rules from earlier theme versions. */
+body[data-theme-preset] .account-hero,
+body[data-theme-preset] .account-hero p,
+body[data-theme-preset] .account-hero .muted {
+  color: var(--contrast-text, #10243a) !important;
+}
+
+body[data-theme-preset] .account-profile-card,
+body[data-theme-preset] .account-profile-metrics > div,
+body[data-theme-preset] .card,
+body[data-theme-preset] .stat-card,
+body[data-theme-preset] .table-scroll,
+body[data-theme-preset] .profile-list div {
+  color: var(--contrast-text, #10243a) !important;
+}
+
+body[data-theme-preset] .account-profile-copy h2,
+body[data-theme-preset] .account-profile-metrics strong,
+body[data-theme-preset] .stat-card h2,
+body[data-theme-preset] td:last-child,
+body[data-theme-preset] .profile-list strong {
+  color: var(--contrast-heading, #071827) !important;
+}
+
+body[data-theme-preset] .account-profile-copy p,
+body[data-theme-preset] .account-profile-metrics span,
+body[data-theme-preset] .account-profile-metrics small,
+body[data-theme-preset] .stat-card p,
+body[data-theme-preset] .profile-list span {
+  color: var(--contrast-muted, #4d5f70) !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 780px) {
+  .account-summary-hero {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    border-radius: 30px;
+  }
+
+  .account-summary-copy h1 {
+    font-size: clamp(46px, 17vw, 82px);
+  }
+
+  .account-summary-score {
+    min-height: 132px;
+    border-radius: 26px;
+  }
+}

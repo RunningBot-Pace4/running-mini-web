@@ -32,13 +32,13 @@ export default async function AccountPage() {
 
   return (
     <>
-      <section className="hero account-hero">
-        <div>
+      <section className="account-summary-hero" aria-label="Account summary">
+        <div className="account-summary-copy">
           <span className="eyebrow">My account</span>
           <h1>{user.name}</h1>
           <p>{user.email}</p>
         </div>
-        <div className="mini-score-card">
+        <div className="account-summary-score" aria-label="Total approved points">
           <span>Total points</span>
           <strong>{totalPoints}</strong>
           <small>{totalDistance.toFixed(2)}km submitted</small>

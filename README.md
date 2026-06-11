@@ -672,3 +672,15 @@ README.md
 ```
 
 No database migration is required for this update.
+
+## UI QA update - contrast and account page readability
+
+This package includes a full contrast pass for the main visible screens:
+
+- Home/member dashboard cards
+- Account hero and profile details
+- Event cards and score cards
+- Admin cards/tables
+- Theme-based light/dark card readability
+
+Main rule applied: light cards use dark text, dark themes use light text, and score/stat labels no longer use white text on light backgrounds.
