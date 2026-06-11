@@ -642,3 +642,16 @@ The loading overlay now uses the same logo image/mark and brand name shown in th
 ### Mobile logo / club name note
 
 The header now always shows the club name on mobile. If the admin saved an empty or space-only logo name, the app falls back to `Run Mini`. Update it from `/admin → Brand & Design → Logo name`.
+
+## Update: Theme readability and contrast polish
+
+This update fixes low-contrast text across all 10 themes.
+
+What changed:
+
+- Light cards now use dark readable text.
+- Dark themes still use light readable text.
+- Score wallet, stat cards, next event cards, event detail cards, account cards, admin cards, tables, and rich descriptions now share contrast-safe styling.
+- The fix applies globally, so future theme changes should not make text disappear on light backgrounds.
+
+No database change is required for this update.

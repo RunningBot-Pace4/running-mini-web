@@ -9988,3 +9988,267 @@ button[type="submit"] {
     flex: 0 0 auto;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* v4 global readability + card polish                                        */
+/* Fixes low-contrast text across all 10 design themes.                       */
+/* Rule: light cards use dark text, dark themes use light text, and all       */
+/* important wallet/stat/event cards inherit safe contrast tokens.            */
+/* -------------------------------------------------------------------------- */
+
+body[data-theme-preset] {
+  --contrast-heading: #071827;
+  --contrast-text: #10243a;
+  --contrast-muted: #4d5f70;
+  --contrast-soft-muted: #66798a;
+  --contrast-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.88));
+  --contrast-soft-card-bg:
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 16%, transparent 84%), transparent 9rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-primary, #1d6fa3) 8%, #ffffff 92%), color-mix(in srgb, var(--brand-secondary, #ff7a45) 9%, #ffffff 91%));
+  --contrast-sub-card-bg: rgba(255, 255, 255, 0.76);
+  --contrast-border: color-mix(in srgb, var(--brand-primary, #1d6fa3) 14%, rgba(11, 31, 51, 0.08) 86%);
+  --contrast-shadow: 0 22px 68px color-mix(in srgb, var(--brand-primary, #1d6fa3) 10%, transparent 90%);
+  --contrast-chip-bg: color-mix(in srgb, var(--brand-primary, #1d6fa3) 10%, #ffffff 90%);
+}
+
+body[data-theme-preset="midnight-run"],
+body[data-theme-preset="neon-track"] {
+  --contrast-heading: #f8fbff;
+  --contrast-text: #eef6ff;
+  --contrast-muted: rgba(238, 246, 255, 0.74);
+  --contrast-soft-muted: rgba(238, 246, 255, 0.58);
+  --contrast-card-bg: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(2, 6, 23, 0.86));
+  --contrast-soft-card-bg:
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--brand-secondary, #a78bfa) 20%, transparent 80%), transparent 9rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.05));
+  --contrast-sub-card-bg: rgba(255, 255, 255, 0.08);
+  --contrast-border: color-mix(in srgb, var(--brand-primary, #22d3ee) 24%, rgba(255, 255, 255, 0.12) 76%);
+  --contrast-shadow: 0 24px 86px rgba(2, 6, 23, 0.58);
+  --contrast-chip-bg: rgba(255, 255, 255, 0.10);
+}
+
+body[data-theme-preset] .card,
+body[data-theme-preset] .event-card,
+body[data-theme-preset] .coastal-phone-card,
+body[data-theme-preset] .coastal-dashboard-card,
+body[data-theme-preset] .coastal-event-card,
+body[data-theme-preset] .coastal-lifestyle-card,
+body[data-theme-preset] .coastal-join-panel,
+body[data-theme-preset] .coastal-mission-map article,
+body[data-theme-preset] .cn-workout-board,
+body[data-theme-preset] .cn-flow-card,
+body[data-theme-preset] .cn-submission-wallet,
+body[data-theme-preset] .cn-leaderboard-card,
+body[data-theme-preset] .cn-locked-panel,
+body[data-theme-preset] .admin-section-card,
+body[data-theme-preset] .admin-panel,
+body[data-theme-preset] .admin-event-row {
+  color: var(--contrast-text) !important;
+  background: var(--contrast-card-bg) !important;
+  border-color: var(--contrast-border) !important;
+  box-shadow: var(--contrast-shadow) !important;
+}
+
+body[data-theme-preset] .coastal-ticket,
+body[data-theme-preset] .coastal-next-focus,
+body[data-theme-preset] .score-rule-card,
+body[data-theme-preset] .mini-score-card,
+body[data-theme-preset] .cn-event-score-ticket,
+body[data-theme-preset] .premium-score-ticket,
+body[data-theme-preset] .cn-submission-card,
+body[data-theme-preset] .cn-mission-map article,
+body[data-theme-preset] .coastal-stat-row div,
+body[data-theme-preset] .coastal-task-list div,
+body[data-theme-preset] .profile-list div,
+body[data-theme-preset] .admin-quick-stats article {
+  color: var(--contrast-text) !important;
+  background: var(--contrast-soft-card-bg) !important;
+  border: 1px solid var(--contrast-border) !important;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--brand-primary, #1d6fa3) 8%, transparent 92%) !important;
+}
+
+body[data-theme-preset] .coastal-ticket::after {
+  opacity: 0.18;
+}
+
+body[data-theme-preset] h1,
+body[data-theme-preset] h2,
+body[data-theme-preset] h3,
+body[data-theme-preset] h4,
+body[data-theme-preset] .card h2,
+body[data-theme-preset] .card h3,
+body[data-theme-preset] .coastal-phone-top strong,
+body[data-theme-preset] .coastal-ticket strong,
+body[data-theme-preset] .coastal-next-focus strong,
+body[data-theme-preset] .coastal-dashboard-card strong,
+body[data-theme-preset] .coastal-stat-row strong,
+body[data-theme-preset] .coastal-task-list strong,
+body[data-theme-preset] .coastal-event-card h2,
+body[data-theme-preset] .cn-event-card h2,
+body[data-theme-preset] .cn-flow-card h2,
+body[data-theme-preset] .cn-workout-board h2,
+body[data-theme-preset] .cn-leaderboard-card h2,
+body[data-theme-preset] .cn-event-score-ticket strong,
+body[data-theme-preset] .premium-score-ticket strong,
+body[data-theme-preset] .mini-score-card strong,
+body[data-theme-preset] .profile-list strong,
+body[data-theme-preset] table td strong {
+  color: var(--contrast-heading) !important;
+}
+
+body[data-theme-preset] p,
+body[data-theme-preset] small,
+body[data-theme-preset] .muted,
+body[data-theme-preset] .card p,
+body[data-theme-preset] .coastal-phone-top small,
+body[data-theme-preset] .coastal-ticket small,
+body[data-theme-preset] .coastal-next-focus small,
+body[data-theme-preset] .coastal-dashboard-card small,
+body[data-theme-preset] .coastal-stat-row span,
+body[data-theme-preset] .coastal-task-list span,
+body[data-theme-preset] .coastal-event-footer span,
+body[data-theme-preset] .profile-list span,
+body[data-theme-preset] .cn-event-score-ticket small,
+body[data-theme-preset] .premium-score-ticket p,
+body[data-theme-preset] .cn-submission-card p,
+body[data-theme-preset] table th,
+body[data-theme-preset] table td {
+  color: var(--contrast-muted) !important;
+}
+
+body[data-theme-preset] .coastal-ticket span,
+body[data-theme-preset] .coastal-next-focus > span,
+body[data-theme-preset] .score-rule-top span,
+body[data-theme-preset] .eyebrow,
+body[data-theme-preset] .cn-board-badge,
+body[data-theme-preset] .cn-event-score-ticket span,
+body[data-theme-preset] .premium-score-ticket > span,
+body[data-theme-preset] .cn-flow-step,
+body[data-theme-preset] .admin-section-number {
+  color: var(--brand-primary, #1d6fa3) !important;
+}
+
+body[data-theme-preset] .cn-board-badge,
+body[data-theme-preset] .cn-flow-step,
+body[data-theme-preset] .admin-section-number,
+body[data-theme-preset] .button:not(.ghost),
+body[data-theme-preset] button:not(.ghost),
+body[data-theme-preset] .coastal-primary-btn,
+body[data-theme-preset] .cn-register-pill {
+  color: #ffffff !important;
+}
+
+body[data-theme-preset] .coastal-proof-strip span,
+body[data-theme-preset] .date-pill,
+body[data-theme-preset] .cn-event-chips span,
+body[data-theme-preset] .badge,
+body[data-theme-preset] .theme-simple-preview,
+body[data-theme-preset] .theme-simple-option,
+body[data-theme-preset] .logo-upload-panel {
+  background: var(--contrast-chip-bg) !important;
+  color: var(--contrast-text) !important;
+  border-color: var(--contrast-border) !important;
+}
+
+body[data-theme-preset] .rich-content,
+body[data-theme-preset] .rich-content p,
+body[data-theme-preset] .rich-content li,
+body[data-theme-preset] .rich-content blockquote,
+body[data-theme-preset] .event-description,
+body[data-theme-preset] .desc-line {
+  color: var(--contrast-text) !important;
+}
+
+body[data-theme-preset] .rich-content h1,
+body[data-theme-preset] .rich-content h2,
+body[data-theme-preset] .rich-content h3,
+body[data-theme-preset] .rich-content h4,
+body[data-theme-preset] .desc-heading {
+  color: var(--brand-primary, #1d6fa3) !important;
+}
+
+body[data-theme-preset] input,
+body[data-theme-preset] textarea,
+body[data-theme-preset] select,
+body[data-theme-preset] .rich-editor-content {
+  color: #0f172a !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #1d6fa3) 14%, rgba(15, 23, 42, 0.12) 86%) !important;
+}
+
+body[data-theme-preset] table {
+  color: var(--contrast-text) !important;
+}
+
+body[data-theme-preset] tr:hover td {
+  background: color-mix(in srgb, var(--brand-primary, #1d6fa3) 6%, transparent 94%) !important;
+}
+
+body[data-theme-preset] .account-hero,
+body[data-theme-preset] .admin-hero,
+body[data-theme-preset] .cn-event-hero-copy {
+  color: var(--contrast-text) !important;
+  background:
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--brand-secondary, #ff7a45) 24%, transparent 76%), transparent 13rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-primary, #1d6fa3) 12%, #ffffff 88%), color-mix(in srgb, var(--brand-background, #f8fbfd) 88%, #ffffff 12%)) !important;
+  border: 1px solid var(--contrast-border) !important;
+}
+
+body[data-theme-preset="midnight-run"] .account-hero,
+body[data-theme-preset="midnight-run"] .admin-hero,
+body[data-theme-preset="midnight-run"] .cn-event-hero-copy,
+body[data-theme-preset="neon-track"] .account-hero,
+body[data-theme-preset="neon-track"] .admin-hero,
+body[data-theme-preset="neon-track"] .cn-event-hero-copy {
+  background:
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--brand-secondary, #a78bfa) 18%, transparent 82%), transparent 13rem),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.88)) !important;
+}
+
+body[data-theme-preset] .account-hero p,
+body[data-theme-preset] .admin-hero p,
+body[data-theme-preset] .cn-event-hero-copy p,
+body[data-theme-preset] .cn-event-chips span {
+  color: var(--contrast-muted) !important;
+}
+
+body[data-theme-preset] .topbar.cn-topbar,
+body[data-theme-preset] .cn-mobile-tabbar {
+  color: var(--contrast-text) !important;
+}
+
+body[data-theme-preset] .brand-name,
+body[data-theme-preset] .cn-nav a,
+body[data-theme-preset] .cn-mobile-tabbar a,
+body[data-theme-preset] .cn-mobile-tabbar button {
+  color: var(--contrast-heading) !important;
+}
+
+body[data-theme-preset] .simple-loader-card,
+body[data-theme-preset] .pace-loading-card {
+  color: #ffffff !important;
+  background:
+    linear-gradient(180deg, rgba(9, 18, 30, 0.94), rgba(9, 18, 30, 0.84)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+body[data-theme-preset] .simple-loader-card p,
+body[data-theme-preset] .pace-loading-card p,
+body[data-theme-preset] .pace-loading-card small,
+body[data-theme-preset] .pace-loading-steps span {
+  color: rgba(255, 255, 255, 0.76) !important;
+}
+
+@media (max-width: 780px) {
+  body[data-theme-preset] .coastal-ticket,
+  body[data-theme-preset] .coastal-next-focus,
+  body[data-theme-preset] .score-rule-card,
+  body[data-theme-preset] .mini-score-card {
+    background: var(--contrast-soft-card-bg) !important;
+  }
+
+  body[data-theme-preset] .coastal-ticket strong,
+  body[data-theme-preset] .mini-score-card strong {
+    font-size: clamp(30px, 11vw, 48px);
+  }
+}
