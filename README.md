@@ -655,3 +655,20 @@ What changed:
 - The fix applies globally, so future theme changes should not make text disappear on light backgrounds.
 
 No database change is required for this update.
+
+## Update: cleaner home preview and account profile UI
+
+- Removed the extra subtitle text behind the Run Mini name in the home preview card.
+- Redesigned `/account` profile details into a modern runner profile card with avatar, role badge, Strava status, and quick metrics.
+- Added responsive styling so the profile card looks cleaner on mobile and desktop.
+
+Upload changed files:
+
+```text
+app/page.tsx
+app/account/page.tsx
+app/globals.css
+README.md
+```
+
+No database migration is required for this update.

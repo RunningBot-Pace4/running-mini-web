@@ -88,7 +88,6 @@ function GuestIntro({
             <span className="coastal-avatar">🏃</span>
             <div>
               <strong>Run Mini</strong>
-              <small>Coastal challenge pass</small>
             </div>
             <em>LIVE</em>
           </div>
@@ -227,7 +226,6 @@ export default async function HomePage() {
             <span className="coastal-avatar">🏃</span>
             <div>
               <strong>{user.name}</strong>
-              <small>Runner pass active</small>
             </div>
             <em>LIVE</em>
           </div>

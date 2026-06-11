@@ -63,28 +63,48 @@ export default async function AccountPage() {
         </div>
       </div>
 
-      <div className="card">
-        <h2>Profile details</h2>
-        <div className="profile-list">
-          <div>
-            <span>Name</span>
-            <strong>{user.name}</strong>
+      <section className="account-profile-card" aria-labelledby="profile-details-title">
+        <div className="account-profile-glow" aria-hidden="true" />
+        <div className="account-profile-header">
+          <div className="account-avatar" aria-hidden="true">
+            {user.name.slice(0, 1).toUpperCase()}
           </div>
-          <div>
-            <span>Email</span>
-            <strong>{user.email}</strong>
+          <div className="account-profile-copy">
+            <span className="eyebrow">Profile details</span>
+            <h2 id="profile-details-title">{user.name}</h2>
+            <p>{user.email}</p>
           </div>
-          <div>
-            <span>Role</span>
-            <strong>{user.role}</strong>
-          </div>
-          <div>
-            <span>Strava</span>
-            <strong>{stravaToken ? "Connected" : "Not connected"}</strong>
+          <div className="account-badge-stack">
+            <span className="account-role-badge">{user.role}</span>
+            <span className={stravaToken ? "account-strava-badge connected" : "account-strava-badge"}>
+              {stravaToken ? "Strava connected" : "Strava not connected"}
+            </span>
           </div>
         </div>
-      </div>
 
+        <div className="account-profile-metrics" aria-label="Runner summary">
+          <div>
+            <span>Total points</span>
+            <strong>{totalPoints}</strong>
+            <small>Approved score</small>
+          </div>
+          <div>
+            <span>Total distance</span>
+            <strong>{totalDistance.toFixed(2)}km</strong>
+            <small>Submitted runs</small>
+          </div>
+          <div>
+            <span>Attend votes</span>
+            <strong>{attendVotes}</strong>
+            <small>Club sessions</small>
+          </div>
+          <div>
+            <span>Run records</span>
+            <strong>{approvedSubmissions.length}</strong>
+            <small>Approved entries</small>
+          </div>
+        </div>
+      </section>
 
       <div className="card">
         <h2>Change password</h2>
