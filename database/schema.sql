@@ -6,6 +6,7 @@ CREATE TYPE "EventStatus" AS ENUM ('DRAFT', 'OPEN', 'CLOSED', 'ARCHIVED');
 CREATE TYPE "VoteStatus" AS ENUM ('ATTEND', 'NOT_ATTEND');
 CREATE TYPE "SubmissionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 CREATE TYPE "RewardType" AS ENUM ('ITEM', 'VOUCHER');
+CREATE TYPE "TierLevel" AS ENUM ('BRONZE', 'SILVER', 'GOLD', 'PLATINUM');
 CREATE TYPE "RedemptionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'FULFILLED', 'CANCELLED');
 
 CREATE TABLE "User" (
@@ -44,6 +45,7 @@ CREATE TABLE "Reward" (
   "type" "RewardType" NOT NULL,
   "description" TEXT,
   "costPoints" INTEGER NOT NULL,
+  "minTier" "TierLevel" NOT NULL DEFAULT 'BRONZE',
   "stockQuantity" INTEGER,
   "voucherCode" TEXT,
   "imageDataUrl" TEXT,
@@ -176,6 +178,7 @@ CREATE INDEX "Submission_eventId_status_idx" ON "Submission"("eventId", "status"
 CREATE INDEX "Submission_userId_idx" ON "Submission"("userId");
 
 CREATE INDEX "Reward_isActive_type_idx" ON "Reward"("isActive", "type");
+CREATE INDEX "Reward_minTier_idx" ON "Reward"("minTier");
 CREATE INDEX "Reward_costPoints_idx" ON "Reward"("costPoints");
 CREATE INDEX "Redemption_userId_status_idx" ON "Redemption"("userId", "status");
 CREATE INDEX "Redemption_rewardId_status_idx" ON "Redemption"("rewardId", "status");

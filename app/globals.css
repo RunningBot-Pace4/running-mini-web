@@ -11461,3 +11461,604 @@ body[data-theme-preset] .profile-list span {
     min-width: 0;
   }
 }
+
+/* Activ clean redesign: simple, bright and reward-focused */
+.activ-clean-hero,
+.activ-member-hero,
+.activ-dashboard-hero,
+.activ-store-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 28px;
+  align-items: center;
+  padding: clamp(28px, 5vw, 64px);
+  border: 1px solid rgba(15, 35, 55, 0.08);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(255, 207, 92, 0.42), transparent 30%),
+    radial-gradient(circle at 5% 98%, rgba(30, 144, 255, 0.17), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #f6fcff 54%, #ecfff2 100%);
+  box-shadow: 0 30px 70px rgba(15, 35, 55, 0.12);
+  overflow: hidden;
+}
+
+.activ-clean-hero::after,
+.activ-member-hero::after,
+.activ-dashboard-hero::after,
+.activ-store-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -32px -10%;
+  height: 96px;
+  background:
+    linear-gradient(90deg, rgba(58, 183, 141, 0.32), rgba(73, 196, 243, 0.25)),
+    radial-gradient(120% 70% at 50% 0%, transparent 40%, rgba(255,255,255,.75) 41% 44%, transparent 45%);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.activ-hero-copy,
+.activ-member-copy,
+.activ-dashboard-main,
+.activ-store-hero > div:first-child {
+  position: relative;
+  z-index: 1;
+}
+
+.activ-hero-copy h1,
+.activ-member-copy h1,
+.activ-dashboard-main h1,
+.activ-store-hero h1 {
+  max-width: 760px;
+  margin: 8px 0 14px;
+  color: #0b1f33;
+  font-size: clamp(46px, 8vw, 98px);
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+.activ-hero-description,
+.activ-member-copy p,
+.activ-dashboard-main p,
+.activ-store-hero p {
+  max-width: 650px;
+  color: #526477;
+  font-size: clamp(17px, 2vw, 24px);
+  line-height: 1.55;
+}
+
+.activ-hero-description * {
+  color: #526477 !important;
+}
+
+.activ-hero-actions,
+.activ-member-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.activ-phone-preview,
+.activ-member-wallet,
+.activ-wallet-panel,
+.activ-store-wallet {
+  position: relative;
+  z-index: 1;
+  min-height: 390px;
+  padding: 26px;
+  border: 1px solid rgba(14, 36, 55, 0.1);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 24px 50px rgba(11, 31, 51, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.activ-phone-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #0b1f33;
+}
+
+.activ-phone-head span {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #d8f4ff, #ffffff 48%, #ff8b55);
+  box-shadow: 0 12px 24px rgba(11,31,51,.12);
+}
+
+.activ-phone-head strong,
+.activ-phone-head em {
+  color: #0b1f33;
+}
+
+.activ-phone-head em {
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #dff9e9;
+  color: #087a3e;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.activ-phone-score {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #eefcf1, #ffffff 62%, #fff4d6);
+  border: 1px solid #ccebd8;
+}
+
+.activ-phone-score span,
+.activ-phone-reward span,
+.activ-member-wallet span,
+.activ-wallet-panel span,
+.activ-store-wallet span {
+  display: block;
+  color: #16a05d;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.activ-phone-score strong,
+.activ-phone-reward strong,
+.activ-member-wallet strong,
+.activ-wallet-panel strong,
+.activ-store-wallet strong {
+  display: block;
+  margin-top: 8px;
+  color: #0b1f33;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1;
+}
+
+.activ-phone-score small,
+.activ-phone-reward,
+.activ-member-wallet small,
+.activ-wallet-panel small,
+.activ-store-wallet small {
+  color: #526477;
+}
+
+.activ-phone-steps {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 32px 8px;
+  padding-top: 16px;
+}
+
+.activ-phone-steps i {
+  position: absolute;
+  top: 24px;
+  left: 12px;
+  right: 12px;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #18af5a, #f6b000, #ff4d2d);
+}
+
+.activ-phone-steps b {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0b1f33;
+  box-shadow: 0 8px 18px rgba(11,31,51,.14);
+}
+
+.activ-phone-reward {
+  padding: 20px;
+  border-radius: 24px;
+  background: #f7fbff;
+  border: 1px solid rgba(11,31,51,.08);
+}
+
+.activ-feature-grid,
+.activ-dashboard-strip,
+.activ-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.activ-feature-grid article,
+.activ-dashboard-strip article,
+.activ-stat-grid article,
+.activ-home-panel,
+.activ-section-card,
+.activ-tier-card,
+.activ-event-item {
+  border: 1px solid rgba(11,31,51,.08);
+  border-radius: 28px;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 18px 46px rgba(11,31,51,.08);
+}
+
+.activ-feature-grid article,
+.activ-dashboard-strip article,
+.activ-stat-grid article {
+  padding: 22px;
+}
+
+.activ-feature-grid span,
+.activ-dashboard-strip span,
+.activ-stat-grid span,
+.activ-event-date span {
+  color: #16a05d;
+  font-weight: 950;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.activ-feature-grid h2,
+.activ-feature-grid p,
+.activ-dashboard-strip strong,
+.activ-dashboard-strip small,
+.activ-stat-grid strong,
+.activ-stat-grid small {
+  color: #0b1f33;
+}
+
+.activ-feature-grid p,
+.activ-dashboard-strip small,
+.activ-stat-grid small {
+  color: #526477;
+}
+
+.activ-member-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+}
+
+.activ-member-wallet,
+.activ-wallet-panel,
+.activ-store-wallet {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.activ-member-wallet strong,
+.activ-wallet-panel strong,
+.activ-store-wallet strong {
+  font-size: clamp(54px, 8vw, 88px);
+}
+
+.activ-home-panel,
+.activ-section-card,
+.activ-tier-card {
+  margin-top: 22px;
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.activ-home-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(135deg, #ffffff, #effcff);
+}
+
+.activ-home-panel h2,
+.activ-section-card h2,
+.activ-section-title h2,
+.activ-tier-card h2 {
+  margin: 6px 0;
+  color: #0b1f33;
+  letter-spacing: -0.035em;
+}
+
+.activ-home-panel p,
+.activ-section-title p,
+.activ-section-card p,
+.activ-tier-card p {
+  color: #526477;
+}
+
+.activ-section-title {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.activ-event-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.activ-event-item {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+}
+
+.activ-event-date {
+  display: grid;
+  min-height: 84px;
+  place-items: center;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #eefcff, #e9ffe9);
+  border: 1px solid rgba(22,160,93,.14);
+}
+
+.activ-event-date span {
+  font-size: 26px;
+  letter-spacing: 0;
+}
+
+.activ-event-date small,
+.activ-event-body p,
+.activ-event-topline small {
+  color: #526477;
+}
+
+.activ-event-body h2 {
+  margin: 6px 0;
+  color: #0b1f33;
+}
+
+.activ-event-topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.activ-workout-preview {
+  margin-top: 10px;
+}
+
+.activ-dashboard-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+}
+
+.activ-member-pills span,
+.activ-tier-pill,
+.activ-status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #0b1f33;
+  border: 1px solid rgba(11,31,51,.1);
+  font-weight: 900;
+}
+
+.activ-tier-pill {
+  border-color: color-mix(in srgb, var(--tier-color, #16a05d) 34%, transparent);
+  background: color-mix(in srgb, var(--tier-color, #16a05d) 12%, white);
+}
+
+.activ-status-pill.connected {
+  background: #e7f9ef;
+  color: #087a3e;
+}
+
+.activ-tier-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(300px, 1fr);
+  gap: 24px;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff, #f5fff8);
+}
+
+.activ-tier-benefit {
+  display: inline-block;
+  margin-top: 12px;
+  color: #16a05d;
+}
+
+.activ-progress-head {
+  display: flex;
+  justify-content: space-between;
+  color: #0b1f33;
+  font-weight: 900;
+}
+
+.activ-progress-bar,
+.activ-mini-progress {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(11,31,51,.08);
+}
+
+.activ-progress-bar span,
+.activ-mini-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #17a85b, #f8b000, #ff5c35);
+}
+
+.activ-challenge-grid,
+.activ-badge-grid,
+.activ-tier-list,
+.activ-store-steps {
+  display: grid;
+  gap: 14px;
+}
+
+.activ-challenge-grid,
+.activ-badge-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.activ-challenge-grid.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.activ-challenge-card,
+.activ-badge-card,
+.activ-tier-item,
+.activ-store-steps article {
+  padding: 18px;
+  border: 1px solid rgba(11,31,51,.08);
+  border-radius: 24px;
+  background: #fff;
+  color: #0b1f33;
+}
+
+.activ-challenge-card.completed,
+.activ-badge-card.earned,
+.activ-tier-item.active {
+  border-color: rgba(22,160,93,.24);
+  background: linear-gradient(135deg, #f2fff6, #ffffff);
+}
+
+.activ-challenge-card strong,
+.activ-badge-card strong,
+.activ-tier-item strong,
+.activ-store-steps strong {
+  color: #0b1f33;
+}
+
+.activ-challenge-card span,
+.activ-badge-card small,
+.activ-tier-item em,
+.activ-store-steps article strong {
+  color: #16a05d;
+  font-weight: 950;
+}
+
+.activ-badge-card.locked {
+  opacity: 0.66;
+}
+
+.activ-badge-card > span,
+.activ-tier-item > span {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--tier-color, #16a05d) 16%, white);
+  font-size: 24px;
+}
+
+.activ-tier-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.activ-tier-item {
+  display: grid;
+  grid-template-columns: 56px minmax(140px, 0.65fr) minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.activ-store-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+}
+
+.activ-store-steps {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.activ-reward-card {
+  min-height: 310px;
+}
+
+.activ-reward-card.locked {
+  filter: grayscale(.1);
+  opacity: .72;
+}
+
+.activ-reward-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activ-tier-lock {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #eefcf1;
+  color: #087a3e;
+  font-weight: 950;
+  font-size: 12px;
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .activ-clean-hero,
+  .activ-member-hero,
+  .activ-dashboard-hero,
+  .activ-store-hero,
+  .activ-tier-card {
+    grid-template-columns: 1fr;
+    border-radius: 26px;
+    padding: 24px;
+  }
+
+  .activ-phone-preview {
+    min-height: auto;
+  }
+
+  .activ-feature-grid,
+  .activ-dashboard-strip,
+  .activ-stat-grid,
+  .activ-challenge-grid,
+  .activ-challenge-grid.compact,
+  .activ-badge-grid,
+  .activ-store-steps,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .activ-tier-list {
+    grid-template-columns: 1fr;
+  }
+
+  .activ-tier-item {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .activ-tier-item p,
+  .activ-tier-item em {
+    grid-column: 1 / -1;
+  }
+
+  .activ-home-panel {
+    display: grid;
+  }
+
+  .activ-event-item {
+    grid-template-columns: 70px minmax(0, 1fr);
+  }
+
+  .activ-event-item > .button,
+  .activ-event-item > a.button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .activ-hero-copy h1,
+  .activ-member-copy h1,
+  .activ-dashboard-main h1,
+  .activ-store-hero h1 {
+    font-size: clamp(42px, 15vw, 74px);
+  }
+}

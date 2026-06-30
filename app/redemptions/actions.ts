@@ -5,6 +5,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, requireUser } from "@/lib/session";
 import { ACTIVE_REDEMPTION_STATUSES } from "@/lib/redemptions";
+import { canAccessTierReward, getMemberTier } from "@/lib/member-progress";
 
 const redeemRewardSchema = z.object({
   rewardId: z.string().min(1),
@@ -46,6 +47,11 @@ export async function redeemRewardAction(_: ActionState, formData: FormData): Pr
       const totalEarned = earned._sum.totalPoints || 0;
       const spentOrReserved = reserved._sum.pointsCost || 0;
       const availablePoints = totalEarned - spentOrReserved;
+      const tier = getMemberTier(totalEarned).current;
+
+      if (!canAccessTierReward(tier.key, reward.minTier)) {
+        return { error: `This reward requires ${String(reward.minTier).toLowerCase()} tier or above.` };
+      }
 
       if (availablePoints < reward.costPoints) {
         return { error: `Not enough points. You need ${reward.costPoints} points, but only have ${Math.max(0, availablePoints)} available.` };
@@ -85,6 +91,7 @@ const createRewardSchema = z.object({
   type: z.enum(["ITEM", "VOUCHER"]),
   description: z.string().trim().max(500).optional(),
   costPoints: z.coerce.number().int().min(1).max(100000),
+  minTier: z.enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"]).default("BRONZE"),
   stockQuantity: z.string().optional(),
   voucherCode: z.string().trim().max(120).optional(),
   isActive: z.coerce.boolean().default(false),
@@ -98,6 +105,7 @@ export async function createRewardAction(_: ActionState, formData: FormData): Pr
     type: formData.get("type"),
     description: formData.get("description") || "",
     costPoints: formData.get("costPoints"),
+    minTier: formData.get("minTier") || "BRONZE",
     stockQuantity: formData.get("stockQuantity") || "",
     voucherCode: formData.get("voucherCode") || "",
     isActive: formData.get("isActive") === "on",
@@ -114,6 +122,7 @@ export async function createRewardAction(_: ActionState, formData: FormData): Pr
       type: parsed.data.type,
       description: parsed.data.description || null,
       costPoints: parsed.data.costPoints,
+      minTier: parsed.data.minTier,
       stockQuantity,
       voucherCode: parsed.data.voucherCode || null,
       isActive: parsed.data.isActive,
@@ -131,6 +140,7 @@ const updateRewardSchema = z.object({
   type: z.enum(["ITEM", "VOUCHER"]),
   description: z.string().trim().max(500).optional(),
   costPoints: z.coerce.number().int().min(1).max(100000),
+  minTier: z.enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"]).default("BRONZE"),
   stockQuantity: z.string().optional(),
   voucherCode: z.string().trim().max(120).optional(),
   isActive: z.coerce.boolean().default(false),
@@ -145,6 +155,7 @@ export async function updateRewardAction(_: ActionState, formData: FormData): Pr
     type: formData.get("type"),
     description: formData.get("description") || "",
     costPoints: formData.get("costPoints"),
+    minTier: formData.get("minTier") || "BRONZE",
     stockQuantity: formData.get("stockQuantity") || "",
     voucherCode: formData.get("voucherCode") || "",
     isActive: formData.get("isActive") === "on",
@@ -162,6 +173,7 @@ export async function updateRewardAction(_: ActionState, formData: FormData): Pr
       type: parsed.data.type,
       description: parsed.data.description || null,
       costPoints: parsed.data.costPoints,
+      minTier: parsed.data.minTier,
       stockQuantity,
       voucherCode: parsed.data.voucherCode || null,
       isActive: parsed.data.isActive,

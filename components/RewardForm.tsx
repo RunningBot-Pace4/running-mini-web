@@ -3,12 +3,20 @@
 import { useActionState } from "react";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 
+const tierOptions = [
+  { value: "BRONZE", label: "Bronze" },
+  { value: "SILVER", label: "Silver" },
+  { value: "GOLD", label: "Gold" },
+  { value: "PLATINUM", label: "Platinum" },
+] as const;
+
 type Reward = {
   id?: string;
   name?: string;
   type?: "ITEM" | "VOUCHER";
   description?: string | null;
   costPoints?: number;
+  minTier?: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM";
   stockQuantity?: number | null;
   voucherCode?: string | null;
   isActive?: boolean;
@@ -61,7 +69,7 @@ export function RewardForm({
         />
       </div>
 
-      <div className="grid grid-3">
+      <div className="grid grid-4">
         <div>
           <label htmlFor={isEdit ? `rewardCost-${reward?.id}` : "rewardCost"}>Points required</label>
           <input
@@ -73,6 +81,14 @@ export function RewardForm({
             defaultValue={reward?.costPoints || 50}
             required
           />
+        </div>
+        <div>
+          <label htmlFor={isEdit ? `rewardTier-${reward?.id}` : "rewardTier"}>Minimum tier</label>
+          <select id={isEdit ? `rewardTier-${reward?.id}` : "rewardTier"} name="minTier" defaultValue={reward?.minTier || "BRONZE"}>
+            {tierOptions.map((tier) => (
+              <option value={tier.value} key={tier.value}>{tier.label}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label htmlFor={isEdit ? `rewardStock-${reward?.id}` : "rewardStock"}>Stock</label>

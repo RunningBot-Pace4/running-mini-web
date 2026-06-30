@@ -159,3 +159,13 @@ Please contact me at [sammuti.com](https://sammuti.com) :)
 - Members can redeem available points for rewards.
 - Admin can approve, reject, or mark redemption requests as fulfilled.
 - Points are reserved while redemption is pending, approved, or fulfilled.
+
+## Update: Activ-style reward dashboard
+
+The web now includes a cleaner reward-focused member dashboard:
+
+- Member tier progress: Bronze, Silver, Gold, Platinum.
+- Badge collection earned automatically from votes, approved runs, distance, points and redemptions.
+- Challenge board showing member mission progress.
+- Reward catalog supports minimum tier requirement per item/voucher.
+- Member dashboard is designed to feel simpler, cleaner and closer to a health rewards app experience.

@@ -35,6 +35,13 @@ enum RewardType {
   VOUCHER
 }
 
+enum TierLevel {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
 enum RedemptionStatus {
   PENDING
   APPROVED
@@ -194,6 +201,7 @@ model Reward {
   type          RewardType
   description   String?
   costPoints    Int
+  minTier       TierLevel    @default(BRONZE)
   stockQuantity Int?
   voucherCode   String?
   imageDataUrl  String?      @db.Text
@@ -204,6 +212,7 @@ model Reward {
   redemptions   Redemption[]
 
   @@index([isActive, type])
+  @@index([minTier])
   @@index([costPoints])
 }
 

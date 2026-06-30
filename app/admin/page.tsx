@@ -224,7 +224,7 @@ export default async function AdminPage() {
           <div>
             <span className="admin-section-number">04</span>
             <h2>Redemptions</h2>
-            <p>Create point rewards, manage item/voucher stock, and approve member redemption requests.</p>
+            <p>Create tier-based point rewards, manage item/voucher stock, and approve member redemption requests.</p>
           </div>
           <div className="admin-section-status">
             <span>{rewards.length} rewards</span>
@@ -235,7 +235,7 @@ export default async function AdminPage() {
         <details className="admin-panel">
           <summary>
             <span>Create reward</span>
-            <small>Add item or voucher rewards that members can redeem using points.</small>
+            <small>Add item or voucher rewards and set the minimum member tier required.</small>
           </summary>
           <div className="admin-panel-body">
             <RewardForm action={createRewardAction} />
@@ -245,7 +245,7 @@ export default async function AdminPage() {
         <details className="admin-panel">
           <summary>
             <span>Reward catalog</span>
-            <small>Edit point cost, stock, type, active status, and voucher notes.</small>
+            <small>Edit point cost, minimum tier, stock, type, active status, and voucher notes.</small>
           </summary>
           <div className="admin-panel-body reward-admin-list">
             {rewards.map((reward) => (
@@ -253,7 +253,7 @@ export default async function AdminPage() {
                 <summary>
                   <div>
                     <strong>{reward.name}</strong>
-                    <small>{reward.type} · {reward.costPoints} pts · {reward.stockQuantity === null ? "Unlimited" : `${reward.stockQuantity} stock`} · {reward._count.redemptions} requests</small>
+                    <small>{reward.type} · {reward.costPoints} pts · {reward.minTier}+ · {reward.stockQuantity === null ? "Unlimited" : `${reward.stockQuantity} stock`} · {reward._count.redemptions} requests</small>
                   </div>
                   <span className={reward.isActive ? "badge success" : "badge"}>{reward.isActive ? "ACTIVE" : "HIDDEN"}</span>
                 </summary>

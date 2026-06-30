@@ -7,6 +7,8 @@ import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription } from "@/lib/scoring";
 import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
+import { getUserPointWallet } from "@/lib/redemptions";
+import { buildBadges, buildChallenges, getMemberTier } from "@/lib/member-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -25,127 +27,36 @@ function GuestIntro({
     heroDescription: string;
   };
 }) {
-  const lifestyleCards = [
-    {
-      icon: "💧",
-      title: "Sweat with purpose",
-      text: "Every vote, run, and kilometre feeds the club scoreboard.",
-    },
-    {
-      icon: "🌤️",
-      title: "Sunrise discipline",
-      text: "Turn scheduled workouts into a simple mobile mission flow.",
-    },
-    {
-      icon: "🌊",
-      title: "Sea-level calm",
-      text: "Clean cards, fast actions, and clear progress keep members focused.",
-    },
-  ];
-
   return (
     <>
-      <section className="coastal-hero guest-coastal-hero" aria-label="Running club introduction">
-        <div className="coastal-sky" aria-hidden="true">
-          <span className="coastal-sun" />
-          <span className="coastal-cloud cloud-one" />
-          <span className="coastal-cloud cloud-two" />
-          <span className="coastal-wave wave-one" />
-          <span className="coastal-wave wave-two" />
-        </div>
-
-        <div className="coastal-hero-copy">
-          <div className="coastal-live-chip">
-            <span className="pulse-dot" />
-            {homeContent.heroEyebrow || "Coastal running challenge"}
-          </div>
-
-          <h1>{homeContent.heroTitle}</h1>
-
-          <div className="coastal-rich-copy">
+      <section className="activ-clean-hero" aria-label="Running club introduction">
+        <div className="activ-hero-copy">
+          <span className="eyebrow">{homeContent.heroEyebrow || "Run. Level up. Get rewarded."}</span>
+          <h1>{homeContent.heroTitle || "Run. Earn. Redeem."}</h1>
+          <div className="activ-hero-description">
             <EventDescription text={homeContent.heroDescription} />
           </div>
-
-          <div className="coastal-hero-actions">
-            <LoadingLink className="button coastal-primary-btn" href="/register" loadingLabel="Opening registration...">
-              Join the club
-            </LoadingLink>
-            <LoadingLink className="button coastal-secondary-btn" href="/login" loadingLabel="Opening login...">
-              Member login
-            </LoadingLink>
-          </div>
-
-          <div className="coastal-proof-strip" aria-label="Club features">
-            <span>Morning sessions</span>
-            <span>Attendance vote</span>
-            <span>KM scoring</span>
-            <span>Share results</span>
+          <div className="activ-hero-actions">
+            <LoadingLink className="button" href="/register" loadingLabel="Opening registration...">Get started free</LoadingLink>
+            <LoadingLink className="button ghost" href="/login" loadingLabel="Opening login...">Member login</LoadingLink>
           </div>
         </div>
-
-        <div className="coastal-phone-card" aria-label="Mobile challenge preview">
-          <div className="coastal-phone-top">
-            <span className="coastal-avatar">🏃</span>
-            <div>
-              <strong>Run Mini</strong>
-            </div>
-            <em>LIVE</em>
+        <div className="activ-phone-preview" aria-label="Member app preview">
+          <div className="activ-phone-head"><span>🏃</span><strong>Run Mini</strong><em>LIVE</em></div>
+          <div className="activ-phone-score"><span>Today’s mission</span><strong>Vote → Run → Submit</strong><small>Earn points and unlock better rewards.</small></div>
+          <div className="activ-phone-steps">
+            <i />
+            <b>01</b><b>02</b><b>03</b>
           </div>
-
-          <div className="coastal-ticket">
-            <span>Today’s focus</span>
-            <strong>Sweat · Run · Score</strong>
-            <small>Complete missions and climb the club board.</small>
-          </div>
-
-          <div className="coastal-mini-route" aria-hidden="true">
-            <span className="route-dot start" />
-            <span className="route-dot mid" />
-            <span className="route-dot end" />
-            <span className="route-runner">🏃‍♂️</span>
-          </div>
-
-          <div className="coastal-task-list">
-            <div><strong>01</strong><span>Register</span></div>
-            <div><strong>02</strong><span>Vote</span></div>
-            <div><strong>03</strong><span>Submit KM</span></div>
-          </div>
+          <div className="activ-phone-reward"><span>Tier</span><strong>Bronze → Silver → Gold → Platinum</strong></div>
         </div>
       </section>
 
-      <section className="coastal-motto" aria-label="Running club motto">
-        <span>Sweat</span>
-        <strong>Sky energy. Sea rhythm. Team effort.</strong>
-        <span>Repeat</span>
-      </section>
-
-      <section className="coastal-section-title">
-        <span className="eyebrow">Premium mobile running club</span>
-        <h2>A website that feels like a fitness app.</h2>
-        <p>Designed for mobile members with strong visuals, fast actions, reward scoring, and a club-first experience.</p>
-      </section>
-
-      <div className="coastal-lifestyle-grid">
-        {lifestyleCards.map((card) => (
-          <article className="coastal-lifestyle-card" key={card.title}>
-            <span>{card.icon}</span>
-            <h3>{card.title}</h3>
-            <p>{card.text}</p>
-          </article>
-        ))}
-      </div>
-
-      <section className="coastal-join-panel">
-        <div>
-          <span className="eyebrow">Members only</span>
-          <h2>Login unlocks the live event board.</h2>
-          <p>Members can vote attendance, connect Strava or submit manual KM, track points, and share results.</p>
-        </div>
-        <div className="coastal-feed-stack" aria-hidden="true">
-          <span>Workout opened</span>
-          <span>Attendance updated</span>
-          <span>Distance submitted</span>
-        </div>
+      <section className="activ-feature-grid" aria-label="Key benefits">
+        <article><span>01</span><h2>Make every KM count</h2><p>Members submit Strava or manual distance and collect points from approved runs.</p></article>
+        <article><span>02</span><h2>Level up by tiers</h2><p>Bronze, Silver, Gold and Platinum tiers can unlock better club benefits.</p></article>
+        <article><span>03</span><h2>Redeem rewards</h2><p>Use available points to redeem items, vouchers, discounts and club privileges.</p></article>
+        <article><span>04</span><h2>Join challenges</h2><p>Badges and missions help keep the club motivated every week.</p></article>
       </section>
     </>
   );
@@ -165,201 +76,105 @@ export default async function HomePage() {
   const events = await prisma.event.findMany({
     where: { status: { in: ["OPEN", "CLOSED"] } },
     orderBy: { startAt: "desc" },
-    include: {
-      _count: { select: { votes: true, submissions: true } },
-    },
+    include: { _count: { select: { votes: true, submissions: true } } },
   });
 
-  const openEvents = events.filter((event) => isEventAcceptingResponses(event)).length;
-  const totalVotes = events.reduce((sum, event) => sum + event._count.votes, 0);
-  const totalRuns = events.reduce((sum, event) => sum + event._count.submissions, 0);
-
-  const [myVoteCount, mySubmissions] = await Promise.all([
+  const [myVoteCount, mySubmissions, wallet, myRedemptionCount] = await Promise.all([
     prisma.eventVote.count({ where: { userId: user.id } }),
     prisma.submission.findMany({
       where: { userId: user.id, status: "APPROVED" },
       select: { distanceKm: true, totalPoints: true },
     }),
+    getUserPointWallet(user.id),
+    prisma.redemption.count({ where: { userId: user.id } }),
   ]);
 
   const myDistanceKm = mySubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const myPoints = mySubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
-  const momentum = Math.min(100, Math.max(18, openEvents * 22 + totalVotes * 6 + totalRuns * 12));
+  const myTier = getMemberTier(myPoints);
+  const badgeCount = buildBadges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount }).filter((badge) => badge.earned).length;
+  const challenges = buildChallenges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount }).slice(0, 3);
+  const openEvents = events.filter((event) => isEventAcceptingResponses(event)).length;
   const nextEvent = events.find((event) => isEventAcceptingResponses(event)) || events[0];
 
   return (
     <>
-      <section className="coastal-hero member-coastal-hero">
-        <div className="coastal-sky" aria-hidden="true">
-          <span className="coastal-sun" />
-          <span className="coastal-cloud cloud-one" />
-          <span className="coastal-cloud cloud-two" />
-          <span className="coastal-wave wave-one" />
-          <span className="coastal-wave wave-two" />
-        </div>
-
-        <div className="coastal-hero-copy">
-          <div className="coastal-live-chip"><span className="pulse-dot" />{homeContent.heroEyebrow}</div>
-          <h1>{homeContent.heroTitle}</h1>
-          <div className="coastal-rich-copy">
-            <EventDescription text={homeContent.heroDescription} />
-          </div>
-
-          <div className="coastal-hero-actions">
-            <LoadingLink className="button coastal-primary-btn" href="#events">
-              View events
-            </LoadingLink>
-            <LoadingLink className="button coastal-secondary-btn" href="/account" loadingLabel="Opening account...">
-              My account
-            </LoadingLink>
-          </div>
-
-          <div className="coastal-proof-strip">
-            <span>{myPoints} pts</span>
-            <span>{myDistanceKm.toFixed(1)} km</span>
-            <span>{myVoteCount} votes</span>
+      <section className="activ-member-hero" aria-label="Member dashboard">
+        <div className="activ-member-copy">
+          <span className="eyebrow">Welcome back</span>
+          <h1>Hi, {user.name}</h1>
+          <p>Track your club sessions, collect points, unlock tiers and redeem rewards.</p>
+          <div className="activ-hero-actions">
+            <LoadingLink className="button" href="#events">View events</LoadingLink>
+            <LoadingLink className="button ghost" href="/account">My dashboard</LoadingLink>
           </div>
         </div>
-
-        <div className="coastal-phone-card member-coastal-card">
-          <div className="coastal-phone-top">
-            <span className="coastal-avatar">🏃</span>
-            <div>
-              <strong>{user.name}</strong>
-            </div>
-            <em>LIVE</em>
-          </div>
-
-          <div className="coastal-ticket">
-            <span>My score wallet</span>
-            <strong>{myPoints} pts</strong>
-            <small>{myDistanceKm.toFixed(1)}km submitted · {myVoteCount} votes</small>
-          </div>
-
-          <div className="coastal-stat-row">
-            <div><strong>{openEvents}</strong><span>Open</span></div>
-            <div><strong>{totalVotes}</strong><span>Votes</span></div>
-            <div><strong>{totalRuns}</strong><span>Runs</span></div>
-          </div>
-
-          <div className="coastal-next-focus">
-            <span>Next tide</span>
-            <strong>{nextEvent?.title || "Create your first event"}</strong>
-            <small>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add one from the dashboard."}</small>
-          </div>
+        <div className="activ-member-wallet">
+          <span>{myTier.current.emoji} {myTier.current.name} tier</span>
+          <strong>{wallet.availablePoints}</strong>
+          <small>available points</small>
+          <LoadingLink className="button ghost mini" href="/redemptions">Redeem</LoadingLink>
         </div>
       </section>
 
-      <section className="coastal-dashboard-row" aria-label="Runner dashboard">
-        <div className="coastal-dashboard-card hot">
-          <span>Club momentum</span>
-          <strong>{momentum}%</strong>
-          <div className="coastal-meter" aria-label={`Club momentum ${momentum}%`}>
-            <span style={{ width: `${momentum}%` }} />
-          </div>
-        </div>
+      <section className="activ-dashboard-strip" aria-label="Member summary">
+        <article><span>Points</span><strong>{myPoints}</strong><small>{scoringDescription(scoreSettings)}</small></article>
+        <article><span>Distance</span><strong>{myDistanceKm.toFixed(1)}km</strong><small>{mySubmissions.length} approved runs</small></article>
+        <article><span>Badges</span><strong>{badgeCount}</strong><small>earned achievements</small></article>
+        <article><span>Open events</span><strong>{openEvents}</strong><small>available missions</small></article>
+      </section>
 
-        <div className="coastal-dashboard-card score-rule-card">
-          <div className="score-rule-top">
-            <span>Points rule</span>
-            <em>Admin editable</em>
-          </div>
-          <div className="score-rule-main">
-            <strong>{scoreSettings.attendancePoints}</strong>
-            <span>Attend</span>
-            <strong>{scoreSettings.perKmPoints}</strong>
-            <span>Per km</span>
-          </div>
-          <small>{scoringDescription(scoreSettings)}</small>
+      <section className="activ-home-panel">
+        <div>
+          <span className="eyebrow">Next focus</span>
+          <h2>{nextEvent?.title || "Create your first event"}</h2>
+          <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add the first event from the dashboard."}</p>
         </div>
+        {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
+      </section>
 
-        <div className="coastal-dashboard-card">
-          <span>Flow</span>
-          <strong>Vote → Run → Submit</strong>
-          <small>Strava or manual distance accepted after ATTEND vote.</small>
+      <section className="activ-section-card">
+        <div className="section-title-row">
+          <div>
+            <span className="eyebrow">Active challenges</span>
+            <h2>Keep the streak moving</h2>
+          </div>
+          <LoadingLink className="button ghost" href="/account">View badges</LoadingLink>
+        </div>
+        <div className="activ-challenge-grid compact">
+          {challenges.map((challenge) => (
+            <article className={challenge.completed ? "activ-challenge-card completed" : "activ-challenge-card"} key={challenge.key}>
+              <div><strong>{challenge.title}</strong><p>{challenge.description}</p></div>
+              <span>{challenge.current}/{challenge.target} {challenge.unit}</span>
+              <div className="activ-mini-progress"><i style={{ width: `${challenge.progress}%` }} /></div>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="coastal-mission-map" aria-label="How the challenge works">
-        <article>
-          <span>01</span>
-          <strong>Vote</strong>
-          <small>Green attend, red not attend.</small>
-        </article>
-        <article>
-          <span>02</span>
-          <strong>Run</strong>
-          <small>Complete the workout session.</small>
-        </article>
-        <article>
-          <span>03</span>
-          <strong>Submit</strong>
-          <small>Sync Strava or key in distance.</small>
-        </article>
-        <article>
-          <span>04</span>
-          <strong>Share</strong>
-          <small>Post result and motivate the club.</small>
-        </article>
+      <section id="events" className="activ-section-title">
+        <span className="eyebrow">Event board</span>
+        <h2>Choose your next mission</h2>
+        <p>Vote, run, submit KM, and share your result.</p>
       </section>
 
-      <section id="events" className="coastal-section-title">
-        <span className="eyebrow">Member event board</span>
-        <h2>Choose your next coastal mission.</h2>
-        <p>Tap an event to vote, submit distance, view leaderboard, and share your result.</p>
-      </section>
-
-      <div className="coastal-event-grid">
-        {events.map((event, index) => {
+      <div className="activ-event-list">
+        {events.map((event) => {
           const displayStatus = eventDisplayStatus(event);
-
           return (
-            <article className="coastal-event-card" key={event.id}>
-              <div className="coastal-event-scenery" aria-hidden="true">
-                <span className="coastal-event-sun" />
-                <span className="coastal-event-wave one" />
-                <span className="coastal-event-wave two" />
+            <article className="activ-event-item" key={event.id}>
+              <div className="activ-event-date"><span>{event.startAt.getDate().toString().padStart(2, "0")}</span><small>{event.startAt.toLocaleString("en-US", { month: "short" })}</small></div>
+              <div className="activ-event-body">
+                <div className="activ-event-topline"><span className={statusClass(displayStatus)}>{displayStatus}</span><small>{event._count.votes} votes · {event._count.submissions} runs</small></div>
+                <h2>{event.title}</h2>
+                <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
+                {event.description && <div className="workout-preview activ-workout-preview"><EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} /></div>}
               </div>
-
-              <div className="coastal-event-top">
-                <span className="coastal-event-rank">#{String(index + 1).padStart(2, "0")}</span>
-                <span className={statusClass(displayStatus)}>{displayStatus}</span>
-              </div>
-
-              <h2>{event.title}</h2>
-              <p className="date-pill">{formatDateTimeRange(event.startAt, event.endAt)}</p>
-
-              {event.description && (
-                <div className="workout-preview coastal-workout-preview">
-                  <EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} />
-                </div>
-              )}
-
-              <div className="coastal-event-footer">
-                <div>
-                  <strong>{event._count.votes}</strong>
-                  <span>votes</span>
-                </div>
-                <div>
-                  <strong>{event._count.submissions}</strong>
-                  <span>runs</span>
-                </div>
-              </div>
-
-              <LoadingLink className="button full coastal-primary-btn" href={`/events/${event.slug}`}>
-                Enter workout →
-              </LoadingLink>
+              <LoadingLink className="button ghost" href={`/events/${event.slug}`}>Enter</LoadingLink>
             </article>
           );
         })}
-
-        {events.length === 0 && (
-          <div className="card empty-card">
-            <div className="runner-badge">🏁</div>
-            <h2>No events yet</h2>
-            <p className="muted">Ask an admin to create the first running event.</p>
-          </div>
-        )}
+        {events.length === 0 && <div className="empty-card"><h2>No events yet</h2><p className="muted">Ask an admin to create the first running event.</p></div>}
       </div>
     </>
   );

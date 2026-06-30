@@ -751,3 +751,37 @@ Keep Vercel build command:
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+## Activ-style clean redesign, badges, challenges and tiers
+
+This update changes the member experience into a cleaner reward-focused running dashboard inspired by modern health reward apps:
+
+- Simple public landing page with clear club benefits.
+- Member dashboard with points wallet, tier progress, badges and challenges.
+- Tier system: Bronze, Silver, Gold and Platinum.
+- Badge system based on attendance, approved runs, total KM, points and redemptions.
+- Challenge board with progress bars.
+- Reward store can now lock rewards by minimum tier.
+
+### Tier thresholds
+
+| Tier | Minimum points | Example benefit |
+|---|---:|---|
+| Bronze | 0 | Starter rewards and basic item redemption |
+| Silver | 100 | Better voucher access and priority redemption queue |
+| Gold | 250 | Premium vouchers and event priority |
+| Platinum | 500 | Exclusive items and first access to campaigns |
+
+### Admin redemption change
+
+Admin can now set a minimum tier for each reward from:
+
+```text
+/admin → 04 Redemptions → Create reward / Reward catalog
+```
+
+The build command should remain:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```
