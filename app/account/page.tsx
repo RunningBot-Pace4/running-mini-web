@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { formatDateTime } from "@/lib/datetime";
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
+import { getUserPointWallet, redemptionStatusClass } from "@/lib/redemptions";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,7 @@ export default async function AccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const [votes, submissions, stravaToken] = await Promise.all([
+  const [votes, submissions, stravaToken, wallet, redemptions] = await Promise.all([
     prisma.eventVote.findMany({
       where: { userId: user.id },
       include: { event: true },
@@ -23,6 +24,13 @@ export default async function AccountPage() {
       orderBy: { createdAt: "desc" },
     }),
     prisma.stravaToken.findUnique({ where: { userId: user.id } }),
+    getUserPointWallet(user.id),
+    prisma.redemption.findMany({
+      where: { userId: user.id },
+      include: { reward: true },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+    }),
   ]);
 
   const approvedSubmissions = submissions.filter((submission) => submission.status === "APPROVED");
@@ -38,10 +46,11 @@ export default async function AccountPage() {
           <h1>{user.name}</h1>
           <p>{user.email}</p>
         </div>
-        <div className="account-summary-score" aria-label="Total approved points">
-          <span>Total points</span>
-          <strong>{totalPoints}</strong>
-          <small>{totalDistance.toFixed(2)}km submitted</small>
+        <div className="account-summary-score wallet-card-safe" aria-label="Available redemption points">
+          <span>Available points</span>
+          <strong>{wallet.availablePoints}</strong>
+          <small>{totalPoints} earned · {wallet.spentOrReserved} reserved/spent</small>
+          <LoadingLink className="button ghost mini" href="/redemptions">Redeem points</LoadingLink>
         </div>
       </section>
 
@@ -84,6 +93,11 @@ export default async function AccountPage() {
 
         <div className="account-profile-metrics" aria-label="Runner summary">
           <div>
+            <span>Available points</span>
+            <strong>{wallet.availablePoints}</strong>
+            <small>Ready to redeem</small>
+          </div>
+          <div>
             <span>Total points</span>
             <strong>{totalPoints}</strong>
             <small>Approved score</small>
@@ -105,6 +119,33 @@ export default async function AccountPage() {
           </div>
         </div>
       </section>
+
+
+      <div className="card redemption-mini-card">
+        <div className="section-title-row">
+          <div>
+            <h2>Redemption wallet</h2>
+            <p className="muted">Redeem items or vouchers using your available points.</p>
+          </div>
+          <LoadingLink className="button" href="/redemptions">Open reward store</LoadingLink>
+        </div>
+        <div className="grid grid-3">
+          <div className="mini-wallet-stat"><span>Available</span><strong>{wallet.availablePoints}</strong></div>
+          <div className="mini-wallet-stat"><span>Earned</span><strong>{wallet.totalEarned}</strong></div>
+          <div className="mini-wallet-stat"><span>Reserved / spent</span><strong>{wallet.spentOrReserved}</strong></div>
+        </div>
+        {redemptions.length > 0 && (
+          <div className="redemption-history-strip">
+            {redemptions.slice(0, 3).map((redemption) => (
+              <div key={redemption.id}>
+                <span className={redemptionStatusClass(redemption.status)}>{redemption.status}</span>
+                <strong>{redemption.reward.name}</strong>
+                <small>{redemption.pointsCost} pts</small>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="card">
         <h2>Change password</h2>

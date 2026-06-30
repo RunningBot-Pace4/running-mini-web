@@ -150,3 +150,12 @@ Core tables:
 ## Need Professional Help in Developing Your Architecture?
 
 Please contact me at [sammuti.com](https://sammuti.com) :)
+
+## Update: Redemptions and IG Story Share
+
+- Share result page uses a simplified premium 9:16 Instagram Story card.
+- Redundant social share block removed from share page.
+- Admin can create item/voucher rewards.
+- Members can redeem available points for rewards.
+- Admin can approve, reject, or mark redemption requests as fulfilled.
+- Points are reserved while redemption is pending, approved, or fulfilled.

@@ -6,12 +6,15 @@ import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
 import { HomeContentForm } from "@/components/HomeContentForm";
 import { ScoreSettingsForm } from "@/components/ScoreSettingsForm";
+import { RewardForm } from "@/components/RewardForm";
 import { createEventAction, updateEventStatusAction, updateHomeContentAction, updateScoreSettingsAction } from "@/app/admin/actions";
+import { createRewardAction, updateRewardAction, updateRedemptionStatusAction } from "@/app/redemptions/actions";
 import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 import { stravaConfigStatus } from "@/lib/strava-config";
+import { redemptionStatusClass } from "@/lib/redemptions";
 
 export const dynamic = "force-dynamic";
 
@@ -26,18 +29,30 @@ export default async function AdminPage() {
   const scoreSettings = await getScoreSettings();
   const stravaConfig = stravaConfigStatus();
 
-  const events = await prisma.event.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      _count: { select: { votes: true, submissions: true } },
-    },
-  });
+  const [events, rewards, redemptionRequests] = await Promise.all([
+    prisma.event.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: { select: { votes: true, submissions: true } },
+      },
+    }),
+    prisma.reward.findMany({
+      orderBy: [{ isActive: "desc" }, { costPoints: "asc" }, { createdAt: "desc" }],
+      include: { _count: { select: { redemptions: true } } },
+    }),
+    prisma.redemption.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: { user: true, reward: true },
+    }),
+  ]);
 
   const openEvents = events.filter((event) => event.status === "OPEN").length;
   const draftEvents = events.filter((event) => event.status === "DRAFT").length;
   const closedEvents = events.filter((event) => event.status === "CLOSED").length;
   const totalVotes = events.reduce((sum, event) => sum + event._count.votes, 0);
   const totalRuns = events.reduce((sum, event) => sum + event._count.submissions, 0);
+  const pendingRedemptions = redemptionRequests.filter((item) => item.status === "PENDING").length;
 
   return (
     <>
@@ -65,6 +80,10 @@ export default async function AdminPage() {
             <span>Runs</span>
             <strong>{totalRuns}</strong>
           </article>
+          <article>
+            <span>Redeem</span>
+            <strong>{pendingRedemptions}</strong>
+          </article>
         </div>
       </section>
 
@@ -72,7 +91,8 @@ export default async function AdminPage() {
         <a href="#admin-events">01 Events</a>
         <a href="#admin-design">02 Design</a>
         <a href="#admin-scoring">03 Scoring</a>
-        <a href="#admin-strava">04 Strava</a>
+        <a href="#admin-redemptions">04 Redemptions</a>
+        <a href="#admin-strava">05 Strava</a>
       </nav>
 
       <section id="admin-events" className="admin-section-card is-primary">
@@ -199,10 +219,115 @@ export default async function AdminPage() {
         </details>
       </section>
 
-      <section id="admin-strava" className="admin-section-card">
+      <section id="admin-redemptions" className="admin-section-card">
         <div className="admin-section-head">
           <div>
             <span className="admin-section-number">04</span>
+            <h2>Redemptions</h2>
+            <p>Create point rewards, manage item/voucher stock, and approve member redemption requests.</p>
+          </div>
+          <div className="admin-section-status">
+            <span>{rewards.length} rewards</span>
+            <span>{pendingRedemptions} pending</span>
+          </div>
+        </div>
+
+        <details className="admin-panel">
+          <summary>
+            <span>Create reward</span>
+            <small>Add item or voucher rewards that members can redeem using points.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <RewardForm action={createRewardAction} />
+          </div>
+        </details>
+
+        <details className="admin-panel">
+          <summary>
+            <span>Reward catalog</span>
+            <small>Edit point cost, stock, type, active status, and voucher notes.</small>
+          </summary>
+          <div className="admin-panel-body reward-admin-list">
+            {rewards.map((reward) => (
+              <details className="reward-admin-card" key={reward.id}>
+                <summary>
+                  <div>
+                    <strong>{reward.name}</strong>
+                    <small>{reward.type} · {reward.costPoints} pts · {reward.stockQuantity === null ? "Unlimited" : `${reward.stockQuantity} stock`} · {reward._count.redemptions} requests</small>
+                  </div>
+                  <span className={reward.isActive ? "badge success" : "badge"}>{reward.isActive ? "ACTIVE" : "HIDDEN"}</span>
+                </summary>
+                <div className="admin-panel-body">
+                  <RewardForm reward={reward} action={updateRewardAction} />
+                </div>
+              </details>
+            ))}
+            {rewards.length === 0 && <p className="muted">No rewards created yet.</p>}
+          </div>
+        </details>
+
+        <details className="admin-panel">
+          <summary>
+            <span>Redemption requests</span>
+            <small>Approve, reject, or mark rewards as fulfilled after collection or voucher delivery.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Reward</th>
+                    <th>Points</th>
+                    <th>Status</th>
+                    <th>Admin note</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {redemptionRequests.map((request) => (
+                    <tr key={request.id}>
+                      <td>
+                        <strong>{request.user.name}</strong>
+                        <br />
+                        <small>{request.user.email}</small>
+                      </td>
+                      <td>
+                        {request.reward.name}
+                        <br />
+                        <small>{request.reward.type}</small>
+                      </td>
+                      <td>{request.pointsCost}</td>
+                      <td><span className={redemptionStatusClass(request.status)}>{request.status}</span></td>
+                      <td>{request.adminNote || "—"}</td>
+                      <td>
+                        <form className="inline-status-form" action={updateRedemptionStatusAction}>
+                          <input type="hidden" name="redemptionId" value={request.id} />
+                          <select name="status" defaultValue={request.status}>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="FULFILLED">Fulfilled</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="CANCELLED">Cancelled</option>
+                          </select>
+                          <input name="adminNote" placeholder="Optional note" defaultValue={request.adminNote || ""} />
+                          <FormSubmitButton className="ghost" pendingLabel="Updating redemption...">Update</FormSubmitButton>
+                        </form>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {redemptionRequests.length === 0 && <p className="muted">No redemption requests yet.</p>}
+          </div>
+        </details>
+      </section>
+
+      <section id="admin-strava" className="admin-section-card">
+        <div className="admin-section-head">
+          <div>
+            <span className="admin-section-number">05</span>
             <h2>Strava connection</h2>
             <p>Check whether the Vercel environment variables and callback domain are ready.</p>
           </div>

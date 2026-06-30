@@ -42,6 +42,32 @@ async function main() {
     },
   });
 
+  const sampleRewards = [
+    {
+      name: "Club Finisher Voucher",
+      type: "VOUCHER" as const,
+      description: "Sample RM10 club voucher. Edit or hide this from Admin → Redemptions.",
+      costPoints: 80,
+      stockQuantity: 20,
+      voucherCode: "ADMIN TO ISSUE",
+    },
+    {
+      name: "Training Day Sticker Pack",
+      type: "ITEM" as const,
+      description: "Sample small item reward for active members.",
+      costPoints: 40,
+      stockQuantity: 50,
+      voucherCode: null,
+    },
+  ];
+
+  for (const reward of sampleRewards) {
+    const exists = await prisma.reward.findFirst({ where: { name: reward.name } });
+    if (!exists) {
+      await prisma.reward.create({ data: { ...reward, isActive: true } });
+    }
+  }
+
   console.log(`Admin ready: ${email}`);
 }
 

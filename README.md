@@ -695,3 +695,59 @@ Main rule applied: light cards use dark text, dark themes use light text, and sc
 - Share result page now includes a 9:16 Instagram Story style result card.
 - Users can generate/share/download a PNG story card with distance, points, route line, event name and runner name.
 - The share card works with mobile native share sheet when supported; otherwise users can download and manually upload to Instagram Story / Xiaohongshu.
+
+## Latest update: Clean IG share + redemptions
+
+### Clean Premium IG Story Share
+
+The share result page has been simplified into one clean 9:16 story card and one action panel:
+
+- Share story image
+- Download image
+- Copy caption + link
+
+The older duplicated Facebook / X / extra share link block has been removed from the result page to keep it cleaner for Instagram Story and Xiaohongshu sharing.
+
+### Points Redemptions
+
+The system now supports a reward store where members can redeem approved points for either:
+
+- Item rewards
+- Voucher rewards
+
+Admin can manage it from:
+
+```text
+/admin → 04 Redemptions
+```
+
+Member reward store:
+
+```text
+/redemptions
+```
+
+Redemption logic:
+
+- Available points = approved submission points - pending/approved/fulfilled redemption points.
+- Member submits redemption request.
+- Points are reserved while request is pending.
+- Admin can mark request as Pending, Approved, Fulfilled, Rejected, or Cancelled.
+- If a reserved request is rejected/cancelled and the reward has limited stock, stock is returned.
+
+### Database update
+
+This update adds these Prisma models/enums:
+
+```text
+RewardType
+RedemptionStatus
+Reward
+Redemption
+```
+
+Keep Vercel build command:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

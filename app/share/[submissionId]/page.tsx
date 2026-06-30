@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LoadingLink } from "@/components/LoadingLink";
 import { prisma } from "@/lib/prisma";
-import { ShareButtons } from "@/components/ShareButtons";
 import { SharePosterActions } from "@/components/SharePosterActions";
+import { getHomeContent } from "@/lib/site-content";
+import { formatDateTimeRange } from "@/lib/datetime";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -24,107 +27,95 @@ export async function generateMetadata({
   return {
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
+    openGraph: { title, description, type: "website" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
 export default async function SharePage({ params }: { params: Promise<{ submissionId: string }> }) {
   const { submissionId } = await params;
-  const submission = await prisma.submission.findUnique({
-    where: { id: submissionId },
-    include: { user: true, event: true, activity: true },
-  });
+  const [submission, siteContent] = await Promise.all([
+    prisma.submission.findUnique({
+      where: { id: submissionId },
+      include: { user: true, event: true, activity: true },
+    }),
+    getHomeContent(),
+  ]);
 
   if (!submission || submission.status !== "APPROVED") notFound();
 
   const distanceKm = Number(submission.distanceKm).toFixed(2).replace(/\.00$/, "");
-  const shareText = `${submission.user.name} scored ${submission.totalPoints} points in ${submission.event.title}: ${distanceKm}km run!`;
+  const brandName = (siteContent.brandName || "Run Mini").trim() || "Run Mini";
+  const shareText = `${submission.user.name} finished ${distanceKm}km and scored ${submission.totalPoints} points in ${submission.event.title}.`;
 
   return (
     <>
-      <section className="share-hero-section">
-        <div className="share-story-preview" aria-label="Instagram story result preview">
-          <div className="story-sky" aria-hidden="true">
-            <span className="story-sun" />
-            <span className="story-wave one" />
-            <span className="story-wave two" />
+      <section className="ig-share-layout">
+        <div className="ig-story-card" aria-label="Instagram story result preview">
+          <div className="ig-story-bg" aria-hidden="true">
+            <span className="ig-sun" />
+            <span className="ig-wave one" />
+            <span className="ig-wave two" />
           </div>
 
-          <div className="story-header">
-            <span className="story-logo">🏃</span>
+          <header className="ig-story-header">
+            <span className="ig-logo-mark">
+              {siteContent.logoImageDataUrl ? <img src={siteContent.logoImageDataUrl} alt="" /> : "🏃"}
+            </span>
             <div>
-              <strong>Run Mini</strong>
+              <strong>{brandName}</strong>
               <small>Sweat • Run • Score</small>
             </div>
-          </div>
+          </header>
 
-          <div className="story-metric-card">
-            <span>FINISH RESULT</span>
-            <strong>{distanceKm}km</strong>
-            <em>{submission.totalPoints} pts</em>
-          </div>
+          <main className="ig-story-main">
+            <span className="eyebrow">Finish result</span>
+            <h1>{distanceKm}<small>km</small></h1>
+            <div className="ig-points-pill">{submission.totalPoints} pts earned</div>
+            <h2>{submission.event.title}</h2>
+            <p>{formatDateTimeRange(submission.event.startAt, submission.event.endAt)}</p>
+          </main>
 
-          <div className="story-route" aria-hidden="true">
-            <span className="route-dot start" />
-            <span className="route-dot mid" />
-            <span className="route-dot end" />
+          <div className="ig-route-line" aria-hidden="true">
+            <span className="route-node start" />
+            <span className="route-node mid" />
+            <span className="route-node end" />
             <span className="route-runner">🏃‍♂️</span>
           </div>
 
-          <div className="story-runner-card">
-            <span>RUNNER</span>
-            <strong>{submission.user.name}</strong>
-            <small>{submission.event.title}</small>
-          </div>
-
-          <div className="story-points-row">
+          <footer className="ig-story-footer">
             <div>
-              <strong>{submission.attendancePoints}</strong>
-              <span>Attend</span>
+              <span>Runner</span>
+              <strong>{submission.user.name}</strong>
             </div>
-            <div>
-              <strong>{submission.distancePoints}</strong>
-              <span>Distance</span>
+            <div className="ig-stat-row">
+              <article><strong>{submission.attendancePoints}</strong><span>Attend</span></article>
+              <article><strong>{submission.distancePoints}</strong><span>Distance</span></article>
+              <article><strong>{submission.totalPoints}</strong><span>Total</span></article>
             </div>
-            <div>
-              <strong>{submission.totalPoints}</strong>
-              <span>Total</span>
-            </div>
-          </div>
+          </footer>
         </div>
 
-        <div className="share-control-card">
-          <span className="eyebrow">Share card</span>
-          <h1>Ready for Instagram Story.</h1>
+        <aside className="ig-share-actions-card">
+          <span className="eyebrow">Clean premium story</span>
+          <h1>Share your finish.</h1>
           <p className="muted">
-            The card is designed in 9:16 story style with large distance, points, route line and runner details.
+            This 9:16 result card is designed for Instagram Story and Xiaohongshu. Use one action only: share, download, or copy caption.
           </p>
           <SharePosterActions
+            brandName={brandName}
             userName={submission.user.name}
             eventTitle={submission.event.title}
             activityName={submission.activity.name}
+            eventDate={formatDateTimeRange(submission.event.startAt, submission.event.endAt)}
             distanceKm={distanceKm}
             totalPoints={submission.totalPoints}
             attendancePoints={submission.attendancePoints}
             distancePoints={submission.distancePoints}
             shareText={shareText}
           />
-        </div>
+        </aside>
       </section>
-
-      <div className="card">
-        <h2>Share link</h2>
-        <ShareButtons text={shareText} />
-      </div>
 
       <LoadingLink className="button ghost full" href={`/events/${submission.event.slug}`}>
         Back to event

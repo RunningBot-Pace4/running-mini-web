@@ -90,6 +90,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <nav className="nav cn-nav">
               <LoadingLink href="/">Events</LoadingLink>
               {user && <LoadingLink href="/account">Account</LoadingLink>}
+              {user && <LoadingLink href="/redemptions">Redeem</LoadingLink>}
               {user?.role === "ADMIN" && <LoadingLink href="/admin">Admin</LoadingLink>}
               {user ? (
                 <LogoutForm action={logoutAction} />
@@ -123,15 +124,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               Login
             </LoadingLink>
           )}
-          {user?.role === "ADMIN" ? (
-            <LoadingLink href="/admin" loadingLabel="Opening admin...">
-              <span>🛠️</span>
-              Admin
+          {user ? (
+            <LoadingLink href="/redemptions" loadingLabel="Opening rewards...">
+              <span>🎁</span>
+              Redeem
             </LoadingLink>
           ) : (
             <LoadingLink href="/register" loadingLabel="Opening registration...">
               <span>🔥</span>
               Join
+            </LoadingLink>
+          )}
+          {user?.role === "ADMIN" && (
+            <LoadingLink href="/admin" loadingLabel="Opening admin...">
+              <span>🛠️</span>
+              Admin
             </LoadingLink>
           )}
           {user && (

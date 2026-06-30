@@ -5,6 +5,8 @@ CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 CREATE TYPE "EventStatus" AS ENUM ('DRAFT', 'OPEN', 'CLOSED', 'ARCHIVED');
 CREATE TYPE "VoteStatus" AS ENUM ('ATTEND', 'NOT_ATTEND');
 CREATE TYPE "SubmissionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+CREATE TYPE "RewardType" AS ENUM ('ITEM', 'VOUCHER');
+CREATE TYPE "RedemptionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'FULFILLED', 'CANCELLED');
 
 CREATE TABLE "User" (
   "id" TEXT PRIMARY KEY,
@@ -34,6 +36,36 @@ CREATE TABLE "PasswordResetToken" (
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+
+
+CREATE TABLE "Reward" (
+  "id" TEXT PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "type" "RewardType" NOT NULL,
+  "description" TEXT,
+  "costPoints" INTEGER NOT NULL,
+  "stockQuantity" INTEGER,
+  "voucherCode" TEXT,
+  "imageDataUrl" TEXT,
+  "isActive" BOOLEAN NOT NULL DEFAULT true,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE "Redemption" (
+  "id" TEXT PRIMARY KEY,
+  "userId" TEXT NOT NULL REFERENCES "User"("id") ON DELETE CASCADE,
+  "rewardId" TEXT NOT NULL REFERENCES "Reward"("id") ON DELETE RESTRICT,
+  "status" "RedemptionStatus" NOT NULL DEFAULT 'PENDING',
+  "pointsCost" INTEGER NOT NULL,
+  "quantity" INTEGER NOT NULL DEFAULT 1,
+  "requestNote" TEXT,
+  "adminNote" TEXT,
+  "approvedAt" TIMESTAMPTZ,
+  "fulfilledAt" TIMESTAMPTZ,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
 CREATE TABLE "ScoreSetting" (
   "id" TEXT PRIMARY KEY,
@@ -142,3 +174,9 @@ CREATE INDEX "StravaActivity_userId_startDate_idx" ON "StravaActivity"("userId",
 CREATE INDEX "StravaActivity_type_idx" ON "StravaActivity"("type");
 CREATE INDEX "Submission_eventId_status_idx" ON "Submission"("eventId", "status");
 CREATE INDEX "Submission_userId_idx" ON "Submission"("userId");
+
+CREATE INDEX "Reward_isActive_type_idx" ON "Reward"("isActive", "type");
+CREATE INDEX "Reward_costPoints_idx" ON "Reward"("costPoints");
+CREATE INDEX "Redemption_userId_status_idx" ON "Redemption"("userId", "status");
+CREATE INDEX "Redemption_rewardId_status_idx" ON "Redemption"("rewardId", "status");
+CREATE INDEX "Redemption_createdAt_idx" ON "Redemption"("createdAt");

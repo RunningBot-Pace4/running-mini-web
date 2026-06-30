@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type SharePosterActionsProps = {
+  brandName: string;
   userName: string;
   eventTitle: string;
   activityName: string;
+  eventDate: string;
   distanceKm: string;
   totalPoints: number;
   attendancePoints: number;
@@ -26,32 +28,22 @@ function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width:
   ctx.closePath();
 }
 
-function drawTextBlock(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-  lineHeight: number,
-  maxLines = 2,
-) {
+function drawTextBlock(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, maxLines = 2) {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let current = "";
 
   for (const word of words) {
     const test = current ? `${current} ${word}` : word;
-    if (ctx.measureText(test).width <= maxWidth) {
-      current = test;
-    } else {
+    if (ctx.measureText(test).width <= maxWidth) current = test;
+    else {
       if (current) lines.push(current);
       current = word;
     }
   }
   if (current) lines.push(current);
 
-  const visibleLines = lines.slice(0, maxLines);
-  visibleLines.forEach((line, index) => {
+  lines.slice(0, maxLines).forEach((line, index) => {
     const value = index === maxLines - 1 && lines.length > maxLines ? `${line.replace(/\s+\S*$/, "")}…` : line;
     ctx.fillText(value, x, y + index * lineHeight);
   });
@@ -67,9 +59,11 @@ async function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 }
 
 export function SharePosterActions({
+  brandName,
   userName,
   eventTitle,
   activityName,
+  eventDate,
   distanceKm,
   totalPoints,
   attendancePoints,
@@ -81,8 +75,8 @@ export function SharePosterActions({
   const [message, setMessage] = useState("");
   const [url, setUrl] = useState("");
 
-  useMemo(() => {
-    if (typeof window !== "undefined") setUrl(window.location.href);
+  useEffect(() => {
+    setUrl(window.location.href);
   }, []);
 
   function buildPosterCanvas() {
@@ -93,120 +87,135 @@ export function SharePosterActions({
     if (!ctx) throw new Error("Canvas is not supported on this device.");
 
     const bg = ctx.createLinearGradient(0, 0, 1080, 1920);
-    bg.addColorStop(0, "#0b1f33");
-    bg.addColorStop(0.42, "#1d6fa3");
-    bg.addColorStop(1, "#ff7a45");
+    bg.addColorStop(0, "#e8f8ff");
+    bg.addColorStop(0.38, "#f7ffe9");
+    bg.addColorStop(1, "#fff0df");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, 1080, 1920);
 
-    const sunrise = ctx.createRadialGradient(820, 260, 20, 820, 260, 440);
-    sunrise.addColorStop(0, "rgba(255, 214, 107, 0.98)");
-    sunrise.addColorStop(0.45, "rgba(255, 122, 69, 0.45)");
-    sunrise.addColorStop(1, "rgba(255, 122, 69, 0)");
-    ctx.fillStyle = sunrise;
-    ctx.fillRect(0, 0, 1080, 780);
+    const sun = ctx.createRadialGradient(830, 250, 20, 830, 250, 520);
+    sun.addColorStop(0, "rgba(255, 195, 69, 0.9)");
+    sun.addColorStop(0.45, "rgba(255, 122, 69, 0.35)");
+    sun.addColorStop(1, "rgba(255, 122, 69, 0)");
+    ctx.fillStyle = sun;
+    ctx.fillRect(0, 0, 1080, 900);
 
-    ctx.strokeStyle = "rgba(255,255,255,0.18)";
-    ctx.lineWidth = 4;
-    for (let i = 0; i < 8; i += 1) {
+    ctx.strokeStyle = "rgba(29,111,163,0.12)";
+    ctx.lineWidth = 8;
+    for (let i = 0; i < 5; i += 1) {
       ctx.beginPath();
-      ctx.arc(540, 1280 + i * 18, 560 + i * 52, Math.PI * 1.05, Math.PI * 1.95);
+      ctx.arc(540, 1320 + i * 50, 520 + i * 74, Math.PI * 1.06, Math.PI * 1.94);
       ctx.stroke();
     }
 
-    ctx.fillStyle = "rgba(255,255,255,0.16)";
-    for (let i = 0; i < 40; i += 1) {
-      const x = (i * 173) % 1080;
-      const y = 260 + ((i * 97) % 980);
-      ctx.beginPath();
-      ctx.arc(x, y, 2 + (i % 5), 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    roundedRect(ctx, 70, 86, 940, 1640, 72);
-    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    roundedRect(ctx, 70, 82, 940, 1756, 70);
+    ctx.fillStyle = "rgba(255,255,255,0.82)";
     ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+    ctx.strokeStyle = "rgba(29,111,163,0.18)";
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    ctx.fillStyle = "#0b1f33";
-    ctx.font = "900 42px Arial";
-    ctx.fillText("RUN MINI RESULT", 126, 190);
-    ctx.fillStyle = "#1d6fa3";
-    ctx.font = "800 26px Arial";
-    ctx.fillText("Sweat • Run • Score", 126, 235);
+    roundedRect(ctx, 126, 145, 110, 110, 34);
+    const logoGrad = ctx.createLinearGradient(126, 145, 236, 255);
+    logoGrad.addColorStop(0, "#6ec6ff");
+    logoGrad.addColorStop(1, "#ff7a45");
+    ctx.fillStyle = logoGrad;
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "700 54px Arial";
+    ctx.fillText("🏃", 151, 220);
 
-    roundedRect(ctx, 126, 310, 828, 500, 56);
-    const hero = ctx.createLinearGradient(126, 310, 954, 810);
-    hero.addColorStop(0, "#e9f8ff");
-    hero.addColorStop(0.6, "#f7ffe7");
-    hero.addColorStop(1, "#fff2e5");
-    ctx.fillStyle = hero;
+    ctx.fillStyle = "#0b1f33";
+    ctx.font = "900 44px Arial";
+    drawTextBlock(ctx, brandName, 270, 184, 640, 52, 1);
+    ctx.fillStyle = "#526579";
+    ctx.font = "800 28px Arial";
+    ctx.fillText("Sweat • Run • Score", 270, 232);
+
+    ctx.fillStyle = "#1d6fa3";
+    ctx.font = "900 34px Arial";
+    ctx.fillText("FINISH RESULT", 126, 390);
+
+    ctx.fillStyle = "#0b1f33";
+    ctx.font = "900 186px Arial";
+    ctx.fillText(distanceKm, 126, 590);
+    ctx.font = "900 90px Arial";
+    ctx.fillText("km", 126 + ctx.measureText(distanceKm).width + 18, 590);
+
+    roundedRect(ctx, 126, 650, 420, 102, 51);
+    ctx.fillStyle = "#ff5a1f";
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 54px Arial";
+    ctx.fillText(`${totalPoints} pts`, 172, 718);
+
+    ctx.fillStyle = "#0b1f33";
+    ctx.font = "900 54px Arial";
+    drawTextBlock(ctx, eventTitle, 126, 865, 820, 62, 2);
+    ctx.fillStyle = "#526579";
+    ctx.font = "700 30px Arial";
+    drawTextBlock(ctx, eventDate, 126, 995, 820, 42, 2);
+
+    roundedRect(ctx, 126, 1115, 828, 250, 54);
+    ctx.fillStyle = "rgba(255,255,255,0.78)";
     ctx.fill();
     ctx.strokeStyle = "rgba(29,111,163,0.16)";
     ctx.stroke();
-
-    ctx.fillStyle = "#0b1f33";
-    ctx.font = "900 138px Arial";
-    ctx.fillText(`${distanceKm}km`, 172, 500);
-    ctx.fillStyle = "#ff5a1f";
-    ctx.font = "900 118px Arial";
-    ctx.fillText(`${totalPoints} pts`, 172, 650);
-
-    ctx.fillStyle = "#516271";
-    ctx.font = "700 34px Arial";
-    ctx.fillText(`${attendancePoints} attend pts + ${distancePoints} distance pts`, 174, 725);
-
     ctx.strokeStyle = "#1d6fa3";
-    ctx.lineWidth = 18;
+    ctx.lineWidth = 20;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(170, 940);
-    ctx.bezierCurveTo(340, 830, 472, 1080, 640, 956);
-    ctx.bezierCurveTo(750, 870, 810, 930, 910, 850);
+    ctx.moveTo(190, 1250);
+    ctx.bezierCurveTo(330, 1130, 480, 1350, 635, 1240);
+    ctx.bezierCurveTo(760, 1152, 830, 1215, 910, 1146);
     ctx.stroke();
 
     for (const [x, y, color] of [
-      [170, 940, "#07c160"],
-      [640, 956, "#ffb000"],
-      [910, 850, "#ff5a1f"],
+      [190, 1250, "#07c160"],
+      [635, 1240, "#ffb000"],
+      [910, 1146, "#ff5a1f"],
     ] as const) {
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.arc(x, y, 34, 0, Math.PI * 2);
+      ctx.arc(x, y, 38, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.arc(x, y, 19, 0, Math.PI * 2);
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.font = "700 62px Arial";
+    ctx.fillText("🏃‍♂️", 525, 1210);
 
+    ctx.fillStyle = "#1d6fa3";
+    ctx.font = "900 30px Arial";
+    ctx.fillText("RUNNER", 126, 1480);
     ctx.fillStyle = "#0b1f33";
-    ctx.font = "900 58px Arial";
-    drawTextBlock(ctx, userName, 126, 1120, 820, 66, 1);
-
-    ctx.fillStyle = "#334155";
-    ctx.font = "800 36px Arial";
-    drawTextBlock(ctx, eventTitle, 126, 1195, 820, 46, 2);
-
+    ctx.font = "900 72px Arial";
+    drawTextBlock(ctx, userName, 126, 1560, 820, 80, 1);
     ctx.fillStyle = "#64748b";
     ctx.font = "700 30px Arial";
-    drawTextBlock(ctx, activityName, 126, 1325, 820, 42, 2);
+    drawTextBlock(ctx, activityName, 126, 1625, 820, 38, 1);
 
-    roundedRect(ctx, 126, 1430, 828, 160, 38);
-    ctx.fillStyle = "#0b1f33";
-    ctx.fill();
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "900 34px Arial";
-    ctx.fillText("SHARE THE FINISH", 174, 1504);
-    ctx.fillStyle = "rgba(255,255,255,0.72)";
-    ctx.font = "700 28px Arial";
-    ctx.fillText("Save this story card and post to IG / XHS.", 174, 1552);
-
-    ctx.fillStyle = "#0b1f33";
-    ctx.font = "900 28px Arial";
-    ctx.fillText("#RunMini #SweatRunScore", 126, 1688);
+    const stats = [
+      ["Attend", attendancePoints],
+      ["Distance", distancePoints],
+      ["Total", totalPoints],
+    ] as const;
+    stats.forEach(([label, value], index) => {
+      const x = 126 + index * 280;
+      roundedRect(ctx, x, 1690, 246, 110, 34);
+      ctx.fillStyle = "rgba(255,255,255,0.88)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(29,111,163,0.14)";
+      ctx.stroke();
+      ctx.fillStyle = "#0b1f33";
+      ctx.font = "900 42px Arial";
+      ctx.fillText(String(value), x + 36, 1743);
+      ctx.fillStyle = "#526579";
+      ctx.font = "800 24px Arial";
+      ctx.fillText(label, x + 36, 1782);
+    });
 
     return canvas;
   }
@@ -215,32 +224,6 @@ export function SharePosterActions({
     const canvas = buildPosterCanvas();
     const blob = await canvasToBlob(canvas);
     return new File([blob], "run-mini-story.png", { type: "image/png" });
-  }
-
-  async function shareStoryImage() {
-    setBusy(true);
-    setMessage("");
-    try {
-      const file = await generateImageFile();
-      const data: FileShareData = {
-        title: "Run Mini Result",
-        text: shareText,
-        files: [file],
-      };
-      const nav = navigator as Navigator & { canShare?: (data: FileShareData) => boolean };
-
-      if (navigator.share && (!nav.canShare || nav.canShare(data))) {
-        await navigator.share(data);
-        setMessage("Open Instagram or your favourite app from the share sheet.");
-      } else {
-        downloadFile(file);
-        setMessage("Image downloaded. Upload it to Instagram Story or post manually.");
-      }
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Unable to share image. Please download instead.");
-    } finally {
-      setBusy(false);
-    }
   }
 
   function downloadFile(file: File) {
@@ -252,6 +235,27 @@ export function SharePosterActions({
     link.click();
     link.remove();
     URL.revokeObjectURL(objectUrl);
+  }
+
+  async function shareStoryImage() {
+    setBusy(true);
+    setMessage("");
+    try {
+      const file = await generateImageFile();
+      const data: FileShareData = { title: "Run Mini Result", text: shareText, files: [file] };
+      const nav = navigator as Navigator & { canShare?: (data: FileShareData) => boolean };
+      if (navigator.share && (!nav.canShare || nav.canShare(data))) {
+        await navigator.share(data);
+        setMessage("Choose Instagram, Xiaohongshu, WhatsApp, or any app from your phone share sheet.");
+      } else {
+        downloadFile(file);
+        setMessage("Image downloaded. Upload it to Instagram Story manually.");
+      }
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Unable to share image. Please download instead.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function downloadStoryImage() {
@@ -275,24 +279,17 @@ export function SharePosterActions({
   }
 
   return (
-    <div className="share-actions-panel">
-      <div className="share-action-grid">
-        <button type="button" onClick={shareStoryImage} disabled={busy}>
-          {busy ? "Generating..." : "Share IG story image"}
-        </button>
-        <button className="secondary" type="button" onClick={downloadStoryImage} disabled={busy}>
-          Download story image
-        </button>
-      </div>
-
+    <div className="share-actions-panel clean-share-actions">
+      <button type="button" onClick={shareStoryImage} disabled={busy}>
+        {busy ? "Generating story..." : "Share story image"}
+      </button>
+      <button className="secondary" type="button" onClick={downloadStoryImage} disabled={busy}>
+        Download image
+      </button>
       <button className="ghost" type="button" onClick={copyCaption} disabled={busy}>
         {copied ? "Caption copied!" : "Copy caption + link"}
       </button>
-
       {message && <p className="success-text">{message}</p>}
-      <p className="muted">
-        Tip: Instagram and Xiaohongshu work best with a 9:16 story image. Use the phone share sheet when available, or download and upload manually.
-      </p>
     </div>
   );
 }
