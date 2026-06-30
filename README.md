@@ -844,3 +844,17 @@ This update adds the `TierBenefit` table. Keep the Vercel build command as:
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+## Latest QA update: mobile loyalty dashboard + admin responsive alignment
+
+This update focuses on the issues found during mobile testing:
+
+- Fixed admin accordion alignment on mobile.
+- Fixed reward catalog expand/collapse card layout.
+- Changed admin section tabs to a compact mobile grid so they do not overlap page content.
+- Redesigned dashboard to feel more like a loyalty/activity app.
+- Improved member tier meter, reward wallet, challenge cards and mobile stats spacing.
+- Replaced the loading screen with a simpler loyalty-pass loader using the same site logo.
+- Added responsive CSS checks for mobile widths around 390px, 420px, 560px and desktop layout.
+
+No database migration is required for this patch.

@@ -111,31 +111,37 @@ export function PageLoadingOverlay({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="page-loading-overlay premium-app-loader"
+      className="page-loading-overlay loyalty-loader-overlay"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <section className="premium-loader-card" aria-label={label}>
-        <div className="premium-loader-brand">
-          <div className="premium-loader-logo" aria-hidden="true">
+      <section className="loyalty-loader-card" aria-label={label}>
+        <div className="loyalty-loader-brand">
+          <div className="loyalty-loader-logo" aria-hidden="true">
             {brand.imageSrc ? <img src={brand.imageSrc} alt="" /> : <span>{brand.mark}</span>}
           </div>
           <div>
             <strong>{brand.name}</strong>
-            <small>Performance Club Hub</small>
+            <small>Member pass is updating</small>
           </div>
         </div>
 
-        <div className="premium-loader-pulse" aria-hidden="true">
-          <span />
-          <i />
+        <div className="loyalty-loader-pass" aria-hidden="true">
+          <div className="loyalty-loader-ring"><span /></div>
+          <div className="loyalty-loader-tier-dots">
+            <i />
+            <i />
+            <i />
+            <i />
+            <i />
+          </div>
         </div>
 
         <h2>{label}</h2>
-        <p>Preparing your club dashboard...</p>
+        <p>Please wait while we prepare your club dashboard.</p>
 
-        <div className="premium-loader-bar" aria-hidden="true">
+        <div className="loyalty-loader-bar" aria-hidden="true">
           <span />
         </div>
       </section>
