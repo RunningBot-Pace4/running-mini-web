@@ -70,6 +70,17 @@ CREATE TABLE "Redemption" (
   "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+
+CREATE TABLE "TierBenefit" (
+  "id" TEXT PRIMARY KEY,
+  "tier" "TierLevel" NOT NULL UNIQUE,
+  "minPoints" INTEGER NOT NULL DEFAULT 0,
+  "benefit" TEXT NOT NULL,
+  "discount" TEXT NOT NULL DEFAULT '',
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE "ScoreSetting" (
   "id" TEXT PRIMARY KEY,
   "key" TEXT NOT NULL UNIQUE,
@@ -186,3 +197,4 @@ CREATE INDEX "Reward_costPoints_idx" ON "Reward"("costPoints");
 CREATE INDEX "Redemption_userId_status_idx" ON "Redemption"("userId", "status");
 CREATE INDEX "Redemption_rewardId_status_idx" ON "Redemption"("rewardId", "status");
 CREATE INDEX "Redemption_createdAt_idx" ON "Redemption"("createdAt");
+CREATE INDEX "TierBenefit_minPoints_idx" ON "TierBenefit"("minPoints");

@@ -10,6 +10,7 @@ import { HOME_CONTENT_KEY } from "@/lib/site-content";
 import { getThemePreset, isThemePresetKey } from "@/lib/theme-presets";
 import { SCORE_SETTING_KEY } from "@/lib/score-config";
 import { calculateScore, getScoreSettings } from "@/lib/scoring";
+import { DEFAULT_MEMBER_TIERS } from "@/lib/member-progress";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -178,6 +179,49 @@ export async function updateScoreSettingsAction(_: unknown, formData: FormData) 
   revalidatePath("/admin");
   revalidatePath("/events/[slug]", "page");
   return { success: "Scoring rules updated." };
+}
+
+
+const updateTierBenefitsSchema = z.object({
+  tiers: z.array(z.object({
+    tier: z.enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"]),
+    minPoints: z.coerce.number().int().min(0).max(100000),
+    benefit: z.string().trim().min(3).max(500),
+    discount: z.string().trim().min(1).max(120),
+  })).length(4),
+});
+
+export async function updateTierBenefitsAction(_: unknown, formData: FormData) {
+  await requireAdmin();
+
+  const tiers = DEFAULT_MEMBER_TIERS.map((tier) => ({
+    tier: tier.key,
+    minPoints: formData.get(`${tier.key}_minPoints`),
+    benefit: formData.get(`${tier.key}_benefit`),
+    discount: formData.get(`${tier.key}_discount`),
+  }));
+
+  const parsed = updateTierBenefitsSchema.safeParse({ tiers });
+  if (!parsed.success) return { error: "Please enter valid tier points and benefits." };
+
+  const sorted = [...parsed.data.tiers].sort((a, b) => a.minPoints - b.minPoints);
+  const requiredOrder = ["BRONZE", "SILVER", "GOLD", "PLATINUM"];
+  const orderOk = sorted.every((item, index) => item.tier === requiredOrder[index]);
+  if (!orderOk) return { error: "Tier points must increase in order: Bronze, Silver, Gold, Platinum." };
+
+  for (const tier of parsed.data.tiers) {
+    await prisma.tierBenefit.upsert({
+      where: { tier: tier.tier },
+      update: { minPoints: tier.minPoints, benefit: tier.benefit, discount: tier.discount },
+      create: { tier: tier.tier, minPoints: tier.minPoints, benefit: tier.benefit, discount: tier.discount },
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/account");
+  revalidatePath("/redemptions");
+  revalidatePath("/admin");
+  return { success: "Tier benefits updated." };
 }
 
 

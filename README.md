@@ -813,3 +813,34 @@ This update adds an `EventType` enum and `Event.type` field. Keep the Vercel bui
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+## Update: Mobile app dashboard, clean admin redemptions, tier benefit settings
+
+This version adds a stronger mobile-app style member dashboard inspired by reward/activity apps:
+
+- App-style tier journey card
+- Reward wallet banner
+- HYROX / Redline / Marathon / Training quick tiles
+- More useful member stats and challenge progress
+- Cleaner Account page layout and tier alignment
+- Cleaner Admin redemption expand/collapse cards
+- New simple premium loading page
+- Admin can now edit tier benefits and point thresholds from `Admin → 04 Redemptions → Tier benefits`
+
+### Tier benefits setup
+
+Admin can edit Bronze, Silver, Gold and Platinum:
+
+- minimum points
+- public benefit text
+- discount / voucher label
+
+Rewards still have their own minimum tier setting inside Create/Edit Reward.
+
+### Database update
+
+This update adds the `TierBenefit` table. Keep the Vercel build command as:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

@@ -5,13 +5,15 @@ import { getUserPointWallet, redemptionStatusClass } from "@/lib/redemptions";
 import { redeemRewardAction } from "@/app/redemptions/actions";
 import { RewardRedeemButton } from "@/components/RewardRedeemButton";
 import { formatDateTime } from "@/lib/datetime";
-import { canAccessTierReward, getMemberTier } from "@/lib/member-progress";
+import { canAccessTierReward, getMemberTier, getTierDefinitions } from "@/lib/member-progress";
 
 export const dynamic = "force-dynamic";
 
 export default async function RedemptionsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const tierDefinitions = await getTierDefinitions();
 
   const [wallet, rewards, redemptions, approvedPoints] = await Promise.all([
     getUserPointWallet(user.id),
@@ -30,7 +32,7 @@ export default async function RedemptionsPage() {
     }),
   ]);
 
-  const tierProgress = getMemberTier(approvedPoints._sum.totalPoints || 0);
+  const tierProgress = getMemberTier(approvedPoints._sum.totalPoints || 0, tierDefinitions);
 
   return (
     <>

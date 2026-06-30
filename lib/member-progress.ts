@@ -1,3 +1,5 @@
+import { prisma } from "@/lib/prisma";
+
 export type TierKey = "BRONZE" | "SILVER" | "GOLD" | "PLATINUM";
 
 export type MemberTier = {
@@ -10,15 +12,15 @@ export type MemberTier = {
   discount: string;
 };
 
-export const MEMBER_TIERS: MemberTier[] = [
+export const DEFAULT_MEMBER_TIERS: MemberTier[] = [
   {
     key: "BRONZE",
     name: "Bronze",
     emoji: "🥉",
     minPoints: 0,
     color: "#B87333",
-    benefit: "Access basic club rewards, starter item redemption and community badges.",
-    discount: "Starter member vouchers",
+    benefit: "Access starter rewards, community badges and member-only event tracking.",
+    discount: "Basic club rewards",
   },
   {
     key: "SILVER",
@@ -26,8 +28,8 @@ export const MEMBER_TIERS: MemberTier[] = [
     emoji: "🥈",
     minPoints: 100,
     color: "#94A3B8",
-    benefit: "Unlock better vouchers, priority redemption queue and Silver member recognition.",
-    discount: "Up to 5% partner discount",
+    benefit: "Unlock selected vouchers, better reward access and Silver recognition.",
+    discount: "Small discount / voucher perks",
   },
   {
     key: "GOLD",
@@ -35,8 +37,8 @@ export const MEMBER_TIERS: MemberTier[] = [
     emoji: "🥇",
     minPoints: 250,
     color: "#F59E0B",
-    benefit: "Unlock premium vouchers, event priority perks and Gold achievement status.",
-    discount: "Up to 10% partner discount",
+    benefit: "Unlock premium vouchers, priority reward access and event perk eligibility.",
+    discount: "Better partner discounts / vouchers",
   },
   {
     key: "PLATINUM",
@@ -44,26 +46,52 @@ export const MEMBER_TIERS: MemberTier[] = [
     emoji: "💎",
     minPoints: 500,
     color: "#7C3AED",
-    benefit: "Unlock exclusive items, first access to campaigns and VIP club recognition.",
-    discount: "Up to 15% partner discount",
+    benefit: "Unlock exclusive items, VIP recognition and first access to limited campaigns.",
+    discount: "Best discounts / exclusive vouchers",
   },
 ];
 
+// Backward-compatible export used by existing pages/components.
+export const MEMBER_TIERS = DEFAULT_MEMBER_TIERS;
+
+export async function getTierDefinitions(): Promise<MemberTier[]> {
+  try {
+    const rows = await prisma.tierBenefit.findMany({ orderBy: { minPoints: "asc" } });
+    if (rows.length === 0) return DEFAULT_MEMBER_TIERS;
+
+    return DEFAULT_MEMBER_TIERS.map((fallback) => {
+      const saved = rows.find((row) => row.tier === fallback.key);
+      return saved
+        ? {
+            ...fallback,
+            minPoints: saved.minPoints,
+            benefit: saved.benefit,
+            discount: saved.discount,
+          }
+        : fallback;
+    }).sort((a, b) => a.minPoints - b.minPoints);
+  } catch {
+    // This keeps old deployments alive before prisma db push creates the table.
+    return DEFAULT_MEMBER_TIERS;
+  }
+}
+
 export function tierRank(tier: string | null | undefined) {
-  const index = MEMBER_TIERS.findIndex((item) => item.key === tier);
+  const index = DEFAULT_MEMBER_TIERS.findIndex((item) => item.key === tier);
   return index < 0 ? 0 : index;
 }
 
-export function getMemberTier(totalPoints: number) {
-  let current = MEMBER_TIERS[0];
-  for (const tier of MEMBER_TIERS) {
+export function getMemberTier(totalPoints: number, tiers: MemberTier[] = DEFAULT_MEMBER_TIERS) {
+  const orderedTiers = [...tiers].sort((a, b) => a.minPoints - b.minPoints);
+  let current = orderedTiers[0] || DEFAULT_MEMBER_TIERS[0];
+  for (const tier of orderedTiers) {
     if (totalPoints >= tier.minPoints) current = tier;
   }
 
-  const next = MEMBER_TIERS.find((tier) => tier.minPoints > totalPoints) || null;
+  const next = orderedTiers.find((tier) => tier.minPoints > totalPoints) || null;
   const previousMin = current.minPoints;
   const nextMin = next?.minPoints ?? current.minPoints;
-  const progress = next
+  const progress = next && nextMin > previousMin
     ? Math.min(100, Math.max(0, Math.round(((totalPoints - previousMin) / (nextMin - previousMin)) * 100)))
     : 100;
 

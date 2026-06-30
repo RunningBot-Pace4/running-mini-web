@@ -6,8 +6,9 @@ import { getCurrentUser } from "@/lib/session";
 import { AdminEventForm } from "@/components/AdminEventForm";
 import { HomeContentForm } from "@/components/HomeContentForm";
 import { ScoreSettingsForm } from "@/components/ScoreSettingsForm";
+import { TierBenefitsForm } from "@/components/TierBenefitsForm";
 import { RewardForm } from "@/components/RewardForm";
-import { createEventAction, updateEventStatusAction, updateHomeContentAction, updateScoreSettingsAction } from "@/app/admin/actions";
+import { createEventAction, updateEventStatusAction, updateHomeContentAction, updateScoreSettingsAction, updateTierBenefitsAction } from "@/app/admin/actions";
 import { createRewardAction, updateRewardAction, updateRedemptionStatusAction } from "@/app/redemptions/actions";
 import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
@@ -16,6 +17,7 @@ import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 import { stravaConfigStatus } from "@/lib/strava-config";
 import { redemptionStatusClass } from "@/lib/redemptions";
 import { eventTypeClass, getClubEventType } from "@/lib/event-types";
+import { getTierDefinitions } from "@/lib/member-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +30,7 @@ export default async function AdminPage() {
 
   const homeContent = await getHomeContent();
   const scoreSettings = await getScoreSettings();
+  const tierDefinitions = await getTierDefinitions();
   const stravaConfig = stravaConfigStatus();
 
   const [events, rewards, redemptionRequests] = await Promise.all([
@@ -256,11 +259,14 @@ export default async function AdminPage() {
             {rewards.map((reward) => (
               <details className="reward-admin-card" key={reward.id}>
                 <summary>
-                  <div>
+                  <div className="reward-admin-summary-main">
                     <strong>{reward.name}</strong>
                     <small>{reward.type} · {reward.costPoints} pts · {reward.minTier}+ · {reward.stockQuantity === null ? "Unlimited" : `${reward.stockQuantity} stock`} · {reward._count.redemptions} requests</small>
                   </div>
-                  <span className={reward.isActive ? "badge success" : "badge"}>{reward.isActive ? "ACTIVE" : "HIDDEN"}</span>
+                  <div className="reward-admin-summary-side">
+                    <span className={reward.isActive ? "badge success" : "badge"}>{reward.isActive ? "ACTIVE" : "HIDDEN"}</span>
+                    <span className="collapse-chevron" aria-hidden="true">⌄</span>
+                  </div>
                 </summary>
                 <div className="admin-panel-body">
                   <RewardForm reward={reward} action={updateRewardAction} />
@@ -270,6 +276,17 @@ export default async function AdminPage() {
             {rewards.length === 0 && <p className="muted">No rewards created yet.</p>}
           </div>
         </details>
+
+        <details className="admin-panel">
+          <summary>
+            <span>Tier benefits</span>
+            <small>Set Bronze, Silver, Gold and Platinum point thresholds, benefits and discount labels.</small>
+          </summary>
+          <div className="admin-panel-body">
+            <TierBenefitsForm tiers={tierDefinitions} action={updateTierBenefitsAction} />
+          </div>
+        </details>
+
 
         <details className="admin-panel">
           <summary>

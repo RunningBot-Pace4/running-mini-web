@@ -5,11 +5,10 @@ import { formatDateTimeRange } from "@/lib/datetime";
 import { EventDescription } from "@/components/EventDescription";
 import { LoadingLink } from "@/components/LoadingLink";
 import { getHomeContent } from "@/lib/site-content";
-import { getScoreSettings, scoringDescription } from "@/lib/scoring";
 import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 import { getUserPointWallet } from "@/lib/redemptions";
-import { buildBadges, buildChallenges, getMemberTier } from "@/lib/member-progress";
+import { buildBadges, buildChallenges, getMemberTier, getTierDefinitions } from "@/lib/member-progress";
 import { CLUB_EVENT_TYPES, eventTypeClass, getClubEventType } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
@@ -75,7 +74,7 @@ export default async function HomePage() {
 
   await closeExpiredOpenEvents();
 
-  const scoreSettings = await getScoreSettings();
+  const tierDefinitions = await getTierDefinitions();
   const events = await prisma.event.findMany({
     where: { status: { in: ["OPEN", "CLOSED"] } },
     orderBy: { startAt: "desc" },
@@ -97,7 +96,7 @@ export default async function HomePage() {
 
   const myDistanceKm = mySubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const myPoints = mySubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
-  const myTier = getMemberTier(myPoints);
+  const myTier = getMemberTier(myPoints, tierDefinitions);
   const badges = buildBadges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount });
   const badgeCount = badges.filter((badge) => badge.earned).length;
   const challenges = buildChallenges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount }).slice(0, 4);
@@ -111,85 +110,83 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="performance-dashboard-hero" aria-label="Member dashboard">
-        <div className="dashboard-welcome-card">
-          <span className="eyebrow">Performance dashboard</span>
-          <h1>Hi, {user.name}</h1>
-          <p>One club hub for HYROX, Redline, marathon, training and weekly challenges.</p>
-          <div className="performance-action-row">
-            <LoadingLink className="button" href="#events">View events</LoadingLink>
-            <LoadingLink className="button ghost" href="/redemptions">Redeem rewards</LoadingLink>
-          </div>
-        </div>
-
-        <div className="dashboard-tier-card">
-          <div className="tier-card-head"><span>{myTier.current.emoji} {myTier.current.name}</span><strong>{wallet.availablePoints} pts</strong></div>
-          <div className="tier-arc" style={{ "--progress": `${myTier.progress}%` } as CSSProperties}>
-            <strong>{myPoints}</strong>
-            <span>total points</span>
-          </div>
-          <p>{myTier.next ? `${myTier.pointsToNext} pts to ${myTier.next.name}` : "Max tier unlocked"}</p>
-        </div>
-      </section>
-
-      <section className="performance-quick-grid" aria-label="Quick stats">
-        <article><span>Total KM</span><strong>{myDistanceKm.toFixed(1)}</strong><small>Approved distance</small></article>
-        <article><span>Events joined</span><strong>{myVoteCount}</strong><small>Attend votes</small></article>
-        <article><span>Badges</span><strong>{badgeCount}/{badges.length}</strong><small>Achievement progress</small></article>
-        <article><span>Open missions</span><strong>{openEvents}</strong><small>{scoringDescription(scoreSettings)}</small></article>
-      </section>
-
-      <section className="performance-club-panel">
-        <div className="panel-copy">
-          <span className="eyebrow">Club formats</span>
-          <h2>Not just running. Train for every arena.</h2>
-          <p>Admin can tag each event as HYROX, Redline, Marathon, Training, Recovery or others so the dashboard matches your real club activities.</p>
-        </div>
-        <div className="club-format-grid">
-          {typeCounts.filter((type) => ["HYROX", "REDLINE", "MARATHON", "TRAINING", "RECOVERY", "OTHER"].includes(type.key)).map((type) => (
-            <article key={type.key} className={`club-format-card type-${type.key.toLowerCase()}`}>
-              <span>{type.icon}</span>
-              <strong>{type.label}</strong>
-              <small>{type.count} event{type.count === 1 ? "" : "s"}</small>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="performance-next-card">
-        <div>
-          <span className="eyebrow">Next focus</span>
-          <h2>{nextEvent?.title || "Create the first club event"}</h2>
-          <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add the first event from the dashboard."}</p>
-          {nextEvent && <span className={eventTypeClass(nextEvent.type)}>{getClubEventType(nextEvent.type).icon} {getClubEventType(nextEvent.type).label}</span>}
-        </div>
-        {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
-      </section>
-
-      <section className="performance-section-card">
-        <div className="section-title-row">
+      <section className="app-dashboard-shell" aria-label="Member app dashboard">
+        <div className="app-dashboard-topbar">
           <div>
-            <span className="eyebrow">Challenges</span>
-            <h2>Keep members motivated</h2>
+            <span className="eyebrow">Performance club</span>
+            <h1>Hi, {user.name}</h1>
           </div>
-          <LoadingLink className="button ghost" href="/account">View full dashboard</LoadingLink>
+          <span className="app-live-pill">LIVE</span>
         </div>
-        <div className="performance-challenge-grid">
-          {challenges.map((challenge) => (
-            <article className={challenge.completed ? "performance-challenge-card completed" : "performance-challenge-card"} key={challenge.key}>
-              <strong>{challenge.title}</strong>
-              <p>{challenge.description}</p>
-              <div className="performance-progress"><i style={{ width: `${challenge.progress}%` }} /></div>
+
+        <div className="app-tier-journey-card">
+          <div className="tier-arc-panel" style={{ "--progress": `${myTier.progress}%`, "--tier-color": myTier.current.color } as CSSProperties}>
+            <div className="tier-arc-labels">
+              {tierDefinitions.map((tier) => (
+                <span key={tier.key}>{tier.name}<small>{tier.minPoints} pts</small></span>
+              ))}
+            </div>
+            <div className="tier-arc-display">
+              <strong>{myPoints}</strong>
+              <span>Total points</span>
+            </div>
+          </div>
+          <div className="tier-journey-bottom">
+            <span>{myTier.current.emoji} {myTier.current.name}</span>
+            <strong>{myTier.next ? `${myTier.pointsToNext} pts to ${myTier.next.name}` : "Max tier unlocked"}</strong>
+          </div>
+        </div>
+
+        <div className="app-reward-banner">
+          <div>
+            <span>Reward wallet</span>
+            <strong>{wallet.availablePoints} pts available</strong>
+            <small>Redeem items, vouchers and club perks.</small>
+          </div>
+          <LoadingLink className="button" href="/redemptions">View rewards</LoadingLink>
+        </div>
+
+        <div className="app-tile-grid">
+          <LoadingLink className="app-tile hyrox" href="#events"><span>🏋️</span><strong>HYROX</strong><small>Hybrid sessions</small></LoadingLink>
+          <LoadingLink className="app-tile redline" href="#events"><span>⚡</span><strong>Redline</strong><small>Team relay</small></LoadingLink>
+          <LoadingLink className="app-tile marathon" href="#events"><span>🏃</span><strong>Marathon</strong><small>Road race</small></LoadingLink>
+          <LoadingLink className="app-tile training" href="#events"><span>🎽</span><strong>Training</strong><small>Club workout</small></LoadingLink>
+        </div>
+
+        <div className="app-metric-grid">
+          <article><span>Total KM</span><strong>{myDistanceKm.toFixed(1)}</strong><small>approved</small></article>
+          <article><span>Joined</span><strong>{myVoteCount}</strong><small>attend votes</small></article>
+          <article><span>Badges</span><strong>{badgeCount}/{badges.length}</strong><small>earned</small></article>
+          <article><span>Missions</span><strong>{openEvents}</strong><small>open</small></article>
+        </div>
+
+        <div className="app-next-event-card">
+          <div>
+            <span className="eyebrow">Next focus</span>
+            <h2>{nextEvent?.title || "Create the first club event"}</h2>
+            <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add your first club event."}</p>
+            {nextEvent && <span className={eventTypeClass(nextEvent.type)}>{getClubEventType(nextEvent.type).icon} {getClubEventType(nextEvent.type).label}</span>}
+          </div>
+          {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open</LoadingLink>}
+        </div>
+
+        <div className="app-challenge-board">
+          <div className="section-title-row compact">
+            <div><span className="eyebrow">Challenges</span><h2>Keep moving</h2></div>
+            <LoadingLink className="button ghost" href="/account">Full dashboard</LoadingLink>
+          </div>
+          {challenges.slice(0, 4).map((challenge) => (
+            <article className={challenge.completed ? "app-challenge completed" : "app-challenge"} key={challenge.key}>
+              <div><strong>{challenge.title}</strong><small>{challenge.description}</small></div>
               <span>{challenge.current}/{challenge.target} {challenge.unit}</span>
+              <i><b style={{ width: `${challenge.progress}%` }} /></i>
             </article>
           ))}
         </div>
-      </section>
 
-      {recentApproved.length > 0 && (
-        <section className="performance-section-card">
-          <div className="section-title-row"><div><span className="eyebrow">Recent effort</span><h2>Your latest approved sessions</h2></div></div>
-          <div className="recent-effort-list">
+        {recentApproved.length > 0 && (
+          <div className="app-recent-list">
+            <div className="section-title-row compact"><div><span className="eyebrow">Recent effort</span><h2>Approved sessions</h2></div></div>
             {recentApproved.map((submission) => (
               <article key={submission.id}>
                 <span className={eventTypeClass(submission.event.type)}>{getClubEventType(submission.event.type).icon}</span>
@@ -197,8 +194,8 @@ export default async function HomePage() {
               </article>
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       <section id="events" className="activ-section-title">
         <span className="eyebrow">Event board</span>

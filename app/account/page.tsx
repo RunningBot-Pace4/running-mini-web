@@ -6,7 +6,7 @@ import { getCurrentUser } from "@/lib/session";
 import { formatDateTime } from "@/lib/datetime";
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 import { getUserPointWallet, redemptionStatusClass } from "@/lib/redemptions";
-import { buildBadges, buildChallenges, getMemberTier, MEMBER_TIERS } from "@/lib/member-progress";
+import { buildBadges, buildChallenges, getMemberTier, getTierDefinitions } from "@/lib/member-progress";
 import { CLUB_EVENT_TYPES, eventTypeClass, getClubEventType } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +14,8 @@ export const dynamic = "force-dynamic";
 export default async function AccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const tierDefinitions = await getTierDefinitions();
 
   const [votes, submissions, stravaToken, wallet, redemptions] = await Promise.all([
     prisma.eventVote.findMany({ where: { userId: user.id }, include: { event: true }, orderBy: { updatedAt: "desc" } }),
@@ -27,7 +29,7 @@ export default async function AccountPage() {
   const totalPoints = approvedSubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
   const totalDistance = approvedSubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const attendVotes = votes.filter((vote) => vote.status === "ATTEND").length;
-  const tierProgress = getMemberTier(totalPoints);
+  const tierProgress = getMemberTier(totalPoints, tierDefinitions);
   const badges = buildBadges({ attendVotes, approvedRuns: approvedSubmissions.length, totalDistance, totalPoints, redemptionCount: redemptions.length });
   const challenges = buildChallenges({ attendVotes, approvedRuns: approvedSubmissions.length, totalDistance, totalPoints, redemptionCount: redemptions.length });
   const earnedBadgeCount = badges.filter((badge) => badge.earned).length;
@@ -38,60 +40,46 @@ export default async function AccountPage() {
 
   return (
     <>
-      <section className="account-app-hero" aria-label="Member profile summary">
-        <div className="account-profile-card">
-          <div className="account-avatar">{user.name.slice(0, 1).toUpperCase()}</div>
-          <div className="account-profile-copy">
-            <span className="eyebrow">My performance pass</span>
+      <section className="account-mobile-pass">
+        <div className="account-pass-top">
+          <div className="account-avatar premium">{user.name.slice(0, 1).toUpperCase()}</div>
+          <div>
+            <span className="eyebrow">My account</span>
             <h1>{user.name}</h1>
             <p>{user.email}</p>
-            <div className="account-pill-row">
-              <span className="account-tier-pill" style={{ "--tier-color": tierProgress.current.color } as CSSProperties}>{tierProgress.current.emoji} {tierProgress.current.name}</span>
-              <span className={stravaToken ? "account-status-pill connected" : "account-status-pill"}>{stravaToken ? "Strava connected" : "Strava not connected"}</span>
-              <span className="account-status-pill">{user.role}</span>
-            </div>
           </div>
+          <span className="app-live-pill">{user.role}</span>
         </div>
 
-        <div className="account-wallet-card">
-          <span>Available points</span>
-          <strong>{wallet.availablePoints}</strong>
-          <p>{totalPoints} earned · {wallet.spentOrReserved} reserved/spent</p>
-          <LoadingLink className="button" href="/redemptions">Open rewards</LoadingLink>
+        <div className="account-pass-wallet">
+          <div>
+            <span>{tierProgress.current.emoji} {tierProgress.current.name} tier</span>
+            <strong>{wallet.availablePoints} pts</strong>
+            <small>{totalPoints} earned · {wallet.spentOrReserved} used/reserved</small>
+          </div>
+          <LoadingLink className="button" href="/redemptions">Rewards</LoadingLink>
         </div>
-      </section>
 
-      <section className="account-tier-progress-card">
-        <div>
-          <span className="eyebrow">Tier journey</span>
-          <h2>{tierProgress.current.name} member</h2>
-          <p>{tierProgress.current.benefit}</p>
-          <strong>{tierProgress.current.discount}</strong>
-        </div>
-        <div className="account-tier-meter">
-          <div className="account-tier-labels"><span>{tierProgress.current.name}</span><span>{tierProgress.next ? tierProgress.next.name : "Max tier"}</span></div>
+        <div className="account-tier-rail" style={{ "--progress": `${tierProgress.progress}%`, "--tier-color": tierProgress.current.color } as CSSProperties}>
+          <div className="account-tier-rail-head">
+            <strong>{tierProgress.current.name} journey</strong>
+            <span>{tierProgress.next ? `${tierProgress.pointsToNext} pts to ${tierProgress.next.name}` : "Highest tier"}</span>
+          </div>
           <div className="account-meter-bar"><i style={{ width: `${tierProgress.progress}%` }} /></div>
-          <p>{tierProgress.next ? `${tierProgress.pointsToNext} pts to unlock ${tierProgress.next.name}` : "Highest tier unlocked. Keep defending your spot."}</p>
+          <p>{tierProgress.current.benefit}</p>
+        </div>
+
+        <div className="account-pass-status-row">
+          <span className={stravaToken ? "account-status-pill connected" : "account-status-pill"}>{stravaToken ? "Strava connected" : "Strava not connected"}</span>
+          <span className="account-status-pill">{tierProgress.current.discount}</span>
         </div>
       </section>
 
-      <section className="account-stat-grid" aria-label="Performance stats">
+      <section className="account-stat-grid modern" aria-label="Performance stats">
         <article><span>Total points</span><strong>{totalPoints}</strong><small>Approved score</small></article>
-        <article><span>Total distance</span><strong>{totalDistance.toFixed(2)}km</strong><small>Across approved submissions</small></article>
-        <article><span>Attend votes</span><strong>{attendVotes}</strong><small>Club event check-ins</small></article>
+        <article><span>Total distance</span><strong>{totalDistance.toFixed(2)}km</strong><small>Approved distance</small></article>
+        <article><span>Attend votes</span><strong>{attendVotes}</strong><small>Club check-ins</small></article>
         <article><span>Badges</span><strong>{earnedBadgeCount}/{badges.length}</strong><small>Achievement collection</small></article>
-      </section>
-
-      <section className="account-section-card">
-        <div className="section-title-row"><div><span className="eyebrow">Activity mix</span><h2>Your club profile is more than running</h2><p className="muted">Approved results are grouped by event category so members can show HYROX, Redline, Marathon and training involvement.</p></div></div>
-        <div className="account-activity-mix">
-          {activityMix.map((type) => (
-            <article key={type.key} className={`account-mix-card type-${type.key.toLowerCase()}`}>
-              <span>{type.icon}</span>
-              <div><strong>{type.label}</strong><small>{type.count} approved session{type.count === 1 ? "" : "s"}</small></div>
-            </article>
-          ))}
-        </div>
       </section>
 
       <section className="account-section-card">
@@ -128,7 +116,7 @@ export default async function AccountPage() {
       <section className="account-section-card">
         <div className="section-title-row"><div><span className="eyebrow">Tier benefits</span><h2>What each tier unlocks</h2></div></div>
         <div className="account-tier-list">
-          {MEMBER_TIERS.map((tier) => (
+          {tierDefinitions.map((tier) => (
             <article className={tier.key === tierProgress.current.key ? "account-tier-item active" : "account-tier-item"} key={tier.key}>
               <span style={{ "--tier-color": tier.color } as CSSProperties}>{tier.emoji}</span>
               <div><strong>{tier.name}</strong><small>{tier.minPoints} pts minimum</small></div>

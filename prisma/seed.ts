@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../lib/password";
 import { DEFAULT_HOME_CONTENT, HOME_CONTENT_KEY } from "../lib/site-content";
 import { DEFAULT_SCORE_SETTING, SCORE_SETTING_KEY } from "../lib/score-config";
+import { DEFAULT_MEMBER_TIERS } from "../lib/member-progress";
 
 const prisma = new PrismaClient();
 
@@ -41,6 +42,21 @@ async function main() {
       ...DEFAULT_SCORE_SETTING,
     },
   });
+
+
+
+  for (const tier of DEFAULT_MEMBER_TIERS) {
+    await prisma.tierBenefit.upsert({
+      where: { tier: tier.key },
+      update: {},
+      create: {
+        tier: tier.key,
+        minPoints: tier.minPoints,
+        benefit: tier.benefit,
+        discount: tier.discount,
+      },
+    });
+  }
 
   const sampleRewards = [
     {
