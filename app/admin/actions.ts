@@ -14,6 +14,7 @@ import { calculateScore, getScoreSettings } from "@/lib/scoring";
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
   description: z.string().max(5000).optional(),
+  type: z.enum(["RUNNING", "HYROX", "REDLINE", "MARATHON", "TRAINING", "RECOVERY", "OTHER"]).default("RUNNING"),
   startAt: z.string().min(1),
   endAt: z.string().min(1),
   status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]).default("OPEN"),
@@ -25,6 +26,7 @@ export async function createEventAction(_: unknown, formData: FormData) {
   const parsed = createEventSchema.safeParse({
     title: formData.get("title"),
     description: String(formData.get("description") || ""),
+    type: formData.get("type") || "RUNNING",
     startAt: formData.get("startAt"),
     endAt: formData.get("endAt"),
     status: formData.get("status") || "OPEN",
@@ -55,6 +57,7 @@ export async function createEventAction(_: unknown, formData: FormData) {
       title: parsed.data.title,
       slug,
       description: parsed.data.description,
+      type: parsed.data.type,
       startAt,
       endAt,
       status: parsed.data.status,
@@ -182,6 +185,7 @@ const updateEventDetailsSchema = z.object({
   eventId: z.string().min(1),
   title: z.string().min(3).max(120),
   description: z.string().max(5000).optional(),
+  type: z.enum(["RUNNING", "HYROX", "REDLINE", "MARATHON", "TRAINING", "RECOVERY", "OTHER"]).default("RUNNING"),
   startAt: z.string().min(1),
   endAt: z.string().min(1),
   status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]),
@@ -194,6 +198,7 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
     eventId: formData.get("eventId"),
     title: formData.get("title"),
     description: String(formData.get("description") || ""),
+    type: formData.get("type") || "RUNNING",
     startAt: formData.get("startAt"),
     endAt: formData.get("endAt"),
     status: formData.get("status"),
@@ -215,6 +220,7 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
     data: {
       title: parsed.data.title,
       description: parsed.data.description,
+      type: parsed.data.type,
       startAt,
       endAt,
       status: parsed.data.status,

@@ -3,6 +3,7 @@
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
+import { CLUB_EVENT_TYPES } from "@/lib/event-types";
 
 type State = { error?: string; success?: string } | undefined;
 
@@ -20,6 +21,18 @@ export function AdminEventForm({
       <div>
         <label htmlFor="title">Event title</label>
         <input id="title" name="title" required />
+      </div>
+
+      <div className="grid grid-2">
+        <div>
+          <label htmlFor="eventType">Event category</label>
+          <select id="eventType" name="type" defaultValue="RUNNING">
+            {CLUB_EVENT_TYPES.map((type) => (
+              <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
+            ))}
+          </select>
+          <p className="field-hint">Use this for HYROX, Redline, Marathon, Training and other club sessions.</p>
+        </div>
       </div>
 
       <div>

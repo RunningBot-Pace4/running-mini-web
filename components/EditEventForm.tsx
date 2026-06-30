@@ -3,6 +3,7 @@
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
 import { useActionState, useEffect, useState } from "react";
 import { RichDescriptionEditor } from "@/components/RichDescriptionEditor";
+import { CLUB_EVENT_TYPES, type ClubEventType } from "@/lib/event-types";
 
 type State = { error?: string; success?: string } | undefined;
 
@@ -10,6 +11,7 @@ type EditableEvent = {
   id: string;
   title: string;
   description: string;
+  type: ClubEventType;
   startAtInput: string;
   endAtInput: string;
   status: "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED";
@@ -43,6 +45,17 @@ export function EditEventForm({
           required
           defaultValue={event.title}
         />
+      </div>
+
+      <div className="grid grid-2">
+        <div>
+          <label htmlFor="edit-eventType">Event category</label>
+          <select id="edit-eventType" name="type" defaultValue={event.type || "RUNNING"}>
+            {CLUB_EVENT_TYPES.map((type) => (
+              <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div>

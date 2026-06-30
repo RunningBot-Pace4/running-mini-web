@@ -15,6 +15,7 @@ import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 import { stravaConfigStatus } from "@/lib/strava-config";
 import { redemptionStatusClass } from "@/lib/redemptions";
+import { eventTypeClass, getClubEventType } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
 
@@ -126,13 +127,16 @@ export default async function AdminPage() {
           </summary>
           <div className="admin-panel-body">
             <div className="admin-event-list">
-              {events.map((event) => (
+              {events.map((event) => {
+                const type = getClubEventType(event.type);
+                return (
                 <article className="admin-event-row" key={event.id}>
                   <div>
                     <LoadingLink className="admin-event-title" href={`/events/${event.slug}`}>
                       {event.title}
                     </LoadingLink>
                     <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
+                    <span className={eventTypeClass(event.type)}>{type.icon} {type.label}</span>
                   </div>
 
                   <div className="admin-event-metrics">
@@ -163,7 +167,8 @@ export default async function AdminPage() {
                     )}
                   </div>
                 </article>
-              ))}
+              );
+              })}
 
               {events.length === 0 && (
                 <div className="empty-card">

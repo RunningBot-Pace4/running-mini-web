@@ -785,3 +785,31 @@ The build command should remain:
 ```bash
 npx prisma db push --accept-data-loss && npm run seed && npm run build
 ```
+
+## 2026-06 Multi-Sport Performance Club Redesign
+
+This update changes the product direction from a running-only mini web into a cleaner multi-sport performance club hub.
+
+### Added
+
+- Member dashboard redesign inspired by clean fitness/reward app layouts.
+- Account page redesign with member pass, tier journey, wallet, activity mix, challenges and badges.
+- Event categories for club formats:
+  - Running
+  - HYROX
+  - Redline
+  - Marathon
+  - Training
+  - Recovery
+  - Others
+- Admin event create/edit now includes Event Category.
+- Home dashboard now highlights HYROX, Redline, Marathon, Training and reward progress.
+- Tier / challenge / badge wording updated to suit a multi-event club instead of running-only.
+
+### Database change
+
+This update adds an `EventType` enum and `Event.type` field. Keep the Vercel build command as:
+
+```bash
+npx prisma db push --accept-data-loss && npm run seed && npm run build
+```

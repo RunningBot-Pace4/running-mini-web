@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { formatDateTimeRange } from "@/lib/datetime";
@@ -9,6 +10,7 @@ import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-windo
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 import { getUserPointWallet } from "@/lib/redemptions";
 import { buildBadges, buildChallenges, getMemberTier } from "@/lib/member-progress";
+import { CLUB_EVENT_TYPES, eventTypeClass, getClubEventType } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,45 +20,48 @@ function statusClass(status: string) {
   return "badge";
 }
 
-function GuestIntro({
-  homeContent,
-}: {
-  homeContent: {
-    heroEyebrow: string;
-    heroTitle: string;
-    heroDescription: string;
-  };
-}) {
+function GuestIntro({ homeContent }: { homeContent: { heroEyebrow: string; heroTitle: string; heroDescription: string } }) {
   return (
     <>
-      <section className="activ-clean-hero" aria-label="Running club introduction">
-        <div className="activ-hero-copy">
-          <span className="eyebrow">{homeContent.heroEyebrow || "Run. Level up. Get rewarded."}</span>
-          <h1>{homeContent.heroTitle || "Run. Earn. Redeem."}</h1>
-          <div className="activ-hero-description">
+      <section className="performance-guest-hero" aria-label="Club introduction">
+        <div className="performance-guest-copy">
+          <span className="eyebrow">{homeContent.heroEyebrow || "SPRC Performance Club Hub"}</span>
+          <h1>{homeContent.heroTitle || "Train for every race format."}</h1>
+          <div className="performance-guest-description">
             <EventDescription text={homeContent.heroDescription} />
           </div>
-          <div className="activ-hero-actions">
-            <LoadingLink className="button" href="/register" loadingLabel="Opening registration...">Get started free</LoadingLink>
+          <div className="performance-action-row">
+            <LoadingLink className="button" href="/register" loadingLabel="Opening registration...">Join the club</LoadingLink>
             <LoadingLink className="button ghost" href="/login" loadingLabel="Opening login...">Member login</LoadingLink>
           </div>
         </div>
-        <div className="activ-phone-preview" aria-label="Member app preview">
-          <div className="activ-phone-head"><span>🏃</span><strong>Run Mini</strong><em>LIVE</em></div>
-          <div className="activ-phone-score"><span>Today’s mission</span><strong>Vote → Run → Submit</strong><small>Earn points and unlock better rewards.</small></div>
-          <div className="activ-phone-steps">
+        <div className="performance-phone-card" aria-label="App preview">
+          <div className="phone-topline"><span>Performance pass</span><strong>LIVE</strong></div>
+          <div className="phone-tier-meter">
+            <span>Bronze</span><span>Silver</span><span>Gold</span><span>Platinum</span>
             <i />
-            <b>01</b><b>02</b><b>03</b>
           </div>
-          <div className="activ-phone-reward"><span>Tier</span><strong>Bronze → Silver → Gold → Platinum</strong></div>
+          <div className="phone-score-bubble"><strong>Vote · Train · Score</strong><small>Earn points from club events, unlock badges and redeem rewards.</small></div>
+          <div className="phone-tile-grid">
+            <span>HYROX</span><span>Redline</span><span>Marathon</span><span>Training</span>
+          </div>
         </div>
       </section>
 
-      <section className="activ-feature-grid" aria-label="Key benefits">
-        <article><span>01</span><h2>Make every KM count</h2><p>Members submit Strava or manual distance and collect points from approved runs.</p></article>
-        <article><span>02</span><h2>Level up by tiers</h2><p>Bronze, Silver, Gold and Platinum tiers can unlock better club benefits.</p></article>
-        <article><span>03</span><h2>Redeem rewards</h2><p>Use available points to redeem items, vouchers, discounts and club privileges.</p></article>
-        <article><span>04</span><h2>Join challenges</h2><p>Badges and missions help keep the club motivated every week.</p></article>
+      <section className="performance-category-grid" aria-label="Club event categories">
+        {CLUB_EVENT_TYPES.slice(1, 6).map((type) => (
+          <article key={type.key} className={`performance-category-card type-${type.key.toLowerCase()}`}>
+            <span>{type.icon}</span>
+            <strong>{type.label}</strong>
+            <p>{type.description}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="performance-how-card">
+        <div><span>01</span><strong>Vote attendance</strong><p>Members confirm ATTEND or NOT ATTEND for each club session.</p></div>
+        <div><span>02</span><strong>Submit result</strong><p>Use Strava or manual KM entry depending on admin settings and event rules.</p></div>
+        <div><span>03</span><strong>Level up</strong><p>Points build badges, tiers and redemption power for items or vouchers.</p></div>
       </section>
     </>
   );
@@ -66,9 +71,7 @@ export default async function HomePage() {
   const user = await getCurrentUser();
   const homeContent = await getHomeContent();
 
-  if (!user) {
-    return <GuestIntro homeContent={homeContent} />;
-  }
+  if (!user) return <GuestIntro homeContent={homeContent} />;
 
   await closeExpiredOpenEvents();
 
@@ -79,102 +82,152 @@ export default async function HomePage() {
     include: { _count: { select: { votes: true, submissions: true } } },
   });
 
-  const [myVoteCount, mySubmissions, wallet, myRedemptionCount] = await Promise.all([
-    prisma.eventVote.count({ where: { userId: user.id } }),
-    prisma.submission.findMany({
-      where: { userId: user.id, status: "APPROVED" },
-      select: { distanceKm: true, totalPoints: true },
-    }),
+  const [myVoteCount, mySubmissions, wallet, myRedemptionCount, recentApproved] = await Promise.all([
+    prisma.eventVote.count({ where: { userId: user.id, status: "ATTEND" } }),
+    prisma.submission.findMany({ where: { userId: user.id, status: "APPROVED" }, select: { distanceKm: true, totalPoints: true } }),
     getUserPointWallet(user.id),
     prisma.redemption.count({ where: { userId: user.id } }),
+    prisma.submission.findMany({
+      where: { userId: user.id, status: "APPROVED" },
+      include: { event: true },
+      orderBy: { createdAt: "desc" },
+      take: 4,
+    }),
   ]);
 
   const myDistanceKm = mySubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const myPoints = mySubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
   const myTier = getMemberTier(myPoints);
-  const badgeCount = buildBadges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount }).filter((badge) => badge.earned).length;
-  const challenges = buildChallenges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount }).slice(0, 3);
+  const badges = buildBadges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount });
+  const badgeCount = badges.filter((badge) => badge.earned).length;
+  const challenges = buildChallenges({ attendVotes: myVoteCount, approvedRuns: mySubmissions.length, totalDistance: myDistanceKm, totalPoints: myPoints, redemptionCount: myRedemptionCount }).slice(0, 4);
   const openEvents = events.filter((event) => isEventAcceptingResponses(event)).length;
-  const nextEvent = events.find((event) => isEventAcceptingResponses(event)) || events[0];
+  const upcomingEvents = events.filter((event) => isEventAcceptingResponses(event));
+  const nextEvent = upcomingEvents[0] || events[0];
+  const typeCounts = CLUB_EVENT_TYPES.map((type) => ({
+    ...type,
+    count: events.filter((event) => event.type === type.key).length,
+  }));
 
   return (
     <>
-      <section className="activ-member-hero" aria-label="Member dashboard">
-        <div className="activ-member-copy">
-          <span className="eyebrow">Welcome back</span>
+      <section className="performance-dashboard-hero" aria-label="Member dashboard">
+        <div className="dashboard-welcome-card">
+          <span className="eyebrow">Performance dashboard</span>
           <h1>Hi, {user.name}</h1>
-          <p>Track your club sessions, collect points, unlock tiers and redeem rewards.</p>
-          <div className="activ-hero-actions">
+          <p>One club hub for HYROX, Redline, marathon, training and weekly challenges.</p>
+          <div className="performance-action-row">
             <LoadingLink className="button" href="#events">View events</LoadingLink>
-            <LoadingLink className="button ghost" href="/account">My dashboard</LoadingLink>
+            <LoadingLink className="button ghost" href="/redemptions">Redeem rewards</LoadingLink>
           </div>
         </div>
-        <div className="activ-member-wallet">
-          <span>{myTier.current.emoji} {myTier.current.name} tier</span>
-          <strong>{wallet.availablePoints}</strong>
-          <small>available points</small>
-          <LoadingLink className="button ghost mini" href="/redemptions">Redeem</LoadingLink>
-        </div>
-      </section>
 
-      <section className="activ-dashboard-strip" aria-label="Member summary">
-        <article><span>Points</span><strong>{myPoints}</strong><small>{scoringDescription(scoreSettings)}</small></article>
-        <article><span>Distance</span><strong>{myDistanceKm.toFixed(1)}km</strong><small>{mySubmissions.length} approved runs</small></article>
-        <article><span>Badges</span><strong>{badgeCount}</strong><small>earned achievements</small></article>
-        <article><span>Open events</span><strong>{openEvents}</strong><small>available missions</small></article>
-      </section>
-
-      <section className="activ-home-panel">
-        <div>
-          <span className="eyebrow">Next focus</span>
-          <h2>{nextEvent?.title || "Create your first event"}</h2>
-          <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add the first event from the dashboard."}</p>
-        </div>
-        {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
-      </section>
-
-      <section className="activ-section-card">
-        <div className="section-title-row">
-          <div>
-            <span className="eyebrow">Active challenges</span>
-            <h2>Keep the streak moving</h2>
+        <div className="dashboard-tier-card">
+          <div className="tier-card-head"><span>{myTier.current.emoji} {myTier.current.name}</span><strong>{wallet.availablePoints} pts</strong></div>
+          <div className="tier-arc" style={{ "--progress": `${myTier.progress}%` } as CSSProperties}>
+            <strong>{myPoints}</strong>
+            <span>total points</span>
           </div>
-          <LoadingLink className="button ghost" href="/account">View badges</LoadingLink>
+          <p>{myTier.next ? `${myTier.pointsToNext} pts to ${myTier.next.name}` : "Max tier unlocked"}</p>
         </div>
-        <div className="activ-challenge-grid compact">
-          {challenges.map((challenge) => (
-            <article className={challenge.completed ? "activ-challenge-card completed" : "activ-challenge-card"} key={challenge.key}>
-              <div><strong>{challenge.title}</strong><p>{challenge.description}</p></div>
-              <span>{challenge.current}/{challenge.target} {challenge.unit}</span>
-              <div className="activ-mini-progress"><i style={{ width: `${challenge.progress}%` }} /></div>
+      </section>
+
+      <section className="performance-quick-grid" aria-label="Quick stats">
+        <article><span>Total KM</span><strong>{myDistanceKm.toFixed(1)}</strong><small>Approved distance</small></article>
+        <article><span>Events joined</span><strong>{myVoteCount}</strong><small>Attend votes</small></article>
+        <article><span>Badges</span><strong>{badgeCount}/{badges.length}</strong><small>Achievement progress</small></article>
+        <article><span>Open missions</span><strong>{openEvents}</strong><small>{scoringDescription(scoreSettings)}</small></article>
+      </section>
+
+      <section className="performance-club-panel">
+        <div className="panel-copy">
+          <span className="eyebrow">Club formats</span>
+          <h2>Not just running. Train for every arena.</h2>
+          <p>Admin can tag each event as HYROX, Redline, Marathon, Training, Recovery or others so the dashboard matches your real club activities.</p>
+        </div>
+        <div className="club-format-grid">
+          {typeCounts.filter((type) => ["HYROX", "REDLINE", "MARATHON", "TRAINING", "RECOVERY", "OTHER"].includes(type.key)).map((type) => (
+            <article key={type.key} className={`club-format-card type-${type.key.toLowerCase()}`}>
+              <span>{type.icon}</span>
+              <strong>{type.label}</strong>
+              <small>{type.count} event{type.count === 1 ? "" : "s"}</small>
             </article>
           ))}
         </div>
       </section>
 
+      <section className="performance-next-card">
+        <div>
+          <span className="eyebrow">Next focus</span>
+          <h2>{nextEvent?.title || "Create the first club event"}</h2>
+          <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add the first event from the dashboard."}</p>
+          {nextEvent && <span className={eventTypeClass(nextEvent.type)}>{getClubEventType(nextEvent.type).icon} {getClubEventType(nextEvent.type).label}</span>}
+        </div>
+        {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
+      </section>
+
+      <section className="performance-section-card">
+        <div className="section-title-row">
+          <div>
+            <span className="eyebrow">Challenges</span>
+            <h2>Keep members motivated</h2>
+          </div>
+          <LoadingLink className="button ghost" href="/account">View full dashboard</LoadingLink>
+        </div>
+        <div className="performance-challenge-grid">
+          {challenges.map((challenge) => (
+            <article className={challenge.completed ? "performance-challenge-card completed" : "performance-challenge-card"} key={challenge.key}>
+              <strong>{challenge.title}</strong>
+              <p>{challenge.description}</p>
+              <div className="performance-progress"><i style={{ width: `${challenge.progress}%` }} /></div>
+              <span>{challenge.current}/{challenge.target} {challenge.unit}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {recentApproved.length > 0 && (
+        <section className="performance-section-card">
+          <div className="section-title-row"><div><span className="eyebrow">Recent effort</span><h2>Your latest approved sessions</h2></div></div>
+          <div className="recent-effort-list">
+            {recentApproved.map((submission) => (
+              <article key={submission.id}>
+                <span className={eventTypeClass(submission.event.type)}>{getClubEventType(submission.event.type).icon}</span>
+                <div><strong>{submission.event.title}</strong><small>{Number(submission.distanceKm).toFixed(2)}km · {submission.totalPoints} pts</small></div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section id="events" className="activ-section-title">
         <span className="eyebrow">Event board</span>
         <h2>Choose your next mission</h2>
-        <p>Vote, run, submit KM, and share your result.</p>
+        <p>Vote, train, submit KM, and share your result.</p>
       </section>
 
-      <div className="activ-event-list">
+      <div className="performance-event-list">
         {events.map((event) => {
           const displayStatus = eventDisplayStatus(event);
+          const type = getClubEventType(event.type);
           return (
-            <article className="activ-event-item" key={event.id}>
-              <div className="activ-event-date"><span>{event.startAt.getDate().toString().padStart(2, "0")}</span><small>{event.startAt.toLocaleString("en-US", { month: "short" })}</small></div>
-              <div className="activ-event-body">
-                <div className="activ-event-topline"><span className={statusClass(displayStatus)}>{displayStatus}</span><small>{event._count.votes} votes · {event._count.submissions} runs</small></div>
+            <article className="performance-event-card" key={event.id}>
+              <div className="event-card-icon"><span>{type.icon}</span></div>
+              <div className="performance-event-body">
+                <div className="performance-event-meta">
+                  <span className={statusClass(displayStatus)}>{displayStatus}</span>
+                  <span className={eventTypeClass(event.type)}>{type.label}</span>
+                  <small>{event._count.votes} votes · {event._count.submissions} results</small>
+                </div>
                 <h2>{event.title}</h2>
                 <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
-                {event.description && <div className="workout-preview activ-workout-preview"><EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} /></div>}
+                {event.description && <div className="workout-preview performance-workout-preview"><EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} /></div>}
               </div>
               <LoadingLink className="button ghost" href={`/events/${event.slug}`}>Enter</LoadingLink>
             </article>
           );
         })}
-        {events.length === 0 && <div className="empty-card"><h2>No events yet</h2><p className="muted">Ask an admin to create the first running event.</p></div>}
+        {events.length === 0 && <div className="empty-card"><h2>No events yet</h2><p className="muted">Ask an admin to create the first club event.</p></div>}
       </div>
     </>
   );

@@ -8,6 +8,7 @@ import { formatDateTime, formatDateTimeLocalInput, formatDateTimeRange } from "@
 import { EventDescription } from "@/components/EventDescription";
 import { EditEventForm } from "@/components/EditEventForm";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
+import { getClubEventType, eventTypeClass } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
   const pendingSubmissionCount = event.submissions.filter((submission) => submission.status === "PENDING").length;
   const approvedSubmissionCount = event.submissions.filter((submission) => submission.status === "APPROVED").length;
   const rejectedSubmissionCount = event.submissions.filter((submission) => submission.status === "REJECTED").length;
+  const eventTypeMeta = getClubEventType(event.type);
 
   return (
     <>
@@ -60,6 +62,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
           <span className={event.status === "OPEN" ? "badge success" : event.status === "CLOSED" ? "badge danger" : "badge"}>
             {event.status}
           </span>
+          <span className={eventTypeClass(event.type)}>{eventTypeMeta.icon} {eventTypeMeta.label}</span>
           <LoadingLink className="button ghost" href={`/events/${event.slug}`}>
             View public event
           </LoadingLink>
@@ -99,6 +102,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
             id: event.id,
             title: event.title,
             description: event.description || "",
+            type: event.type,
             startAtInput: formatDateTimeLocalInput(event.startAt),
             endAtInput: formatDateTimeLocalInput(event.endAt),
             status: event.status,

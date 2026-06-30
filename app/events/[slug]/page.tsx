@@ -10,6 +10,7 @@ import { formatDateTimeRange } from "@/lib/datetime";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 import { closeExpiredOpenEventIfNeeded } from "@/lib/event-maintenance";
+import { eventTypeClass, getClubEventType } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
 
@@ -85,12 +86,14 @@ export default async function EventPage({
 
   const totalDistance = approvedSubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const totalPoints = approvedSubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
+  const eventType = getClubEventType(event.type);
 
   return (
     <>
       <section className="cn-event-detail-hero">
         <div className="cn-event-hero-copy">
           <span className={statusClass(displayStatus)}>{displayStatus}</span>
+          <span className={eventTypeClass(event.type)}>{eventType.icon} {eventType.label}</span>
           <h1>{event.title}</h1>
           <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
           <div className="cn-event-chips">

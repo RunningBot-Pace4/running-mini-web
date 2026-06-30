@@ -3,6 +3,7 @@
 
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 CREATE TYPE "EventStatus" AS ENUM ('DRAFT', 'OPEN', 'CLOSED', 'ARCHIVED');
+CREATE TYPE "EventType" AS ENUM ('RUNNING', 'HYROX', 'REDLINE', 'MARATHON', 'TRAINING', 'RECOVERY', 'OTHER');
 CREATE TYPE "VoteStatus" AS ENUM ('ATTEND', 'NOT_ATTEND');
 CREATE TYPE "SubmissionStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 CREATE TYPE "RewardType" AS ENUM ('ITEM', 'VOUCHER');
@@ -114,6 +115,7 @@ CREATE TABLE "Event" (
   "title" TEXT NOT NULL,
   "slug" TEXT NOT NULL UNIQUE,
   "description" TEXT,
+  "type" "EventType" NOT NULL DEFAULT 'RUNNING',
   "startAt" TIMESTAMPTZ NOT NULL,
   "endAt" TIMESTAMPTZ NOT NULL,
   "status" "EventStatus" NOT NULL DEFAULT 'OPEN',
@@ -170,6 +172,7 @@ CREATE INDEX "Session_expiresAt_idx" ON "Session"("expiresAt");
 CREATE INDEX "PasswordResetToken_userId_idx" ON "PasswordResetToken"("userId");
 CREATE INDEX "PasswordResetToken_expiresAt_idx" ON "PasswordResetToken"("expiresAt");
 CREATE INDEX "Event_status_idx" ON "Event"("status");
+CREATE INDEX "Event_type_idx" ON "Event"("type");
 CREATE INDEX "Event_startAt_endAt_idx" ON "Event"("startAt", "endAt");
 CREATE INDEX "EventVote_userId_status_idx" ON "EventVote"("userId", "status");
 CREATE INDEX "StravaActivity_userId_startDate_idx" ON "StravaActivity"("userId", "startDate");

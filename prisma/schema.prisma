@@ -19,6 +19,16 @@ enum EventStatus {
   ARCHIVED
 }
 
+enum EventType {
+  RUNNING
+  HYROX
+  REDLINE
+  MARATHON
+  TRAINING
+  RECOVERY
+  OTHER
+}
+
 enum VoteStatus {
   ATTEND
   NOT_ATTEND
@@ -118,6 +128,7 @@ model Event {
   title       String
   slug        String       @unique
   description String?
+  type        EventType    @default(RUNNING)
   startAt     DateTime
   endAt       DateTime
   status      EventStatus  @default(OPEN)
@@ -131,6 +142,7 @@ model Event {
   submissions Submission[]
 
   @@index([status])
+  @@index([type])
   @@index([startAt, endAt])
 }
 
