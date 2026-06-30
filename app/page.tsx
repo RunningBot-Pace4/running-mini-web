@@ -9,7 +9,7 @@ import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-windo
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
 import { getUserPointWallet } from "@/lib/redemptions";
 import { buildBadges, buildChallenges, getMemberTier, getTierDefinitions } from "@/lib/member-progress";
-import { CLUB_EVENT_TYPES, eventTypeClass, getClubEventType } from "@/lib/event-types";
+import { eventTypeClass, getClubEventType } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
 
@@ -34,27 +34,15 @@ function GuestIntro({ homeContent }: { homeContent: { heroEyebrow: string; heroT
             <LoadingLink className="button ghost" href="/login" loadingLabel="Opening login...">Member login</LoadingLink>
           </div>
         </div>
-        <div className="performance-phone-card" aria-label="App preview">
-          <div className="phone-topline"><span>Performance pass</span><strong>LIVE</strong></div>
-          <div className="phone-tier-meter">
-            <span>Bronze</span><span>Silver</span><span>Gold</span><span>Platinum</span>
-            <i />
-          </div>
-          <div className="phone-score-bubble"><strong>Vote · Train · Score</strong><small>Earn points from club events, unlock badges and redeem rewards.</small></div>
-          <div className="phone-tile-grid">
-            <span>HYROX</span><span>Redline</span><span>Marathon</span><span>Training</span>
+        <div className="performance-phone-card simple-preview-card" aria-label="App preview">
+          <div className="phone-topline"><span>Club hub</span><strong>LIVE</strong></div>
+          <div className="phone-score-bubble"><strong>Vote · Train · Redeem</strong><small>Track HYROX, redline, marathon and training sessions in one clean member hub.</small></div>
+          <div className="phone-loyalty-preview">
+            <div><span>Tier</span><strong>Bronze → Silver</strong></div>
+            <div><span>Rewards</span><strong>Items & vouchers</strong></div>
+            <div><span>Challenges</span><strong>Badges & missions</strong></div>
           </div>
         </div>
-      </section>
-
-      <section className="performance-category-grid" aria-label="Club event categories">
-        {CLUB_EVENT_TYPES.slice(1, 6).map((type) => (
-          <article key={type.key} className={`performance-category-card type-${type.key.toLowerCase()}`}>
-            <span>{type.icon}</span>
-            <strong>{type.label}</strong>
-            <p>{type.description}</p>
-          </article>
-        ))}
       </section>
 
       <section className="performance-how-card">
@@ -63,6 +51,75 @@ function GuestIntro({ homeContent }: { homeContent: { heroEyebrow: string; heroT
         <div><span>03</span><strong>Level up</strong><p>Points build badges, tiers and redemption power for items or vouchers.</p></div>
       </section>
     </>
+  );
+}
+
+function TierGauge({
+  totalPoints,
+  tierDefinitions,
+  currentTier,
+  nextTier,
+  pointsToNext,
+}: {
+  totalPoints: number;
+  tierDefinitions: Awaited<ReturnType<typeof getTierDefinitions>>;
+  currentTier: Awaited<ReturnType<typeof getMemberTier>>["current"];
+  nextTier: Awaited<ReturnType<typeof getMemberTier>>["next"];
+  pointsToNext: number;
+}) {
+  const ordered = [...tierDefinitions].sort((a, b) => a.minPoints - b.minPoints);
+  const currentIndex = Math.max(0, ordered.findIndex((tier) => tier.key === currentTier.key));
+  const segmentCount = Math.max(1, ordered.length - 1);
+  const localProgress = nextTier
+    ? Math.max(0, Math.min(1, (totalPoints - currentTier.minPoints) / Math.max(1, nextTier.minPoints - currentTier.minPoints)))
+    : 1;
+  const overallProgress = nextTier ? ((currentIndex + localProgress) / segmentCount) * 100 : 100;
+  const labelPositions = [0, 33, 66, 100];
+
+  return (
+    <article className="cute-tier-card">
+      <div className="cute-tier-head">
+        <div>
+          <span className="eyebrow">Tier journey</span>
+          <h2>{currentTier.name} member pass</h2>
+        </div>
+        <strong>{nextTier ? `${pointsToNext} pts to ${nextTier.name}` : "Max tier unlocked"}</strong>
+      </div>
+
+      <div className="cute-tier-gauge-wrap">
+        <div className="cute-tier-label-row" aria-hidden="true">
+          {ordered.map((tier, index) => (
+            <span
+              key={tier.key}
+              className={tier.key === currentTier.key ? "is-current" : ""}
+              style={{ left: `${labelPositions[index] ?? 100}%` } as CSSProperties}
+            >
+              <strong>{tier.name}</strong>
+              <small>{tier.minPoints} pts</small>
+            </span>
+          ))}
+        </div>
+
+        <svg viewBox="0 0 220 138" className="cute-tier-gauge" aria-hidden="true">
+          <path d="M 20 118 A 90 90 0 0 1 200 118" pathLength="100" className="gauge-track" />
+          <path d="M 20 118 A 90 90 0 0 1 200 118" pathLength="100" className="gauge-progress" style={{ strokeDasharray: `${overallProgress} 100` } as CSSProperties} />
+          <circle cx="20" cy="118" r="6" className="gauge-node" />
+          <circle cx="85" cy="46" r="6" className="gauge-node" />
+          <circle cx="135" cy="46" r="6" className="gauge-node" />
+          <circle cx="200" cy="118" r="6" className="gauge-node" />
+        </svg>
+
+        <div className="cute-tier-center">
+          <strong>{totalPoints}</strong>
+          <span>Total points</span>
+        </div>
+      </div>
+
+      <div className="cute-tier-foot">
+        <span>{currentTier.emoji} {currentTier.discount}</span>
+        <small>{currentTier.benefit}</small>
+      </div>
+    </article>
   );
 }
 
@@ -103,89 +160,94 @@ export default async function HomePage() {
   const openEvents = events.filter((event) => isEventAcceptingResponses(event)).length;
   const upcomingEvents = events.filter((event) => isEventAcceptingResponses(event));
   const nextEvent = upcomingEvents[0] || events[0];
-  const typeCounts = CLUB_EVENT_TYPES.map((type) => ({
-    ...type,
-    count: events.filter((event) => event.type === type.key).length,
-  }));
+  const featuredChallenge = challenges.find((challenge) => !challenge.completed) || challenges[0];
 
   return (
     <>
-      <section className="app-dashboard-shell" aria-label="Member app dashboard">
-        <div className="app-dashboard-topbar">
-          <div>
-            <span className="eyebrow">Performance club</span>
-            <h1>Hi, {user.name}</h1>
+      <section className="club-dashboard-v2" aria-label="Member dashboard">
+        <article className="club-hero-card">
+          <div className="club-hero-copy">
+            <span className="eyebrow">Member dashboard</span>
+            <h1>{user.name}</h1>
+            <p>Welcome back. Track club points, rewards, events and challenges in one cute loyalty-style hub.</p>
           </div>
-          <span className="app-live-pill">LIVE</span>
-        </div>
+          <div className="club-hero-pills">
+            <span>{wallet.availablePoints} pts available</span>
+            <span>{openEvents} open missions</span>
+          </div>
+        </article>
 
-        <div className="app-tier-journey-card">
-          <div className="tier-arc-panel" style={{ "--progress": `${myTier.progress}%`, "--tier-color": myTier.current.color } as CSSProperties}>
-            <div className="tier-arc-labels">
-              {tierDefinitions.map((tier) => (
-                <span key={tier.key}>{tier.name}<small>{tier.minPoints} pts</small></span>
-              ))}
+        <div className="club-dashboard-grid-v2">
+          <TierGauge
+            totalPoints={myPoints}
+            tierDefinitions={tierDefinitions}
+            currentTier={myTier.current}
+            nextTier={myTier.next}
+            pointsToNext={myTier.pointsToNext}
+          />
+
+          <article className="cute-reward-card">
+            <span className="eyebrow">Reward wallet</span>
+            <h2>{wallet.availablePoints} pts ready</h2>
+            <p>Use your points for club items, partner vouchers and future member perks.</p>
+            <div className="cute-reward-stats">
+              <div><strong>{wallet.totalEarned}</strong><small>earned</small></div>
+              <div><strong>{wallet.spentOrReserved}</strong><small>used</small></div>
+              <div><strong>{myRedemptionCount}</strong><small>redeems</small></div>
             </div>
-            <div className="tier-arc-display">
-              <strong>{myPoints}</strong>
-              <span>Total points</span>
+            <div className="cute-button-row">
+              <LoadingLink className="button" href="/redemptions">View rewards</LoadingLink>
+              <LoadingLink className="button ghost" href="/account">My account</LoadingLink>
             </div>
-          </div>
-          <div className="tier-journey-bottom">
-            <span>{myTier.current.emoji} {myTier.current.name}</span>
-            <strong>{myTier.next ? `${myTier.pointsToNext} pts to ${myTier.next.name}` : "Max tier unlocked"}</strong>
-          </div>
+          </article>
         </div>
 
-        <div className="app-reward-banner">
-          <div>
-            <span>Reward wallet</span>
-            <strong>{wallet.availablePoints} pts available</strong>
-            <small>Redeem items, vouchers and club perks.</small>
-          </div>
-          <LoadingLink className="button" href="/redemptions">View rewards</LoadingLink>
+        <div className="cute-stat-grid">
+          <article className="cute-stat-card"><span>Total KM</span><strong>{myDistanceKm.toFixed(1)}</strong><small>approved distance</small></article>
+          <article className="cute-stat-card"><span>Attend votes</span><strong>{myVoteCount}</strong><small>club check-ins</small></article>
+          <article className="cute-stat-card"><span>Badges</span><strong>{badgeCount}/{badges.length}</strong><small>earned now</small></article>
+          <article className="cute-stat-card"><span>Approved runs</span><strong>{mySubmissions.length}</strong><small>results counted</small></article>
         </div>
 
-        <div className="app-tile-grid">
-          <LoadingLink className="app-tile hyrox" href="#events"><span>🏋️</span><strong>HYROX</strong><small>Hybrid sessions</small></LoadingLink>
-          <LoadingLink className="app-tile redline" href="#events"><span>⚡</span><strong>Redline</strong><small>Team relay</small></LoadingLink>
-          <LoadingLink className="app-tile marathon" href="#events"><span>🏃</span><strong>Marathon</strong><small>Road race</small></LoadingLink>
-          <LoadingLink className="app-tile training" href="#events"><span>🎽</span><strong>Training</strong><small>Club workout</small></LoadingLink>
-        </div>
-
-        <div className="app-metric-grid">
-          <article><span>Total KM</span><strong>{myDistanceKm.toFixed(1)}</strong><small>approved</small></article>
-          <article><span>Joined</span><strong>{myVoteCount}</strong><small>attend votes</small></article>
-          <article><span>Badges</span><strong>{badgeCount}/{badges.length}</strong><small>earned</small></article>
-          <article><span>Missions</span><strong>{openEvents}</strong><small>open</small></article>
-        </div>
-
-        <div className="app-next-event-card">
-          <div>
-            <span className="eyebrow">Next focus</span>
-            <h2>{nextEvent?.title || "Create the first club event"}</h2>
+        <div className="cute-focus-grid">
+          <article className="cute-focus-card">
+            <div className="section-title-row compact">
+              <div>
+                <span className="eyebrow">Next event</span>
+                <h2>{nextEvent?.title || "Create the first club event"}</h2>
+              </div>
+            </div>
             <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add your first club event."}</p>
             {nextEvent && <span className={eventTypeClass(nextEvent.type)}>{getClubEventType(nextEvent.type).icon} {getClubEventType(nextEvent.type).label}</span>}
-          </div>
-          {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open</LoadingLink>}
-        </div>
+            <div className="cute-button-row">
+              {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
+              <LoadingLink className="button ghost" href="#events">All events</LoadingLink>
+            </div>
+          </article>
 
-        <div className="app-challenge-board">
-          <div className="section-title-row compact">
-            <div><span className="eyebrow">Challenges</span><h2>Keep moving</h2></div>
-            <LoadingLink className="button ghost" href="/account">Full dashboard</LoadingLink>
-          </div>
-          {challenges.slice(0, 4).map((challenge) => (
-            <article className={challenge.completed ? "app-challenge completed" : "app-challenge"} key={challenge.key}>
-              <div><strong>{challenge.title}</strong><small>{challenge.description}</small></div>
-              <span>{challenge.current}/{challenge.target} {challenge.unit}</span>
-              <i><b style={{ width: `${challenge.progress}%` }} /></i>
-            </article>
-          ))}
+          <article className="cute-focus-card challenge">
+            <div className="section-title-row compact">
+              <div>
+                <span className="eyebrow">Challenge</span>
+                <h2>{featuredChallenge?.title || "Stay active"}</h2>
+              </div>
+            </div>
+            <p>{featuredChallenge?.description || "Unlock more badges and points by completing more sessions."}</p>
+            {featuredChallenge && (
+              <>
+                <div className="cute-progress-pill">
+                  <strong>{featuredChallenge.current}/{featuredChallenge.target} {featuredChallenge.unit}</strong>
+                  <small>{featuredChallenge.progress}%</small>
+                </div>
+                <div className="cute-progress-bar"><i style={{ width: `${featuredChallenge.progress}%` }} /></div>
+              </>
+            )}
+            <small className="muted">{badgeCount} badges earned so far.</small>
+          </article>
         </div>
 
         {recentApproved.length > 0 && (
-          <div className="app-recent-list">
+          <div className="app-recent-list cute-recent-list">
             <div className="section-title-row compact"><div><span className="eyebrow">Recent effort</span><h2>Approved sessions</h2></div></div>
             {recentApproved.map((submission) => (
               <article key={submission.id}>

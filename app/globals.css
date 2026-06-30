@@ -13865,3 +13865,820 @@ body[data-theme-preset] .profile-list span {
     text-align: left !important;
   }
 }
+
+/* === Loyalty app redesign v2 === */
+.club-dashboard-v2 {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.club-hero-card,
+.cute-tier-card,
+.cute-reward-card,
+.cute-focus-card,
+.cute-stat-card,
+.cute-recent-list,
+.account-mobile-pass,
+.account-section-card,
+.account-stat-grid.modern article {
+  border-radius: 28px;
+  border: 1px solid rgba(26, 44, 79, 0.08);
+  background:
+    radial-gradient(circle at top right, rgba(255, 217, 128, 0.42), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,249,255,0.98));
+  box-shadow: 0 16px 40px rgba(43, 63, 108, 0.08);
+}
+
+.club-hero-card {
+  padding: 1.4rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.club-hero-copy h1 {
+  margin: 0.2rem 0 0.35rem;
+  font-size: clamp(2rem, 7vw, 3.6rem);
+  line-height: 0.96;
+}
+
+.club-hero-copy p {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--muted-text);
+}
+
+.club-hero-pills {
+  display: grid;
+  gap: 0.6rem;
+  min-width: min(100%, 14rem);
+}
+
+.club-hero-pills span,
+.cute-progress-pill,
+.account-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(26, 44, 79, 0.08);
+  background: rgba(255,255,255,0.88);
+  font-weight: 800;
+  color: var(--title-color);
+}
+
+.club-dashboard-grid-v2,
+.cute-focus-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.cute-tier-card,
+.cute-reward-card,
+.cute-focus-card {
+  padding: 1.25rem;
+}
+
+.cute-tier-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cute-tier-head h2,
+.cute-reward-card h2,
+.cute-focus-card h2 {
+  margin: 0.2rem 0 0;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+}
+
+.cute-tier-head strong {
+  font-size: 0.98rem;
+  white-space: nowrap;
+}
+
+.cute-tier-gauge-wrap {
+  position: relative;
+  min-height: 20rem;
+  border-radius: 28px;
+  padding: 2.6rem 1rem 1rem;
+  background:
+    radial-gradient(circle at center 74%, rgba(255, 182, 52, 0.82), rgba(255, 182, 52, 0.65) 26%, rgba(255, 182, 52, 0.08) 52%, transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,246,230,0.95));
+  border: 1px solid rgba(255, 190, 92, 0.35);
+  overflow: hidden;
+}
+
+.cute-tier-label-row {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 0.9rem;
+  height: 3rem;
+}
+
+.cute-tier-label-row span {
+  position: absolute;
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.1rem;
+  text-align: center;
+  color: var(--muted-text);
+}
+
+.cute-tier-label-row strong {
+  font-size: 0.98rem;
+}
+
+.cute-tier-label-row small {
+  font-size: 0.78rem;
+}
+
+.cute-tier-label-row span.is-current strong {
+  color: var(--title-color);
+}
+
+.cute-tier-gauge {
+  width: min(100%, 28rem);
+  margin: 1.8rem auto 0;
+  display: block;
+  overflow: visible;
+}
+
+.cute-tier-gauge .gauge-track {
+  fill: none;
+  stroke: rgba(205, 176, 130, 0.38);
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.cute-tier-gauge .gauge-progress {
+  fill: none;
+  stroke: url(#gaugeGradient);
+  stroke: linear-gradient(90deg, #d08b34, #f6b34f);
+  stroke: #ffad33;
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.cute-tier-gauge .gauge-node {
+  fill: #dca15b;
+}
+
+.cute-tier-center {
+  position: absolute;
+  left: 50%;
+  bottom: 1.4rem;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.cute-tier-center strong {
+  display: block;
+  font-size: clamp(4rem, 11vw, 6rem);
+  line-height: 1;
+  color: rgba(255,255,255,0.96);
+}
+
+.cute-tier-center span {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.96);
+}
+
+.cute-tier-foot {
+  margin-top: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.cute-tier-foot span {
+  font-weight: 900;
+  font-size: 1.05rem;
+}
+
+.cute-tier-foot small,
+.cute-reward-card p,
+.cute-focus-card p,
+.cute-stat-card small,
+.cute-recent-list small,
+.account-mobile-pass p,
+.account-section-card .muted {
+  color: var(--muted-text);
+}
+
+.cute-reward-card {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.cute-reward-stats,
+.cute-button-row,
+.account-wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.cute-reward-stats div,
+.account-wallet-grid article {
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(26, 44, 79, 0.08);
+  text-align: center;
+}
+
+.cute-reward-stats strong,
+.account-wallet-grid strong,
+.cute-stat-card strong {
+  display: block;
+  font-size: 1.4rem;
+}
+
+.cute-button-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cute-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.cute-stat-card {
+  padding: 1rem;
+}
+
+.cute-stat-card span,
+.account-stat-grid.modern article span {
+  display: block;
+  color: var(--muted-text);
+  font-weight: 700;
+}
+
+.cute-stat-card strong,
+.account-stat-grid.modern article strong {
+  margin-top: 0.3rem;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--title-color);
+}
+
+.cute-focus-card.challenge {
+  background:
+    radial-gradient(circle at top right, rgba(118, 221, 158, 0.24), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,0.98), rgba(241,253,245,0.98));
+}
+
+.cute-progress-pill {
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+
+.cute-progress-pill strong {
+  font-size: 0.98rem;
+}
+
+.cute-progress-pill small {
+  color: var(--muted-text);
+}
+
+.cute-progress-bar,
+.account-progress,
+.app-challenge i {
+  margin-top: 0.7rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: rgba(212, 221, 235, 0.8);
+  overflow: hidden;
+}
+
+.cute-progress-bar i,
+.account-progress i,
+.app-challenge i b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3c82f6, #ff7c48);
+}
+
+.cute-recent-list article {
+  background: rgba(255,255,255,0.86);
+}
+
+.account-mobile-pass {
+  padding: 1.35rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 215, 133, 0.3), transparent 34%),
+    linear-gradient(180deg, rgba(250,252,255,0.98), rgba(243,248,255,0.98));
+}
+
+.account-pass-top {
+  align-items: center;
+}
+
+.account-avatar.premium {
+  box-shadow: 0 16px 28px rgba(82, 111, 173, 0.16);
+}
+
+.account-pass-wallet {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(26, 44, 79, 0.08);
+}
+
+.account-pass-wallet strong {
+  display: block;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1;
+}
+
+.account-tier-rail {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(26, 44, 79, 0.08);
+}
+
+.account-tier-rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.account-meter-bar {
+  height: 0.8rem;
+  border-radius: 999px;
+  background: rgba(215, 224, 235, 0.86);
+  overflow: hidden;
+}
+
+.account-meter-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--theme-primary, #4c8df6), var(--theme-accent, #ff7e56));
+}
+
+.account-pass-status-row {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.account-stat-grid.modern {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.account-stat-grid.modern article,
+.account-challenge-card,
+.account-badge-card,
+.account-tier-item,
+.account-redemption-strip div {
+  padding: 1rem;
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  border: 1px solid rgba(26, 44, 79, 0.08);
+}
+
+.account-section-card {
+  padding: 1.2rem;
+}
+
+.account-challenge-grid,
+.account-badge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.account-badge-card span {
+  font-size: 1.6rem;
+}
+
+.account-tier-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.account-tier-item {
+  display: grid;
+  grid-template-columns: auto minmax(9rem, 1fr) minmax(12rem, 1.4fr) auto;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.account-tier-item span {
+  width: 2.7rem;
+  height: 2.7rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tier-color, #f2f2f2) 18%, white);
+}
+
+.account-tier-item p {
+  margin: 0;
+}
+
+.account-tier-item em {
+  font-style: normal;
+  font-weight: 800;
+  text-align: right;
+  color: var(--title-color);
+}
+
+.account-redemption-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.account-history-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.simple-preview-card .phone-loyalty-preview {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.simple-preview-card .phone-loyalty-preview div {
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(26,44,79,0.08);
+}
+
+.simple-preview-card .phone-loyalty-preview strong {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.cute-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(238, 244, 255, 0.76);
+  backdrop-filter: blur(14px);
+}
+
+.cute-loading-card {
+  width: min(100%, 28rem);
+  border-radius: 32px;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 212, 121, 0.35), transparent 36%),
+    linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,250,255,0.98));
+  border: 1px solid rgba(26, 44, 79, 0.08);
+  box-shadow: 0 24px 64px rgba(43, 63, 108, 0.16);
+}
+
+.cute-loading-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.cute-loading-logo {
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(116, 197, 255, 0.18), rgba(255, 142, 83, 0.18));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.cute-loading-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cute-loading-brand strong {
+  display: block;
+  font-size: 1.4rem;
+}
+
+.cute-loading-brand small {
+  color: var(--muted-text);
+}
+
+.cute-loading-stage {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0;
+  min-height: 10rem;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 190, 92, 0.35);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,249,238,0.96));
+}
+
+.cute-loading-cloud {
+  position: absolute;
+  width: 5rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.86);
+  box-shadow: 1.4rem 0.35rem 0 0 rgba(255,255,255,0.72);
+}
+
+.cute-loading-cloud.left { top: 1.6rem; left: 1rem; }
+.cute-loading-cloud.right { top: 2.2rem; right: 1.5rem; transform: scale(0.88); }
+
+.cute-loading-sun {
+  position: absolute;
+  right: 2.4rem;
+  bottom: 2.6rem;
+  width: 4.6rem;
+  height: 4.6rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffe7a8, #ffb349 66%, #ff9154 100%);
+  box-shadow: 0 0 30px rgba(255, 181, 79, 0.26);
+}
+
+.cute-loading-track {
+  position: absolute;
+  inset: auto 1.2rem 1.4rem;
+  height: 0.85rem;
+  border-radius: 999px;
+  background: rgba(215, 224, 235, 0.86);
+  overflow: hidden;
+}
+
+.cute-loading-track i,
+.cute-loading-track b,
+.cute-loading-bar span {
+  display: block;
+  height: 100%;
+}
+
+.cute-loading-track i {
+  width: 72%;
+  background: linear-gradient(90deg, #4ca1ff, #ff7a46);
+  border-radius: inherit;
+  animation: cuteTrackMove 1.6s ease-in-out infinite alternate;
+}
+
+.cute-loading-track b {
+  position: absolute;
+  top: -1rem;
+  left: calc(72% - 0.85rem);
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid #ff7a46;
+  box-shadow: 0 6px 14px rgba(255, 122, 70, 0.2);
+  animation: cuteRunnerMove 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes cuteTrackMove {
+  from { width: 28%; }
+  to { width: 72%; }
+}
+
+@keyframes cuteRunnerMove {
+  from { left: calc(28% - 0.85rem); }
+  to { left: calc(72% - 0.85rem); }
+}
+
+.cute-loading-copy h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.cute-loading-copy p {
+  margin: 0.5rem 0 0;
+  color: var(--muted-text);
+}
+
+.cute-loading-bar {
+  margin-top: 1rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: rgba(215, 224, 235, 0.86);
+  overflow: hidden;
+}
+
+.cute-loading-bar span {
+  width: 45%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #407cff, #ff7b51);
+  animation: loadingBarMove 1.3s ease-in-out infinite alternate;
+}
+
+@keyframes loadingBarMove {
+  from { transform: translateX(0%); }
+  to { transform: translateX(115%); }
+}
+
+.admin-step-nav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.admin-step-nav a {
+  min-width: 0;
+  text-align: center;
+}
+
+.admin-panel > summary,
+.reward-admin-card > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-panel > summary > span,
+.reward-admin-summary-main strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.admin-panel > summary small,
+.reward-admin-summary-main small {
+  display: block;
+  line-height: 1.45;
+  color: var(--muted-text);
+}
+
+.reward-admin-summary-main,
+.reward-admin-summary-side {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.reward-admin-summary-main {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.reward-admin-summary-side {
+  justify-content: flex-end;
+}
+
+@media (max-width: 1024px) {
+  .club-dashboard-grid-v2,
+  .cute-focus-grid,
+  .account-history-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cute-stat-grid,
+  .account-stat-grid.modern,
+  .account-redemption-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .account-tier-item {
+    grid-template-columns: auto 1fr;
+  }
+
+  .account-tier-item p,
+  .account-tier-item em {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+}
+
+@media (max-width: 760px) {
+  .club-hero-card,
+  .account-pass-top,
+  .account-pass-wallet,
+  .account-tier-rail-head,
+  .cute-tier-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cute-button-row,
+  .cute-reward-stats,
+  .account-wallet-grid,
+  .account-badge-grid,
+  .account-challenge-grid,
+  .cute-stat-grid,
+  .account-stat-grid.modern,
+  .account-redemption-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .cute-tier-gauge-wrap {
+    min-height: 17.5rem;
+  }
+
+  .cute-tier-center strong {
+    font-size: 3.5rem;
+  }
+
+  .cute-tier-center span {
+    font-size: 1.05rem;
+  }
+
+  .cute-tier-label-row {
+    top: 0.55rem;
+  }
+
+  .cute-tier-label-row strong {
+    font-size: 0.82rem;
+  }
+
+  .cute-tier-label-row small {
+    font-size: 0.66rem;
+  }
+
+  .admin-step-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-panel > summary,
+  .reward-admin-card > summary {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .club-dashboard-v2,
+  .account-history-grid {
+    gap: 0.9rem;
+  }
+
+  .cute-tier-card,
+  .cute-reward-card,
+  .cute-focus-card,
+  .club-hero-card,
+  .account-mobile-pass,
+  .account-section-card,
+  .account-stat-grid.modern article {
+    border-radius: 22px;
+  }
+
+  .club-hero-copy h1,
+  .cute-loading-copy h2 {
+    font-size: 1.7rem;
+  }
+
+  .cute-tier-head strong,
+  .account-tier-rail-head span,
+  .club-hero-pills span {
+    white-space: normal;
+  }
+
+  .account-mobile-pass,
+  .account-section-card,
+  .club-hero-card,
+  .cute-tier-card,
+  .cute-reward-card,
+  .cute-focus-card,
+  .cute-stat-card {
+    padding: 1rem;
+  }
+
+  .cute-tier-gauge-wrap {
+    min-height: 16.5rem;
+    padding-top: 2.3rem;
+  }
+
+  .cute-tier-gauge {
+    margin-top: 1.9rem;
+  }
+
+  .admin-step-nav {
+    grid-template-columns: 1fr;
+  }
+}

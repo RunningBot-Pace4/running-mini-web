@@ -111,41 +111,42 @@ export function PageLoadingOverlay({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="page-loading-overlay loyalty-loader-overlay"
+      className="page-loading-overlay cute-loading-overlay"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <section className="loyalty-loader-card" aria-label={label}>
-        <div className="loyalty-loader-brand">
-          <div className="loyalty-loader-logo" aria-hidden="true">
+      <section className="cute-loading-card" aria-label={label}>
+        <div className="cute-loading-brand">
+          <div className="cute-loading-logo" aria-hidden="true">
             {brand.imageSrc ? <img src={brand.imageSrc} alt="" /> : <span>{brand.mark}</span>}
           </div>
           <div>
             <strong>{brand.name}</strong>
-            <small>Member pass is updating</small>
+            <small>Preparing your member dashboard</small>
           </div>
         </div>
 
-        <div className="loyalty-loader-pass" aria-hidden="true">
-          <div className="loyalty-loader-ring"><span /></div>
-          <div className="loyalty-loader-tier-dots">
+        <div className="cute-loading-stage" aria-hidden="true">
+          <span className="cute-loading-cloud left" />
+          <span className="cute-loading-cloud right" />
+          <div className="cute-loading-sun" />
+          <div className="cute-loading-track">
             <i />
-            <i />
-            <i />
-            <i />
-            <i />
+            <b />
           </div>
         </div>
 
-        <h2>{label}</h2>
-        <p>Please wait while we prepare your club dashboard.</p>
+        <div className="cute-loading-copy">
+          <h2>{label}</h2>
+          <p>Please wait while we sync your points, tiers and club activities.</p>
+        </div>
 
-        <div className="loyalty-loader-bar" aria-hidden="true">
+        <div className="cute-loading-bar" aria-hidden="true">
           <span />
         </div>
       </section>
     </div>,
-    document.body
+    document.body,
   );
 }
