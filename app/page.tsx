@@ -259,35 +259,6 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section id="events" className="activ-section-title">
-        <span className="eyebrow">Event board</span>
-        <h2>Choose your next mission</h2>
-        <p>Vote, train, submit KM, and share your result.</p>
-      </section>
-
-      <div className="performance-event-list">
-        {events.map((event) => {
-          const displayStatus = eventDisplayStatus(event);
-          const type = getClubEventType(event.type);
-          return (
-            <article className="performance-event-card" key={event.id}>
-              <div className="event-card-icon"><span>{type.icon}</span></div>
-              <div className="performance-event-body">
-                <div className="performance-event-meta">
-                  <span className={statusClass(displayStatus)}>{displayStatus}</span>
-                  <span className={eventTypeClass(event.type)}>{type.label}</span>
-                  <small>{event._count.votes} votes · {event._count.submissions} results</small>
-                </div>
-                <h2>{event.title}</h2>
-                <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
-                {event.description && <div className="workout-preview performance-workout-preview"><EventDescription text={event.description} compact fullHref={`/events/${event.slug}`} /></div>}
-              </div>
-              <LoadingLink className="button ghost" href={`/events/${event.slug}`}>Enter</LoadingLink>
-            </article>
-          );
-        })}
-        {events.length === 0 && <div className="empty-card"><h2>No events yet</h2><p className="muted">Ask an admin to create the first club event.</p></div>}
-      </div>
     </>
   );
 }

@@ -858,3 +858,16 @@ This update focuses on the issues found during mobile testing:
 - Added responsive CSS checks for mobile widths around 390px, 420px, 560px and desktop layout.
 
 No database migration is required for this patch.
+
+
+## Latest UI direction: loyalty app style
+
+This update follows the approved loyalty-app mockup direction:
+
+- Dashboard is now a proper member dashboard, not the event list page.
+- Dashboard only highlights the upcoming / open event.
+- Full event history is moved to `/events`.
+- Route loading overlays are disabled.
+- Rewards page is redesigned as a card-based loyalty reward store.
+- Admin page mobile alignment and accordion spacing are polished for responsive use.
+- Tier journey uses a half-circle progress style from Bronze → Silver → Gold → Platinum.

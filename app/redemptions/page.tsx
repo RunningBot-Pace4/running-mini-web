@@ -9,6 +9,20 @@ import { canAccessTierReward, getMemberTier, getTierDefinitions } from "@/lib/me
 
 export const dynamic = "force-dynamic";
 
+function rewardVisual(reward: { name: string; type: string }) {
+  const name = reward.name.toLowerCase();
+  if (name.includes("shirt") || name.includes("tee")) return "👕";
+  if (name.includes("sticker")) return "🌟";
+  if (name.includes("coffee")) return "☕";
+  if (name.includes("discount") || name.includes("voucher")) return "🎟️";
+  if (name.includes("training") || name.includes("pass")) return "🏋️";
+  if (name.includes("bottle")) return "🥤";
+  if (name.includes("cap")) return "🧢";
+  if (name.includes("medal")) return "🏅";
+  if (name.includes("sock")) return "🧦";
+  return reward.type === "VOUCHER" ? "🎟️" : "🎁";
+}
+
 export default async function RedemptionsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -33,101 +47,111 @@ export default async function RedemptionsPage() {
   ]);
 
   const tierProgress = getMemberTier(approvedPoints._sum.totalPoints || 0, tierDefinitions);
+  const nextLabel = tierProgress.next ? `${tierProgress.pointsToNext} pts to ${tierProgress.next.name}` : "Highest tier";
 
   return (
     <>
-      <section className="activ-store-hero">
-        <div>
-          <span className="eyebrow">Points redemption</span>
-          <h1>Reward store</h1>
-          <p>Use approved running points to redeem club items, discounts, and vouchers. Higher tiers unlock better rewards.</p>
+      <section className="redeem-store-shell">
+        <div className="redeem-page-head">
+          <div>
+            <span className="eyebrow">Reward store</span>
+            <h1>Rewards / Redeem 🎁</h1>
+            <p>Use your points to get club items, discount vouchers, training perks and partner rewards.</p>
+          </div>
         </div>
-        <div className="activ-store-wallet">
-          <span>{tierProgress.current.emoji} {tierProgress.current.name} tier</span>
-          <strong>{wallet.availablePoints}</strong>
-          <small>available points</small>
+
+        <div className="redeem-wallet-panel">
+          <article>
+            <span>Available points</span>
+            <strong>{wallet.availablePoints} pts</strong>
+            <small>{wallet.totalEarned} earned · {wallet.spentOrReserved} used/reserved</small>
+          </article>
+          <article>
+            <span>Current tier</span>
+            <strong>{tierProgress.current.emoji} {tierProgress.current.name} Member</strong>
+            <small>{tierProgress.current.discount}</small>
+          </article>
+          <article>
+            <span>Next tier</span>
+            <strong>{tierProgress.next ? tierProgress.next.name : "Completed"}</strong>
+            <small>{nextLabel}</small>
+            <div className="redeem-mini-progress"><i style={{ width: `${tierProgress.progress}%` }} /></div>
+          </article>
+          <div className="redeem-mascot" aria-hidden="true">⭐</div>
         </div>
-      </section>
 
-      <section className="activ-section-card">
-        <span className="eyebrow">How it works</span>
-        <div className="activ-store-steps">
-          <article><strong>01</strong><span>Earn points from approved runs.</span></article>
-          <article><strong>02</strong><span>Level up from Bronze to Platinum.</span></article>
-          <article><strong>03</strong><span>Redeem eligible items or vouchers.</span></article>
-          <article><strong>04</strong><span>Admin approves and prepares collection.</span></article>
+        <div className="reward-filter-row" aria-label="Reward filters">
+          <span className="active">All</span>
+          <span>Items</span>
+          <span>Vouchers</span>
+          <span>Bronze</span>
+          <span>Silver</span>
+          <span>Gold</span>
+          <span>Platinum</span>
         </div>
-      </section>
 
-      <section className="redemption-grid activ-reward-grid" aria-label="Available rewards">
-        {rewards.map((reward) => {
-          const outOfStock = reward.stockQuantity !== null && reward.stockQuantity <= 0;
-          const notEnoughPoints = wallet.availablePoints < reward.costPoints;
-          const tierLocked = !canAccessTierReward(tierProgress.current.key, reward.minTier);
-          const disabled = outOfStock || notEnoughPoints || tierLocked;
+        <section className="redeem-catalog-grid" aria-label="Available rewards">
+          {rewards.map((reward) => {
+            const outOfStock = reward.stockQuantity !== null && reward.stockQuantity <= 0;
+            const notEnoughPoints = wallet.availablePoints < reward.costPoints;
+            const tierLocked = !canAccessTierReward(tierProgress.current.key, reward.minTier);
+            const disabled = outOfStock || notEnoughPoints || tierLocked;
+            const visual = rewardVisual(reward);
 
-          return (
-            <article className={tierLocked ? "reward-card activ-reward-card locked" : "reward-card activ-reward-card"} key={reward.id}>
-              <div className="activ-reward-topline">
-                <div className={reward.type === "VOUCHER" ? "reward-icon voucher" : "reward-icon"}>{reward.type === "VOUCHER" ? "🎟️" : "🎁"}</div>
-                <span className="activ-tier-lock">{reward.minTier}+</span>
-              </div>
-              <div className="reward-card-main">
-                <span className="reward-type">{reward.type === "VOUCHER" ? "Voucher" : "Item"}</span>
-                <h2>{reward.name}</h2>
-                {reward.description && <p>{reward.description}</p>}
-              </div>
-              <div className="reward-card-footer">
-                <div>
-                  <strong>{reward.costPoints} pts</strong>
-                  <small>{reward.stockQuantity === null ? "Unlimited" : `${reward.stockQuantity} left`}</small>
+            return (
+              <article className={tierLocked ? "redeem-product-card locked" : "redeem-product-card"} key={reward.id}>
+                <div className="redeem-product-art">
+                  <span>{visual}</span>
+                  <i />
+                </div>
+                <div className="redeem-product-body">
+                  <span className="reward-type">{reward.type === "VOUCHER" ? "Voucher" : "Item"}</span>
+                  <h2>{reward.name}</h2>
+                  {reward.description && <p>{reward.description}</p>}
+                  <div className="redeem-product-meta">
+                    <span>⭐ {reward.costPoints} pts</span>
+                    <small>Min. {reward.minTier}</small>
+                    <small>{reward.stockQuantity === null ? "Unlimited" : `Stock: ${reward.stockQuantity}`}</small>
+                  </div>
                 </div>
                 <RewardRedeemButton rewardId={reward.id} disabled={disabled} action={redeemRewardAction} />
-              </div>
-              {tierLocked && <p className="muted">Unlocks at {reward.minTier} tier.</p>}
-              {outOfStock && <p className="error">Out of stock.</p>}
-              {!outOfStock && !tierLocked && notEnoughPoints && <p className="muted">Need {reward.costPoints - wallet.availablePoints} more points.</p>}
-            </article>
-          );
-        })}
-      </section>
+                {tierLocked && <p className="muted">Unlocks at {reward.minTier} tier.</p>}
+                {outOfStock && <p className="error">Out of stock.</p>}
+                {!outOfStock && !tierLocked && notEnoughPoints && <p className="muted">Need {reward.costPoints - wallet.availablePoints} more points.</p>}
+              </article>
+            );
+          })}
+        </section>
 
-      {rewards.length === 0 && (
-        <div className="empty-card">
-          <h2>No rewards available yet</h2>
-          <p className="muted">Please check again after admin creates the first redemption item or voucher.</p>
-        </div>
-      )}
+        {rewards.length === 0 && (
+          <div className="empty-card">
+            <h2>No rewards available yet</h2>
+            <p className="muted">Please check again after admin creates the first redemption item or voucher.</p>
+          </div>
+        )}
 
-      <section className="card">
-        <h2>My redemption history</h2>
-        <div className="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Reward</th>
-                <th>Type</th>
-                <th>Points</th>
-                <th>Status</th>
-                <th>Requested</th>
-                <th>Admin note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {redemptions.map((redemption) => (
-                <tr key={redemption.id}>
-                  <td>{redemption.reward.name}</td>
-                  <td>{redemption.reward.type}</td>
-                  <td>{redemption.pointsCost}</td>
-                  <td><span className={redemptionStatusClass(redemption.status)}>{redemption.status}</span></td>
-                  <td>{formatDateTime(redemption.createdAt)}</td>
-                  <td>{redemption.adminNote || "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {redemptions.length === 0 && <p className="muted">No redemption requests yet.</p>}
+        <section className="redeem-history-card">
+          <div className="section-title-row compact">
+            <div>
+              <span className="eyebrow">My requests</span>
+              <h2>Redemption history</h2>
+              <p className="muted">Track collection, voucher delivery and admin approval status.</p>
+            </div>
+          </div>
+          <div className="redeem-history-list">
+            {redemptions.map((redemption) => (
+              <article key={redemption.id}>
+                <div className="redeem-history-icon">{rewardVisual(redemption.reward)}</div>
+                <div>
+                  <strong>{redemption.reward.name}</strong>
+                  <small>{redemption.pointsCost} pts · {formatDateTime(redemption.createdAt)}</small>
+                </div>
+                <span className={redemptionStatusClass(redemption.status)}>{redemption.status}</span>
+              </article>
+            ))}
+          </div>
+          {redemptions.length === 0 && <p className="muted">No redemption requests yet.</p>}
+        </section>
       </section>
     </>
   );

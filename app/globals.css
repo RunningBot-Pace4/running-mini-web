@@ -14682,3 +14682,703 @@ body[data-theme-preset] .profile-list span {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* === Exact loyalty app direction update === */
+:root {
+  --loyalty-blue: #1667f2;
+  --loyalty-blue-soft: #edf5ff;
+  --loyalty-gold: #f4a51c;
+  --loyalty-cream: #fffaf1;
+  --loyalty-line: rgba(30, 53, 90, 0.1);
+}
+
+.cn-container {
+  max-width: 1240px;
+}
+
+.topbar.cn-topbar {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--loyalty-line);
+}
+
+.brand.cn-brand {
+  min-width: 0;
+}
+
+.nav.cn-nav a {
+  font-weight: 800;
+}
+
+.club-dashboard-v2 {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.club-hero-card {
+  background: linear-gradient(135deg, #ffffff, #f2f7ff 58%, #fff4dc);
+  border: 1px solid rgba(22, 103, 242, 0.12);
+}
+
+.club-dashboard-grid-v2 {
+  align-items: stretch;
+}
+
+.cute-tier-card {
+  overflow: hidden;
+}
+
+.cute-tier-gauge-wrap {
+  min-height: 24rem;
+  overflow: visible;
+}
+
+.cute-tier-label-row {
+  left: 2.2rem;
+  right: 2.2rem;
+}
+
+.cute-tier-label-row span:first-child {
+  transform: translateX(0);
+  text-align: left;
+}
+
+.cute-tier-label-row span:last-child {
+  transform: translateX(-100%);
+  text-align: right;
+}
+
+.cute-tier-gauge {
+  width: min(100%, 34rem);
+  height: auto;
+}
+
+.cute-tier-gauge .gauge-progress {
+  stroke: #f3a414;
+  filter: drop-shadow(0 8px 10px rgba(244, 165, 28, 0.24));
+}
+
+.cute-tier-gauge .gauge-node {
+  fill: #d79339;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.cute-tier-center strong {
+  color: #ffffff;
+  text-shadow: 0 4px 14px rgba(142, 85, 16, 0.16);
+}
+
+.cute-tier-center span {
+  text-shadow: 0 4px 14px rgba(142, 85, 16, 0.16);
+}
+
+.cute-reward-card {
+  background:
+    radial-gradient(circle at 92% 18%, rgba(244, 165, 28, 0.18), transparent 34%),
+    linear-gradient(180deg, #ffffff, #fffaf1);
+}
+
+.cute-reward-card::after {
+  content: "⭐";
+  position: absolute;
+  right: 1.1rem;
+  top: 1.2rem;
+  font-size: 3rem;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.cute-reward-card {
+  position: relative;
+}
+
+.cute-reward-stats div,
+.cute-stat-card,
+.cute-focus-card,
+.cute-recent-list article {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.cute-reward-stats div:hover,
+.cute-stat-card:hover,
+.cute-focus-card:hover,
+.cute-recent-list article:hover,
+.redeem-product-card:hover,
+.loyalty-event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(43, 63, 108, 0.12);
+}
+
+.cute-focus-card {
+  min-height: 14rem;
+}
+
+.cute-focus-card .button {
+  width: 100%;
+}
+
+.cute-stat-card {
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+}
+
+.cute-stat-card span,
+.cute-reward-card span,
+.cute-focus-card p,
+.cute-recent-list small {
+  color: #53667c;
+}
+
+.page-hero-card.loyalty-page-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: stretch;
+  padding: 1.35rem;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #ffffff, #f3f8ff 64%, #fff2d7);
+  border: 1px solid var(--loyalty-line);
+  box-shadow: 0 16px 38px rgba(43, 63, 108, 0.08);
+}
+
+.page-hero-card h1 {
+  margin: 0.2rem 0;
+}
+
+.page-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(8rem, 1fr));
+  gap: 0.75rem;
+}
+
+.page-hero-stats article {
+  border-radius: 20px;
+  padding: 1rem;
+  background: rgba(255,255,255,0.86);
+  border: 1px solid var(--loyalty-line);
+  text-align: center;
+}
+
+.page-hero-stats strong {
+  display: block;
+  font-size: 2rem;
+  color: var(--loyalty-blue);
+}
+
+.event-center-section {
+  margin-top: 1.1rem;
+}
+
+.loyalty-event-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.loyalty-event-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.94);
+  border: 1px solid var(--loyalty-line);
+  box-shadow: 0 10px 24px rgba(43, 63, 108, 0.06);
+}
+
+.loyalty-event-date {
+  width: 4.3rem;
+  height: 4.3rem;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: #f3f7ff;
+  border: 1px solid rgba(22, 103, 242, 0.12);
+}
+
+.loyalty-event-date strong {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.loyalty-event-date span {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #53667c;
+}
+
+.loyalty-event-main h2 {
+  margin: 0.35rem 0 0.2rem;
+}
+
+.loyalty-event-main p {
+  margin: 0;
+  color: #53667c;
+}
+
+.loyalty-event-list.history .loyalty-event-card {
+  opacity: 0.82;
+}
+
+.redeem-store-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.redeem-page-head h1 {
+  margin: 0.15rem 0;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+}
+
+.redeem-page-head p {
+  color: #53667c;
+  margin: 0;
+}
+
+.redeem-wallet-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.2rem;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 95% 18%, rgba(244, 165, 28, 0.22), transparent 36%),
+    linear-gradient(135deg, #ffffff, #fffaf1);
+  border: 1px solid rgba(244, 165, 28, 0.22);
+  box-shadow: 0 16px 38px rgba(43, 63, 108, 0.08);
+}
+
+.redeem-wallet-panel article {
+  padding: 0.9rem;
+  border-right: 1px solid rgba(30, 53, 90, 0.08);
+}
+
+.redeem-wallet-panel article:last-of-type {
+  border-right: 0;
+}
+
+.redeem-wallet-panel span,
+.redeem-wallet-panel small {
+  color: #53667c;
+}
+
+.redeem-wallet-panel strong {
+  display: block;
+  margin: 0.25rem 0;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: #11233b;
+}
+
+.redeem-mascot {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 26px;
+  display: grid;
+  place-items: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, #fff7d9, #fff);
+  box-shadow: inset 0 0 0 1px rgba(244, 165, 28, 0.18);
+}
+
+.redeem-mini-progress {
+  margin-top: 0.45rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  background: #dde7f3;
+  overflow: hidden;
+}
+
+.redeem-mini-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1667f2, #f4a51c);
+}
+
+.reward-filter-row {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.reward-filter-row span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0 1rem;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid var(--loyalty-line);
+  font-weight: 850;
+  color: #53667c;
+}
+
+.reward-filter-row span.active {
+  background: var(--loyalty-blue);
+  color: #fff;
+  border-color: var(--loyalty-blue);
+}
+
+.redeem-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.redeem-product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid var(--loyalty-line);
+  box-shadow: 0 10px 26px rgba(43, 63, 108, 0.06);
+}
+
+.redeem-product-card.locked {
+  opacity: 0.72;
+}
+
+.redeem-product-art {
+  position: relative;
+  min-height: 9rem;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(244, 165, 28, 0.18), transparent 28%),
+    linear-gradient(135deg, #fffaf1, #f5f9ff);
+  overflow: hidden;
+}
+
+.redeem-product-art span {
+  position: relative;
+  z-index: 1;
+  font-size: 4.2rem;
+}
+
+.redeem-product-art i {
+  position: absolute;
+  inset: 14% 10% auto auto;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: rgba(22,103,242,0.07);
+}
+
+.redeem-product-body {
+  flex: 1;
+}
+
+.redeem-product-body h2 {
+  margin: 0.25rem 0 0.3rem;
+  font-size: 1.15rem;
+}
+
+.redeem-product-body p {
+  margin: 0;
+  color: #53667c;
+  font-size: 0.92rem;
+}
+
+.redeem-product-meta {
+  margin-top: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.redeem-product-meta span {
+  font-weight: 950;
+  color: var(--loyalty-blue);
+}
+
+.redeem-product-meta small {
+  color: #53667c;
+}
+
+.redeem-product-card .button,
+.redeem-product-card button {
+  width: 100%;
+}
+
+.redeem-history-card {
+  padding: 1.1rem;
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid var(--loyalty-line);
+  box-shadow: 0 12px 30px rgba(43, 63, 108, 0.06);
+}
+
+.redeem-history-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.redeem-history-list article {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 18px;
+  background: #f8fbff;
+  border: 1px solid rgba(30, 53, 90, 0.06);
+}
+
+.redeem-history-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff6df;
+  font-size: 1.45rem;
+}
+
+.admin-control-hero,
+.admin-section-card {
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid var(--loyalty-line);
+  box-shadow: 0 14px 36px rgba(43, 63, 108, 0.07);
+}
+
+.admin-control-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.3fr);
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.admin-quick-stats {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.admin-quick-stats article {
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff, #f8fbff);
+  border: 1px solid var(--loyalty-line);
+}
+
+.admin-step-nav {
+  position: sticky;
+  top: 5rem;
+  z-index: 10;
+  padding: 0.6rem;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--loyalty-line);
+  backdrop-filter: blur(16px);
+}
+
+.admin-step-nav a {
+  border-radius: 16px;
+}
+
+.admin-panel > summary,
+.reward-admin-card > summary {
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid var(--loyalty-line);
+  padding: 1rem;
+}
+
+.admin-panel[open] > summary,
+.reward-admin-card[open] > summary {
+  background: #f7fbff;
+  border-color: rgba(22,103,242,0.18);
+}
+
+.reward-admin-summary-main small {
+  word-break: break-word;
+}
+
+.reward-admin-summary-side .badge {
+  max-width: 100%;
+}
+
+@media (min-width: 1260px) {
+  .cute-tier-gauge-wrap {
+    min-height: 25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .redeem-catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .redeem-wallet-panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .redeem-mascot {
+    display: none;
+  }
+
+  .admin-control-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-quick-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .page-hero-card.loyalty-page-hero,
+  .loyalty-event-card {
+    grid-template-columns: 1fr;
+  }
+
+  .page-hero-card.loyalty-page-hero {
+    flex-direction: column;
+  }
+
+  .page-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .loyalty-event-date {
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+
+  .redeem-wallet-panel,
+  .redeem-catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .redeem-wallet-panel article {
+    border-right: 0;
+    border-bottom: 1px solid rgba(30, 53, 90, 0.08);
+  }
+
+  .redeem-wallet-panel article:last-of-type {
+    grid-column: 1 / -1;
+    border-bottom: 0;
+  }
+
+  .redeem-product-art {
+    min-height: 7.4rem;
+  }
+
+  .redeem-product-art span {
+    font-size: 3.2rem;
+  }
+
+  .admin-quick-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-step-nav {
+    top: 4.5rem;
+    overflow-x: auto;
+    grid-template-columns: repeat(5, minmax(8.5rem, 1fr));
+  }
+
+  .admin-panel > summary,
+  .reward-admin-card > summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .reward-admin-summary-side {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 560px) {
+  .cn-container {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+
+  .cute-tier-gauge-wrap {
+    overflow: hidden;
+    min-height: 15.6rem;
+  }
+
+  .cute-tier-label-row {
+    left: 1.35rem;
+    right: 1.35rem;
+  }
+
+  .cute-tier-label-row strong {
+    font-size: 0.72rem;
+  }
+
+  .cute-tier-label-row small {
+    font-size: 0.6rem;
+  }
+
+  .cute-tier-gauge {
+    width: 112%;
+    margin-left: -6%;
+  }
+
+  .cute-tier-center {
+    bottom: 1.1rem;
+  }
+
+  .redeem-wallet-panel,
+  .redeem-catalog-grid,
+  .redeem-history-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .redeem-product-card {
+    border-radius: 20px;
+  }
+
+  .redeem-history-list article .badge {
+    justify-self: start;
+  }
+
+  .reward-filter-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+
+  .reward-filter-row span {
+    white-space: nowrap;
+  }
+
+  .admin-step-nav {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .admin-step-nav a {
+    flex: 0 0 auto;
+    min-width: 8.6rem;
+  }
+
+  .admin-panel > summary,
+  .reward-admin-card > summary {
+    grid-template-columns: 1fr;
+  }
+
+  .reward-admin-summary-side {
+    justify-content: space-between;
+  }
+}
+
+/* Disable previous full-screen loader visuals after removing route loading */
+.page-loading-overlay,
+.cute-loading-overlay,
+.loyalty-loader-overlay {
+  display: none !important;
+}

@@ -10,8 +10,8 @@ import { getHomeContent } from "@/lib/site-content";
 import { getThemePreset } from "@/lib/theme-presets";
 
 export const metadata: Metadata = {
-  title: "Run Mini Web",
-  description: "Mobile running event, Strava sync, scoring and sharing.",
+  title: "Performance Club Hub",
+  description: "Performance club loyalty hub with events, points, badges, rewards and redemptions.",
   manifest: "/manifest.webmanifest",
   themeColor: "#1d6fa3",
   appleWebApp: {
@@ -88,7 +88,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <span className="brand-name">{brandName}</span>
             </LoadingLink>
             <nav className="nav cn-nav">
-              <LoadingLink href="/">Events</LoadingLink>
+              <LoadingLink href="/">Dashboard</LoadingLink>
+              <LoadingLink href="/events">Events</LoadingLink>
               {user && <LoadingLink href="/account">Account</LoadingLink>}
               {user && <LoadingLink href="/redemptions">Redeem</LoadingLink>}
               {user?.role === "ADMIN" && <LoadingLink href="/admin">Admin</LoadingLink>}
@@ -109,8 +110,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main className="container cn-container">{children}</main>
 
         <nav className="cn-mobile-tabbar" aria-label="Mobile app navigation">
-          <LoadingLink href="/" loadingLabel="Opening events...">
-            <span>🏃</span>
+          <LoadingLink href="/" loadingLabel="Opening dashboard...">
+            <span>🏠</span>
+            Home
+          </LoadingLink>
+          <LoadingLink href="/events" loadingLabel="Opening events...">
+            <span>📅</span>
             Events
           </LoadingLink>
           {user ? (
