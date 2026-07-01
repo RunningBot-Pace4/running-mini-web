@@ -871,3 +871,11 @@ This update follows the approved loyalty-app mockup direction:
 - Rewards page is redesigned as a card-based loyalty reward store.
 - Admin page mobile alignment and accordion spacing are polished for responsive use.
 - Tier journey uses a half-circle progress style from Bronze → Silver → Gold → Platinum.
+
+
+## Latest update: Navigation, account menu, loading, admin UX
+- Main navigation order changed to Dashboard, Events, Redeem, Admin.
+- Account and Logout moved into the top-right account menu.
+- Route/action loading overlay restored for links and form submit buttons.
+- Admin header copy simplified to “Club settings”.
+- Admin improvement direction: split into Events, Brand, Points, Rewards, and Strava sections with clearer KPI cards and workflows.

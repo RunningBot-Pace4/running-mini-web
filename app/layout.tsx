@@ -80,48 +80,65 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body style={buildThemeStyle(siteContent)} data-theme-preset={siteContent.themePreset || "coastal-sunrise"}>
         <header className="topbar cn-topbar">
-          <div className="topbar-inner cn-topbar-inner">
-            <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label={`${brandName} home`} loadingLabel="Opening home...">
+          <div className="topbar-inner cn-topbar-inner modern-topbar-inner">
+            <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label={`${brandName} home`} loadingLabel="Opening dashboard...">
               <span className="brand-mark cn-brand-mark coastal-brand-mark">
                 {logoImageDataUrl ? <img src={logoImageDataUrl} alt="" /> : brandMark}
               </span>
               <span className="brand-name">{brandName}</span>
             </LoadingLink>
-            <nav className="nav cn-nav">
-              <LoadingLink href="/">Dashboard</LoadingLink>
-              <LoadingLink href="/events">Events</LoadingLink>
-              {user && <LoadingLink href="/account">Account</LoadingLink>}
-              {user && <LoadingLink href="/redemptions">Redeem</LoadingLink>}
-              {user?.role === "ADMIN" && <LoadingLink href="/admin">Admin</LoadingLink>}
+
+            <div className="topbar-right">
+              <nav className="nav cn-nav primary-nav" aria-label="Main navigation">
+                <LoadingLink href="/" loadingLabel="Opening dashboard...">Dashboard</LoadingLink>
+                <LoadingLink href="/events" loadingLabel="Opening events...">Events</LoadingLink>
+                {user && <LoadingLink href="/redemptions" loadingLabel="Opening rewards...">Redeem</LoadingLink>}
+                {user?.role === "ADMIN" && <LoadingLink href="/admin" loadingLabel="Opening admin...">Admin</LoadingLink>}
+              </nav>
+
               {user ? (
-                <LogoutForm action={logoutAction} />
+                <details className="account-menu">
+                  <summary aria-label="Open account menu">
+                    <span className="account-menu-avatar">{user.name.slice(0, 1).toUpperCase()}</span>
+                    <span className="account-menu-name">{user.name}</span>
+                    <span className="account-menu-caret">⌄</span>
+                  </summary>
+                  <div className="account-menu-panel">
+                    <div className="account-menu-user">
+                      <strong>{user.name}</strong>
+                      <small>{user.email}</small>
+                    </div>
+                    <LoadingLink href="/account" loadingLabel="Opening account...">My account</LoadingLink>
+                    <LogoutForm action={logoutAction} className="account-menu-logout" pendingLabel="Logging out..." />
+                  </div>
+                </details>
               ) : (
-                <>
-                  <LoadingLink href="/login">Login</LoadingLink>
-                  <LoadingLink className="button nav-button cn-register-pill" href="/register">
+                <div className="guest-nav-actions">
+                  <LoadingLink href="/login" loadingLabel="Opening login...">Login</LoadingLink>
+                  <LoadingLink className="button nav-button cn-register-pill" href="/register" loadingLabel="Opening registration...">
                     Register
                   </LoadingLink>
-                </>
+                </div>
               )}
-            </nav>
+            </div>
           </div>
         </header>
 
         <main className="container cn-container">{children}</main>
 
-        <nav className="cn-mobile-tabbar" aria-label="Mobile app navigation">
+        <nav className="cn-mobile-tabbar modern-mobile-tabbar" aria-label="Mobile app navigation">
           <LoadingLink href="/" loadingLabel="Opening dashboard...">
             <span>🏠</span>
-            Home
+            Dashboard
           </LoadingLink>
           <LoadingLink href="/events" loadingLabel="Opening events...">
             <span>📅</span>
             Events
           </LoadingLink>
           {user ? (
-            <LoadingLink href="/account" loadingLabel="Opening account...">
-              <span>🎽</span>
-              Account
+            <LoadingLink href="/redemptions" loadingLabel="Opening rewards...">
+              <span>🎁</span>
+              Redeem
             </LoadingLink>
           ) : (
             <LoadingLink href="/login" loadingLabel="Opening login...">
@@ -129,28 +146,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               Login
             </LoadingLink>
           )}
-          {user ? (
-            <LoadingLink href="/redemptions" loadingLabel="Opening rewards...">
-              <span>🎁</span>
-              Redeem
-            </LoadingLink>
-          ) : (
-            <LoadingLink href="/register" loadingLabel="Opening registration...">
-              <span>🔥</span>
-              Join
-            </LoadingLink>
-          )}
-          {user?.role === "ADMIN" && (
+          {user?.role === "ADMIN" ? (
             <LoadingLink href="/admin" loadingLabel="Opening admin...">
               <span>🛠️</span>
               Admin
             </LoadingLink>
-          )}
-          {user && (
-            <LogoutForm action={logoutAction} className="cn-mobile-logout-button" pendingLabel="Logging out...">
-              <span>🚪</span>
-              Logout
-            </LogoutForm>
+          ) : (
+            <LoadingLink href={user ? "/account" : "/register"} loadingLabel={user ? "Opening account..." : "Opening registration..."}>
+              <span>{user ? "👤" : "🔥"}</span>
+              {user ? "Account" : "Join"}
+            </LoadingLink>
           )}
         </nav>
         <PwaInstallPrompt />

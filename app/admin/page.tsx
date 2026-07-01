@@ -62,9 +62,9 @@ export default async function AdminPage() {
     <>
       <section className="admin-control-hero">
         <div>
-          <span className="eyebrow">Race control</span>
-          <h1>Admin cockpit</h1>
-          <p>Manage the website step by step: event board, brand design, scoring rules, and Strava health check.</p>
+          <span className="eyebrow">Admin Center</span>
+          <h1>Club settings</h1>
+          <p>Create events, manage rewards, update scoring, adjust design, and check Strava in one place.</p>
         </div>
 
         <div className="admin-quick-stats" aria-label="Admin overview">
@@ -93,9 +93,9 @@ export default async function AdminPage() {
 
       <nav className="admin-step-nav" aria-label="Admin sections">
         <a href="#admin-events">01 Events</a>
-        <a href="#admin-design">02 Design</a>
-        <a href="#admin-scoring">03 Scoring</a>
-        <a href="#admin-redemptions">04 Redemptions</a>
+        <a href="#admin-design">02 Brand</a>
+        <a href="#admin-scoring">03 Points</a>
+        <a href="#admin-redemptions">04 Rewards</a>
         <a href="#admin-strava">05 Strava</a>
       </nav>
 
