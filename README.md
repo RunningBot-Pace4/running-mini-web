@@ -879,3 +879,16 @@ This update follows the approved loyalty-app mockup direction:
 - Route/action loading overlay restored for links and form submit buttons.
 - Admin header copy simplified to “Club settings”.
 - Admin improvement direction: split into Events, Brand, Points, Rewards, and Strava sections with clearer KPI cards and workflows.
+
+## Update: Admin Center restructure + minimal loader
+
+This update changes the admin page into a cleaner step-by-step control center:
+
+- Admin Center hero with a simple "Club settings" title.
+- KPI cards for events, members, votes, rewards and pending actions.
+- Organized sections: Events, Points & Approval, Rewards, Website Design, and Strava.
+- Event management now uses mobile-friendly cards instead of cramped rows.
+- Reward catalog and redemption requests are grouped inside cleaner cards.
+- Loading overlay has been replaced with a small modern transition card using the current site logo.
+
+No database migration is required for this update.
