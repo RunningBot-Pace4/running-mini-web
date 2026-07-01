@@ -17,27 +17,21 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Run Mini"
+    title: "Run Mini",
   },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" }
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png"
-  }
+    apple: "/apple-touch-icon.png",
+  },
 };
-
-
 
 type ThemeStyle = CSSProperties & Record<`--${string}`, string>;
 
 function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): ThemeStyle {
   const preset = getThemePreset(content.themePreset);
-
-  // The site now uses fixed presets. Always derive the visible theme from
-  // themePreset so old/stale color columns cannot prevent the selected theme
-  // from showing on the public pages.
   const primary = preset.primary;
   const secondary = preset.secondary;
   const background = preset.background;
@@ -62,6 +56,10 @@ function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): T
     "--brand-secondary": secondary,
     "--brand-background": background,
     "--brand-dark": dark,
+    "--theme-primary": primary,
+    "--theme-accent": secondary,
+    "--title-color": dark,
+    "--muted-text": "#54657d",
     "--sky": "#6ec6ff",
     "--sea": primary,
     "--sunrise": secondary,
@@ -70,93 +68,99 @@ function buildThemeStyle(content: Awaited<ReturnType<typeof getHomeContent>>): T
   };
 }
 
+function BrandLogo({
+  brandName,
+  brandMark,
+  logoImageDataUrl,
+}: {
+  brandName: string;
+  brandMark: string;
+  logoImageDataUrl: string;
+}) {
+  return (
+    <LoadingLink className="loyalty-brand brand" href="/" aria-label={`${brandName} home`} loadingLabel="Opening dashboard...">
+      <span className="loyalty-brand-mark brand-mark">
+        {logoImageDataUrl ? <img src={logoImageDataUrl} alt="" /> : brandMark}
+      </span>
+      <span className="brand-name">{brandName}</span>
+    </LoadingLink>
+  );
+}
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, siteContent] = await Promise.all([getCurrentUser(), getHomeContent()]);
-  const brandName = (siteContent.brandName || "").trim() || "Run Mini";
-  const brandMark = (siteContent.brandMark || "").trim() || "↗";
+  const brandName = (siteContent.brandName || "").trim() || "Super Pogi Rockstars Club";
+  const brandMark = (siteContent.brandMark || "").trim() || "⭐";
   const logoImageDataUrl = siteContent.logoImageDataUrl || "";
 
   return (
     <html lang="en">
       <body style={buildThemeStyle(siteContent)} data-theme-preset={siteContent.themePreset || "coastal-sunrise"}>
-        <header className="topbar cn-topbar">
-          <div className="topbar-inner cn-topbar-inner modern-topbar-inner">
-            <LoadingLink className="brand cn-brand coastal-brand" href="/" aria-label={`${brandName} home`} loadingLabel="Opening dashboard...">
-              <span className="brand-mark cn-brand-mark coastal-brand-mark">
-                {logoImageDataUrl ? <img src={logoImageDataUrl} alt="" /> : brandMark}
-              </span>
-              <span className="brand-name">{brandName}</span>
-            </LoadingLink>
+        <div className="loyalty-app-shell">
+          <aside className="loyalty-sidebar" aria-label="Desktop navigation">
+            <BrandLogo brandName={brandName} brandMark={brandMark} logoImageDataUrl={logoImageDataUrl} />
 
-            <div className="topbar-right">
-              <nav className="nav cn-nav primary-nav" aria-label="Main navigation">
-                <LoadingLink href="/" loadingLabel="Opening dashboard...">Dashboard</LoadingLink>
-                <LoadingLink href="/events" loadingLabel="Opening events...">Events</LoadingLink>
-                {user && <LoadingLink href="/redemptions" loadingLabel="Opening rewards...">Redeem</LoadingLink>}
-                {user?.role === "ADMIN" && <LoadingLink href="/admin" loadingLabel="Opening admin...">Admin</LoadingLink>}
-              </nav>
+            <nav className="loyalty-side-nav">
+              <LoadingLink href="/"><span>🏠</span> Dashboard</LoadingLink>
+              <LoadingLink href="/events"><span>📅</span> Events</LoadingLink>
+              <LoadingLink href="/account"><span>🛡️</span> Challenges</LoadingLink>
+              <LoadingLink href="/redemptions"><span>🎁</span> Rewards</LoadingLink>
+              <LoadingLink href="/account"><span>🏅</span> My Badges</LoadingLink>
+              <LoadingLink href="/account"><span>📈</span> Leaderboard</LoadingLink>
+              {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>⚙️</span> Admin</LoadingLink>}
+            </nav>
 
+            {user ? (
+              <div className="loyalty-sidebar-profile">
+                <span>{user.name.slice(0, 2).toUpperCase()}</span>
+                <div><strong>{user.name}</strong><small>{user.role === "ADMIN" ? "Administrator" : "Member"}</small></div>
+              </div>
+            ) : (
+              <div className="loyalty-sidebar-card">
+                <strong>Join the club</strong>
+                <p>Vote, train, score and redeem rewards.</p>
+                <LoadingLink className="button" href="/register">Register</LoadingLink>
+              </div>
+            )}
+          </aside>
+
+          <section className="loyalty-content-shell">
+            <header className="loyalty-mobile-header">
+              <BrandLogo brandName={brandName} brandMark={brandMark} logoImageDataUrl={logoImageDataUrl} />
+              <span className="loyalty-bell" aria-hidden="true">🔔</span>
+            </header>
+
+            <header className="loyalty-page-topbar" aria-label="Page toolbar">
+              <div className="loyalty-topbar-spacer" />
               {user ? (
                 <details className="account-menu">
-                  <summary aria-label="Open account menu">
-                    <span className="account-menu-avatar">{user.name.slice(0, 1).toUpperCase()}</span>
-                    <span className="account-menu-name">{user.name}</span>
-                    <span className="account-menu-caret">⌄</span>
+                  <summary>
+                    <span className="account-menu-avatar">{user.name.slice(0, 2).toUpperCase()}</span>
+                    <span>{user.name}</span>
                   </summary>
                   <div className="account-menu-panel">
-                    <div className="account-menu-user">
-                      <strong>{user.name}</strong>
-                      <small>{user.email}</small>
-                    </div>
-                    <LoadingLink href="/account" loadingLabel="Opening account...">My account</LoadingLink>
-                    <LogoutForm action={logoutAction} className="account-menu-logout" pendingLabel="Logging out..." />
+                    <LoadingLink href="/account">My account</LoadingLink>
+                    <LogoutForm action={logoutAction} pendingLabel="Logging out..." />
                   </div>
                 </details>
               ) : (
-                <div className="guest-nav-actions">
-                  <LoadingLink href="/login" loadingLabel="Opening login...">Login</LoadingLink>
-                  <LoadingLink className="button nav-button cn-register-pill" href="/register" loadingLabel="Opening registration...">
-                    Register
-                  </LoadingLink>
+                <div className="loyalty-auth-actions">
+                  <LoadingLink href="/login">Login</LoadingLink>
+                  <LoadingLink className="button" href="/register">Register</LoadingLink>
                 </div>
               )}
-            </div>
-          </div>
-        </header>
+            </header>
 
-        <main className="container cn-container">{children}</main>
+            <main className="loyalty-main">{children}</main>
+          </section>
+        </div>
 
-        <nav className="cn-mobile-tabbar modern-mobile-tabbar" aria-label="Mobile app navigation">
-          <LoadingLink href="/" loadingLabel="Opening dashboard...">
-            <span>🏠</span>
-            Dashboard
-          </LoadingLink>
-          <LoadingLink href="/events" loadingLabel="Opening events...">
-            <span>📅</span>
-            Events
-          </LoadingLink>
-          {user ? (
-            <LoadingLink href="/redemptions" loadingLabel="Opening rewards...">
-              <span>🎁</span>
-              Redeem
-            </LoadingLink>
-          ) : (
-            <LoadingLink href="/login" loadingLabel="Opening login...">
-              <span>🔐</span>
-              Login
-            </LoadingLink>
-          )}
-          {user?.role === "ADMIN" ? (
-            <LoadingLink href="/admin" loadingLabel="Opening admin...">
-              <span>🛠️</span>
-              Admin
-            </LoadingLink>
-          ) : (
-            <LoadingLink href={user ? "/account" : "/register"} loadingLabel={user ? "Opening account..." : "Opening registration..."}>
-              <span>{user ? "👤" : "🔥"}</span>
-              {user ? "Account" : "Join"}
-            </LoadingLink>
-          )}
+        <nav className="loyalty-mobile-tabbar" aria-label="Mobile app navigation">
+          <LoadingLink href="/"><span>🏠</span>Home</LoadingLink>
+          <LoadingLink href="/events"><span>📅</span>Events</LoadingLink>
+          <LoadingLink href="/redemptions"><span>🎁</span>Redeem</LoadingLink>
+          <LoadingLink href="/account"><span>👤</span>Account</LoadingLink>
+          {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>🛡️</span>Admin</LoadingLink>}
         </nav>
         <PwaInstallPrompt />
       </body>

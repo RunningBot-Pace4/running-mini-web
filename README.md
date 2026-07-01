@@ -873,22 +873,16 @@ This update follows the approved loyalty-app mockup direction:
 - Tier journey uses a half-circle progress style from Bronze → Silver → Gold → Platinum.
 
 
-## Latest update: Navigation, account menu, loading, admin UX
-- Main navigation order changed to Dashboard, Events, Redeem, Admin.
-- Account and Logout moved into the top-right account menu.
-- Route/action loading overlay restored for links and form submit buttons.
-- Admin header copy simplified to “Club settings”.
-- Admin improvement direction: split into Events, Brand, Points, Rewards, and Strava sections with clearer KPI cards and workflows.
 
-## Update: Admin Center restructure + minimal loader
+## Exact Loyalty UI Implementation
 
-This update changes the admin page into a cleaner step-by-step control center:
+This package updates the app to follow the approved loyalty-app mockup direction more closely:
 
-- Admin Center hero with a simple "Club settings" title.
-- KPI cards for events, members, votes, rewards and pending actions.
-- Organized sections: Events, Points & Approval, Rewards, Website Design, and Strava.
-- Event management now uses mobile-friendly cards instead of cramped rows.
-- Reward catalog and redemption requests are grouped inside cleaner cards.
-- Loading overlay has been replaced with a small modern transition card using the current site logo.
+- Desktop sidebar + mobile bottom navigation layout.
+- Dashboard is a real member dashboard, not an event list.
+- Dashboard shows tier journey, reward wallet, tier benefit, current challenge, member stats, and one upcoming event focus.
+- Event history/full list is kept on `/events`.
+- Admin page is redesigned into an Admin Center with KPI cards, section tabs, Events management, Points & Approval, Rewards, Tiers, Website, and Strava sections.
+- Redeem page keeps the loyalty reward-store direction with wallet summary, filter chips, reward cards, and request history.
 
-No database migration is required for this update.
+No database change is required for this UI-only package.
