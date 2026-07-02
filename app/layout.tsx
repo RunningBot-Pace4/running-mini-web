@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { LoadingLink } from "@/components/LoadingLink";
-import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
 import { AccountMenu } from "@/components/AccountMenu";
+import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
 import "./globals.css";
 import { getCurrentUser } from "@/lib/session";
 import { logoutAction } from "@/app/auth/actions";
@@ -101,13 +101,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <BrandLogo brandName={brandName} brandMark={brandMark} logoImageDataUrl={logoImageDataUrl} />
 
             <nav className="loyalty-side-nav">
-              <LoadingLink href="/"><span>🏠</span> Dashboard</LoadingLink>
-              <LoadingLink href="/events"><span>📅</span> Events</LoadingLink>
-              <LoadingLink href="/challenges"><span>🛡️</span> Challenges</LoadingLink>
-              <LoadingLink href="/redemptions"><span>🎁</span> Rewards</LoadingLink>
-              <LoadingLink href="/badges"><span>🏅</span> My Badges</LoadingLink>
-              <LoadingLink href="/leaderboard"><span>📈</span> Leaderboard</LoadingLink>
-              {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>⚙️</span> Admin</LoadingLink>}
+              <LoadingLink href="/" loadingLabel="Opening dashboard..."><span>🏠</span> Dashboard</LoadingLink>
+              <LoadingLink href="/events" loadingLabel="Opening events..."><span>📅</span> Events</LoadingLink>
+              <LoadingLink href="/redemptions" loadingLabel="Opening rewards..."><span>🎁</span> Redeem</LoadingLink>
+              {user?.role === "ADMIN" && <LoadingLink href="/admin" loadingLabel="Opening admin center..."><span>⚙️</span> Admin</LoadingLink>}
             </nav>
 
             {user ? (
@@ -127,13 +124,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <section className="loyalty-content-shell">
             <header className="loyalty-mobile-header">
               <BrandLogo brandName={brandName} brandMark={brandMark} logoImageDataUrl={logoImageDataUrl} />
-              <span className="loyalty-bell" aria-hidden="true">🔔</span>
+              {user ? (
+                <AccountMenu name={user.name} role={user.role} logoutAction={logoutAction} />
+              ) : (
+                <LoadingLink className="button ghost compact-login" href="/login" loadingLabel="Opening login...">Login</LoadingLink>
+              )}
             </header>
 
             <header className="loyalty-page-topbar" aria-label="Page toolbar">
               <div className="loyalty-topbar-spacer" />
               {user ? (
-                <AccountMenu name={user.name} role={user.role} action={logoutAction} />
+                <AccountMenu name={user.name} role={user.role} logoutAction={logoutAction} />
               ) : (
                 <div className="loyalty-auth-actions">
                   <LoadingLink href="/login">Login</LoadingLink>
@@ -147,12 +148,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </div>
 
         <nav className="loyalty-mobile-tabbar" aria-label="Mobile app navigation">
-          <LoadingLink href="/"><span>🏠</span>Home</LoadingLink>
-          <LoadingLink href="/events"><span>📅</span>Events</LoadingLink>
-          <LoadingLink href="/redemptions"><span>🎁</span>Rewards</LoadingLink>
-          <LoadingLink href="/challenges"><span>🛡️</span>Challenges</LoadingLink>
-          <LoadingLink href="/account"><span>👤</span>Me</LoadingLink>
-          {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>⚙️</span>Admin</LoadingLink>}
+          <LoadingLink href="/" loadingLabel="Opening dashboard..."><span>🏠</span>Dashboard</LoadingLink>
+          <LoadingLink href="/events" loadingLabel="Opening events..."><span>📅</span>Events</LoadingLink>
+          <LoadingLink href="/redemptions" loadingLabel="Opening rewards..."><span>🎁</span>Redeem</LoadingLink>
+          {user?.role === "ADMIN" && <LoadingLink href="/admin" loadingLabel="Opening admin center..."><span>🛡️</span>Admin</LoadingLink>}
         </nav>
         <PwaInstallPrompt />
       </body>

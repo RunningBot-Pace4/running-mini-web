@@ -2,7 +2,7 @@
 
 export function PageLoadingOverlay({
   show = false,
-  label = "Loading...",
+  label = "Processing...",
 }: {
   show?: boolean;
   label?: string;
@@ -10,11 +10,11 @@ export function PageLoadingOverlay({
   if (!show) return null;
 
   return (
-    <div className="page-loading-overlay" role="status" aria-live="polite">
+    <div className="page-loading-overlay" role="status" aria-live="polite" aria-label={label}>
       <div className="page-loading-card">
-        <span className="spinner large" aria-hidden="true" />
+        <span className="page-loading-spinner" aria-hidden="true" />
         <strong>{label}</strong>
-        <small>Please wait a moment.</small>
+        <small>Please do not tap again.</small>
       </div>
     </div>
   );

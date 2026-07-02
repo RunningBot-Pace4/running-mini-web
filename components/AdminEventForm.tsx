@@ -23,15 +23,13 @@ export function AdminEventForm({
         <input id="title" name="title" required />
       </div>
 
-      <div className="form-full-width">
-        <div>
-          <label htmlFor="eventType">Event category</label>
-          <select id="eventType" name="type" defaultValue="RUNNING">
-            {CLUB_EVENT_TYPES.map((type) => (
-              <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
-            ))}
-          </select>
-        </div>
+      <div className="admin-event-category-field">
+        <label htmlFor="eventType">Event category</label>
+        <select id="eventType" name="type" defaultValue="RUNNING">
+          {CLUB_EVENT_TYPES.map((type) => (
+            <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
+          ))}
+        </select>
       </div>
 
       <div>

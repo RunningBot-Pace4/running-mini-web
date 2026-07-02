@@ -8,6 +8,7 @@ import { formatDateTime, formatDateTimeLocalInput, formatDateTimeRange } from "@
 import { EventDescription } from "@/components/EventDescription";
 import { EditEventForm } from "@/components/EditEventForm";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
+import { eventDisplayStatus } from "@/lib/event-window";
 import { getClubEventType, eventTypeClass } from "@/lib/event-types";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +46,7 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
   const approvedSubmissionCount = event.submissions.filter((submission) => submission.status === "APPROVED").length;
   const rejectedSubmissionCount = event.submissions.filter((submission) => submission.status === "REJECTED").length;
   const eventTypeMeta = getClubEventType(event.type);
+  const displayStatus = eventDisplayStatus(event);
 
   return (
     <>
@@ -59,8 +61,8 @@ export default async function AdminEventDetailPage({ params }: { params: Promise
 
       <div className="card">
         <div className="row">
-          <span className={event.status === "OPEN" ? "badge success" : event.status === "CLOSED" ? "badge danger" : "badge"}>
-            {event.status}
+          <span className={displayStatus === "OPEN" ? "badge success" : displayStatus === "CLOSED" ? "badge danger" : "badge"}>
+            {displayStatus}
           </span>
           <span className={eventTypeClass(event.type)}>{eventTypeMeta.icon} {eventTypeMeta.label}</span>
           <LoadingLink className="button ghost" href={`/events/${event.slug}`}>

@@ -74,7 +74,11 @@ function TierGauge({
     ? Math.max(0, Math.min(1, (totalPoints - currentTier.minPoints) / Math.max(1, nextTier.minPoints - currentTier.minPoints)))
     : 1;
   const overallProgress = nextTier ? ((currentIndex + localProgress) / segmentCount) * 100 : 100;
-  const labelPositions = [0, 33, 66, 100];
+  const labelPositions = ordered.map((_, index) =>
+    ordered.length === 1 ? 50 : 6 + (index / (ordered.length - 1)) * 88
+  );
+  const nextTargetPoints = nextTier?.minPoints ?? totalPoints;
+  const centerPointsLabel = nextTier ? `${totalPoints} / ${nextTargetPoints}` : `${totalPoints}`;
 
   return (
     <article className="cute-tier-card">
@@ -110,8 +114,8 @@ function TierGauge({
         </svg>
 
         <div className="cute-tier-center">
-          <strong>{totalPoints}</strong>
-          <span>Total points</span>
+          <strong>{centerPointsLabel}</strong>
+          <span>{nextTier ? "points" : "Total points"}</span>
         </div>
       </div>
 
@@ -138,16 +142,14 @@ export default async function HomePage() {
     include: { _count: { select: { votes: true, submissions: true } } },
   });
 
-  const [myVoteCount, mySubmissions, wallet, myRedemptionCount, recentApproved] = await Promise.all([
+  const [myVoteCount, mySubmissions, wallet, myRedemptionCount, leaderboardSubmissions] = await Promise.all([
     prisma.eventVote.count({ where: { userId: user.id, status: "ATTEND" } }),
     prisma.submission.findMany({ where: { userId: user.id, status: "APPROVED" }, select: { distanceKm: true, totalPoints: true } }),
     getUserPointWallet(user.id),
     prisma.redemption.count({ where: { userId: user.id } }),
     prisma.submission.findMany({
-      where: { userId: user.id, status: "APPROVED" },
-      include: { event: true },
-      orderBy: { createdAt: "desc" },
-      take: 4,
+      where: { status: "APPROVED" },
+      select: { userId: true, totalPoints: true, user: { select: { name: true } } },
     }),
   ]);
 
@@ -161,6 +163,21 @@ export default async function HomePage() {
   const upcomingEvents = events.filter((event) => isEventAcceptingResponses(event));
   const nextEvent = upcomingEvents[0] || events[0];
   const featuredChallenge = challenges.find((challenge) => !challenge.completed) || challenges[0];
+  const latestBadge = [...badges].reverse().find((badge) => badge.earned) || badges[0];
+  const leaderboardMap = new Map<string, { userId: string; name: string; points: number }>();
+  for (const submission of leaderboardSubmissions) {
+    const current = leaderboardMap.get(submission.userId) || {
+      userId: submission.userId,
+      name: submission.user.name,
+      points: 0,
+    };
+    current.points += submission.totalPoints;
+    leaderboardMap.set(submission.userId, current);
+  }
+  const leaderboardTotals = Array.from(leaderboardMap.values()).sort((a, b) => b.points - a.points);
+  const rankIndex = leaderboardTotals.findIndex((row) => row.userId === user.id);
+  const myRank = rankIndex >= 0 ? rankIndex + 1 : null;
+  const rankingPreview = leaderboardTotals.slice(0, 3);
 
   return (
     <>
@@ -176,13 +193,6 @@ export default async function HomePage() {
             <span>{openEvents} open missions</span>
           </div>
         </article>
-
-        <nav className="mobile-quick-actions" aria-label="Member shortcuts">
-          <LoadingLink href="/events"><span>📅</span><strong>Events</strong></LoadingLink>
-          <LoadingLink href="/redemptions"><span>🎁</span><strong>Rewards</strong></LoadingLink>
-          <LoadingLink href="/challenges"><span>🛡️</span><strong>Challenge</strong></LoadingLink>
-          <LoadingLink href="/badges"><span>🏅</span><strong>Badges</strong></LoadingLink>
-        </nav>
 
         <div className="club-dashboard-grid-v2">
           <TierGauge
@@ -216,7 +226,7 @@ export default async function HomePage() {
           <article className="cute-stat-card"><span>Approved runs</span><strong>{mySubmissions.length}</strong><small>results counted</small></article>
         </div>
 
-        <div className="cute-focus-grid">
+        <div className="cute-focus-grid dashboard-summary-grid">
           <article className="cute-focus-card">
             <div className="section-title-row compact">
               <div>
@@ -226,16 +236,19 @@ export default async function HomePage() {
             </div>
             <p>{nextEvent ? formatDateTimeRange(nextEvent.startAt, nextEvent.endAt) : "Admin can add your first club event."}</p>
             {nextEvent && <span className={eventTypeClass(nextEvent.type)}>{getClubEventType(nextEvent.type).icon} {getClubEventType(nextEvent.type).label}</span>}
-            <div className="cute-button-row">
-              {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
-              <LoadingLink className="button ghost" href="/events">All events</LoadingLink>
+            <div className="cute-button-row single">
+              {nextEvent ? (
+                <LoadingLink className="button" href={`/events/${nextEvent.slug}`} loadingLabel="Opening event...">Open event</LoadingLink>
+              ) : (
+                <LoadingLink className="button ghost" href="/events" loadingLabel="Opening events...">All events</LoadingLink>
+              )}
             </div>
           </article>
 
           <article className="cute-focus-card challenge">
             <div className="section-title-row compact">
               <div>
-                <span className="eyebrow">Challenge</span>
+                <span className="eyebrow">Current challenge</span>
                 <h2>{featuredChallenge?.title || "Stay active"}</h2>
               </div>
             </div>
@@ -249,21 +262,41 @@ export default async function HomePage() {
                 <div className="cute-progress-bar"><i style={{ width: `${featuredChallenge.progress}%` }} /></div>
               </>
             )}
-            <small className="muted">{badgeCount} badges earned so far.</small>
+          </article>
+
+          <article className="cute-focus-card badge-preview">
+            <div className="section-title-row compact">
+              <div>
+                <span className="eyebrow">Latest badge</span>
+                <h2>{latestBadge ? `${latestBadge.icon} ${latestBadge.name}` : "No badge yet"}</h2>
+              </div>
+            </div>
+            <p>{latestBadge?.description || "Vote, attend and submit distance to unlock your first badge."}</p>
+            <div className="cute-progress-pill">
+              <strong>{badgeCount}/{badges.length} earned</strong>
+              <small>{latestBadge?.earned ? "Unlocked" : `${latestBadge?.progress || 0}%`}</small>
+            </div>
+          </article>
+
+          <article className="cute-focus-card leaderboard-preview">
+            <div className="section-title-row compact">
+              <div>
+                <span className="eyebrow">Ranking preview</span>
+                <h2>{myRank ? `You are #${myRank}` : "No ranking yet"}</h2>
+              </div>
+            </div>
+            <div className="mini-leaderboard-list">
+              {rankingPreview.map((row, index) => (
+                <div key={row.userId}>
+                  <span>#{index + 1}</span>
+                  <strong>{row.userId === user.id ? "You" : row.name}</strong>
+                  <small>{row.points} pts</small>
+                </div>
+              ))}
+            </div>
+            {rankingPreview.length === 0 && <p className="muted">Submit an approved result to enter the leaderboard.</p>}
           </article>
         </div>
-
-        {recentApproved.length > 0 && (
-          <div className="app-recent-list cute-recent-list">
-            <div className="section-title-row compact"><div><span className="eyebrow">Recent effort</span><h2>Approved sessions</h2></div></div>
-            {recentApproved.map((submission) => (
-              <article key={submission.id}>
-                <span className={eventTypeClass(submission.event.type)}>{getClubEventType(submission.event.type).icon}</span>
-                <div><strong>{submission.event.title}</strong><small>{Number(submission.distanceKm).toFixed(2)}km · {submission.totalPoints} pts</small></div>
-              </article>
-            ))}
-          </div>
-        )}
       </section>
 
     </>

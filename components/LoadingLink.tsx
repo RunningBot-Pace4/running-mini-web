@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
 import type { ComponentProps, MouseEvent, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { PageLoadingOverlay } from "@/components/PageLoadingOverlay";
@@ -11,18 +10,22 @@ type LoadingLinkProps = ComponentProps<typeof Link> & {
   loadingLabel?: string;
 };
 
-function isModifiedClick(event: MouseEvent<HTMLAnchorElement>) {
-  return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+function shouldSkipLoading(event: MouseEvent<HTMLAnchorElement>, href: LoadingLinkProps["href"]) {
+  if (event.defaultPrevented) return true;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return true;
+  if (event.currentTarget.target && event.currentTarget.target !== "_self") return true;
+  if (typeof href === "string" && href.startsWith("#")) return true;
+  return false;
 }
 
-export function LoadingLink({ children, loadingLabel = "Loading...", onClick, href, ...props }: LoadingLinkProps) {
+export function LoadingLink({ children, loadingLabel = "Opening...", onClick, href, ...props }: LoadingLinkProps) {
   const [loading, setLoading] = useState(false);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    setLoading(false);
-  }, [pathname, searchParams]);
+    if (!loading) return;
+    const timer = window.setTimeout(() => setLoading(false), 3500);
+    return () => window.clearTimeout(timer);
+  }, [loading]);
 
   return (
     <>
@@ -32,10 +35,7 @@ export function LoadingLink({ children, loadingLabel = "Loading...", onClick, hr
         aria-busy={loading || undefined}
         onClick={(event) => {
           onClick?.(event);
-          if (event.defaultPrevented || isModifiedClick(event) || props.target === "_blank") return;
-
-          const hrefString = typeof href === "string" ? href : href.pathname || "";
-          if (hrefString && hrefString !== pathname) setLoading(true);
+          if (!shouldSkipLoading(event, href)) setLoading(true);
         }}
       >
         {children}

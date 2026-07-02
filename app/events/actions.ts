@@ -52,8 +52,6 @@ export async function voteAction(formData: FormData) {
   });
 
   revalidatePath(`/events/${rawEvent.slug}`);
-  revalidatePath("/events");
-  revalidatePath("/");
 }
 
 const submitSchema = z.object({
@@ -145,12 +143,7 @@ export async function submitActivityAction(_: unknown, formData: FormData) {
   });
 
   revalidatePath(`/events/${context.event.slug}`);
-  revalidatePath("/events");
-  revalidatePath("/");
   revalidatePath("/account");
-  revalidatePath("/challenges");
-  revalidatePath("/badges");
-  revalidatePath("/leaderboard");
   return { success: submissionStatus === "PENDING" ? "Strava run submitted. Waiting for admin approval before points count." : "Strava run submitted and scored." };
 }
 
@@ -246,11 +239,6 @@ export async function submitManualDistanceAction(_: unknown, formData: FormData)
   }
 
   revalidatePath(`/events/${context.event.slug}`);
-  revalidatePath("/events");
-  revalidatePath("/");
   revalidatePath("/account");
-  revalidatePath("/challenges");
-  revalidatePath("/badges");
-  revalidatePath("/leaderboard");
   return { success: submissionStatus === "PENDING" ? "Manual distance submitted. Waiting for admin approval before points count." : "Manual distance submitted and scored." };
 }

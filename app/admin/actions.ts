@@ -11,7 +11,6 @@ import { getThemePreset, isThemePresetKey } from "@/lib/theme-presets";
 import { SCORE_SETTING_KEY } from "@/lib/score-config";
 import { calculateScore, getScoreSettings } from "@/lib/scoring";
 import { DEFAULT_MEMBER_TIERS } from "@/lib/member-progress";
-import { isAfterAutoClose } from "@/lib/event-window";
 
 const createEventSchema = z.object({
   title: z.string().min(3).max(120),
@@ -43,7 +42,8 @@ export async function createEventAction(_: unknown, formData: FormData) {
     return { error: "End date must be after start date." };
   }
 
-  const manualOpenAt = null;
+  const now = new Date();
+  const manualOpenAt = parsed.data.status === "OPEN" ? now : null;
 
   const baseSlug = slugify(parsed.data.title);
   let slug = baseSlug;
@@ -68,7 +68,6 @@ export async function createEventAction(_: unknown, formData: FormData) {
   });
 
   revalidatePath("/admin");
-  revalidatePath("/events");
   revalidatePath("/");
   return { success: "Event created." };
 }
@@ -258,18 +257,7 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
     return { error: "End date must be after start date." };
   }
 
-  const existingEvent = await prisma.event.findUnique({
-    where: { id: parsed.data.eventId },
-    select: { id: true, status: true },
-  });
-
-  if (!existingEvent) return { error: "Event not found." };
-
-  const now = new Date();
-  const manualOpenAt =
-    parsed.data.status === "OPEN" && isAfterAutoClose({ endAt }, now)
-      ? now
-      : null;
+  const manualOpenAt = parsed.data.status === "OPEN" ? new Date() : null;
 
   const event = await prisma.event.update({
     where: { id: parsed.data.eventId },
@@ -285,7 +273,6 @@ export async function updateEventDetailsAction(_: unknown, formData: FormData) {
   });
 
   revalidatePath("/");
-  revalidatePath("/events");
   revalidatePath("/admin");
   revalidatePath(`/admin/events/${event.id}`);
   revalidatePath(`/events/${event.slug}`);
@@ -315,20 +302,15 @@ export async function updateEventStatusAction(formData: FormData) {
 
   if (!currentEvent) throw new Error("Event not found.");
 
-  const now = new Date();
   const event = await prisma.event.update({
     where: { id: parsed.data.eventId },
     data: {
       status: parsed.data.status,
-      manualOpenAt:
-        parsed.data.status === "OPEN" && isAfterAutoClose({ endAt: currentEvent.endAt }, now)
-          ? now
-          : null,
+      manualOpenAt: parsed.data.status === "OPEN" ? new Date() : null,
     },
   });
 
   revalidatePath("/");
-  revalidatePath("/events");
   revalidatePath("/admin");
   revalidatePath(`/admin/events/${event.id}`);
   revalidatePath(`/events/${currentEvent.slug}`);
@@ -381,9 +363,6 @@ export async function updateSubmissionStatusAction(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/account");
-  revalidatePath("/challenges");
-  revalidatePath("/badges");
-  revalidatePath("/leaderboard");
   revalidatePath("/admin");
   revalidatePath(`/admin/events/${submission.eventId}`);
   revalidatePath(`/events/${submission.event.slug}`);

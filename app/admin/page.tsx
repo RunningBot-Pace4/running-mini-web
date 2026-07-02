@@ -14,7 +14,7 @@ import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
-import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
+import { eventDisplayStatus } from "@/lib/event-window";
 import { stravaConfigStatus } from "@/lib/strava-config";
 import { redemptionStatusClass } from "@/lib/redemptions";
 import { eventTypeClass, getClubEventType } from "@/lib/event-types";
@@ -34,7 +34,7 @@ export default async function AdminPage() {
   const tierDefinitions = await getTierDefinitions();
   const stravaConfig = stravaConfigStatus();
 
-  const [events, rewards, redemptionRequests, memberCount, pendingSubmissions] = await Promise.all([
+  const [events, rewards, redemptionRequests, memberCount, pendingSubmissionCount, pendingSubmissionRows] = await Promise.all([
     prisma.event.findMany({
       orderBy: { createdAt: "desc" },
       include: { _count: { select: { votes: true, submissions: true } } },
@@ -50,13 +50,20 @@ export default async function AdminPage() {
     }),
     prisma.user.count(),
     prisma.submission.count({ where: { status: "PENDING" } }),
+    prisma.submission.findMany({
+      where: { status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      include: { user: true, event: true, activity: true },
+    }),
   ]);
 
-  const openEvents = events.filter((event) => isEventAcceptingResponses(event)).length;
+  const openEvents = events.filter((event) => eventDisplayStatus(event) === "OPEN").length;
   const totalVotes = events.reduce((sum, event) => sum + event._count.votes, 0);
   const totalRuns = events.reduce((sum, event) => sum + event._count.submissions, 0);
-  const pendingRedemptions = redemptionRequests.filter((item) => item.status === "PENDING").length;
-  const pendingActions = pendingRedemptions + pendingSubmissions;
+  const pendingRedemptionRows = redemptionRequests.filter((item) => item.status === "PENDING");
+  const pendingRedemptions = pendingRedemptionRows.length;
+  const pendingActions = pendingRedemptions + pendingSubmissionCount;
   const upcomingEvents = events.filter((event) => event.status !== "ARCHIVED").slice(0, 5);
 
   return (
@@ -79,13 +86,73 @@ export default async function AdminPage() {
       </div>
 
       <nav className="admin-v2-tabs" aria-label="Admin sections">
-        <a className="active" href="#admin-events">📅 Events</a>
-        <a href="#admin-approvals">🧾 Approvals</a>
+        <a className="active" href="#admin-today">⚡ Today</a>
+        <a href="#admin-events">📅 Events</a>
+        <a href="#admin-approvals">🧾 Points & Approval</a>
         <a href="#admin-rewards">🎁 Rewards</a>
-        <a href="#admin-tiers">⭐ Tiers</a>
-        <a href="#admin-website">🎨 Website</a>
+        <a href="#admin-website">🎨 Website Settings</a>
         <a href="#admin-strava">🔺 Strava</a>
       </nav>
+
+      <section id="admin-today" className="admin-v2-card admin-today-card">
+        <div className="admin-v2-section-title">
+          <div><span>⚡</span><div><h2>Today / Need Attention</h2><p>Fast admin queue for non-technical club admins.</p></div></div>
+          <span className={pendingActions > 0 ? "badge warning" : "badge success"}>{pendingActions} pending</span>
+        </div>
+
+        <div className="admin-attention-grid">
+          <article>
+            <span>🧾</span>
+            <div>
+              <strong>{pendingSubmissionCount} point approvals</strong>
+              <p>Review pending member distance submissions.</p>
+            </div>
+            <a className="button ghost" href="#admin-approvals">Review</a>
+          </article>
+          <article>
+            <span>🎁</span>
+            <div>
+              <strong>{pendingRedemptions} reward requests</strong>
+              <p>Approve, reject or mark redemptions fulfilled.</p>
+            </div>
+            <a className="button ghost" href="#admin-rewards">Review</a>
+          </article>
+          <article>
+            <span>📅</span>
+            <div>
+              <strong>{openEvents} open events</strong>
+              <p>Check events that members can still vote or submit to.</p>
+            </div>
+            <a className="button ghost" href="#admin-events">Manage</a>
+          </article>
+        </div>
+
+        <div className="admin-queue-grid">
+          <div className="admin-queue-card">
+            <h3>Pending point submissions</h3>
+            {pendingSubmissionRows.slice(0, 4).map((submission) => (
+              <LoadingLink key={submission.id} href={`/admin/events/${submission.eventId}`} className="admin-queue-row" loadingLabel="Opening event approval...">
+                <span>{submission.user.name}</span>
+                <strong>{submission.distanceKm.toString()}km</strong>
+                <small>{submission.event.title}</small>
+              </LoadingLink>
+            ))}
+            {pendingSubmissionRows.length === 0 && <p className="muted">No pending point submissions.</p>}
+          </div>
+
+          <div className="admin-queue-card">
+            <h3>Pending reward redemptions</h3>
+            {pendingRedemptionRows.slice(0, 4).map((request) => (
+              <a key={request.id} href="#admin-rewards" className="admin-queue-row">
+                <span>{request.user.name}</span>
+                <strong>{request.pointsCost} pts</strong>
+                <small>{request.reward.name}</small>
+              </a>
+            ))}
+            {pendingRedemptionRows.length === 0 && <p className="muted">No pending reward redemptions.</p>}
+          </div>
+        </div>
+      </section>
 
       <section id="admin-events" className="admin-v2-card">
         <div className="admin-v2-section-title">
@@ -155,6 +222,10 @@ export default async function AdminPage() {
         <details className="admin-v2-accordion">
           <summary><span>Scoring configuration</span><small>{scoringDescription(scoreSettings)}</small></summary>
           <div className="admin-panel-body"><ScoreSettingsForm settings={scoreSettings} action={updateScoreSettingsAction} /></div>
+        </details>
+        <details className="admin-v2-accordion">
+          <summary><span>Tier benefits</span><small>Set Bronze, Silver, Gold and Platinum thresholds and member perks.</small></summary>
+          <div className="admin-panel-body"><TierBenefitsForm tiers={tierDefinitions} action={updateTierBenefitsAction} /></div>
         </details>
       </section>
 
@@ -229,20 +300,9 @@ export default async function AdminPage() {
         </details>
       </section>
 
-      <section id="admin-tiers" className="admin-v2-card">
-        <div className="admin-v2-section-title">
-          <div><span>⭐</span><div><h2>Tier benefits</h2><p>Set Bronze, Silver, Gold and Platinum thresholds, benefits and discount labels.</p></div></div>
-          <span className="badge">4 tiers</span>
-        </div>
-        <details className="admin-v2-accordion">
-          <summary><span>Configure tier benefits</span><small>Update unlocks, point thresholds and reward labels.</small></summary>
-          <div className="admin-panel-body"><TierBenefitsForm tiers={tierDefinitions} action={updateTierBenefitsAction} /></div>
-        </details>
-      </section>
-
       <section id="admin-website" className="admin-v2-card">
         <div className="admin-v2-section-title">
-          <div><span>🎨</span><div><h2>Design & branding</h2><p>Upload logo, update home wording and select a ready-made theme.</p></div></div>
+          <div><span>🎨</span><div><h2>Website Settings</h2><p>Upload logo, update club name, home wording and select a ready-made theme.</p></div></div>
           <span className="badge">Customize</span>
         </div>
         <details className="admin-v2-accordion">

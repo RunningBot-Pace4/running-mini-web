@@ -47,15 +47,13 @@ export function EditEventForm({
         />
       </div>
 
-      <div className="form-full-width">
-        <div>
-          <label htmlFor="edit-eventType">Event category</label>
-          <select id="edit-eventType" name="type" defaultValue={event.type || "RUNNING"}>
-            {CLUB_EVENT_TYPES.map((type) => (
-              <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
-            ))}
-          </select>
-        </div>
+      <div className="admin-event-category-field">
+        <label htmlFor="edit-eventType">Event category</label>
+        <select id="edit-eventType" name="type" defaultValue={event.type || "RUNNING"}>
+          {CLUB_EVENT_TYPES.map((type) => (
+            <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
+          ))}
+        </select>
       </div>
 
       <div>

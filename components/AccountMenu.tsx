@@ -4,67 +4,72 @@ import { useEffect, useRef, useState } from "react";
 import { LoadingLink } from "@/components/LoadingLink";
 import { LogoutForm } from "@/components/LogoutForm";
 
-type AccountMenuProps = {
+export function AccountMenu({
+  name,
+  role,
+  logoutAction,
+}: {
   name: string;
-  role: string;
-  action: () => Promise<void>;
-};
-
-export function AccountMenu({ name, role, action }: AccountMenuProps) {
+  role: "ADMIN" | "USER";
+  logoutAction: () => Promise<void>;
+}) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const initials = name.slice(0, 2).toUpperCase();
+  const initials = name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "👤";
 
   useEffect(() => {
     if (!open) return;
 
-    function onKeyDown(event: KeyboardEvent) {
+    function handlePointerDown(event: PointerEvent) {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
 
-    function onPointerDown(event: PointerEvent) {
-      if (!menuRef.current?.contains(event.target as Node)) setOpen(false);
-    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
 
   return (
-    <>
-      {open && <button className="account-menu-backdrop" aria-label="Close account menu" onClick={() => setOpen(false)} type="button" />}
-      <div className={open ? "account-menu is-open" : "account-menu"} ref={menuRef}>
-        <button
-          className="account-menu-trigger"
-          type="button"
-          aria-expanded={open}
-          aria-haspopup="menu"
-          onClick={() => setOpen((value) => !value)}
-        >
-          <span className="account-menu-avatar">{initials}</span>
-          <span className="account-menu-name">{name}</span>
-        </button>
+    <div className="account-menu" ref={menuRef}>
+      <button
+        type="button"
+        className="account-menu-trigger"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Open account menu"
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="account-menu-avatar" aria-hidden="true">{initials}</span>
+        <span className="account-menu-name">{name}</span>
+      </button>
 
-        {open && (
-          <div className="account-menu-panel" role="menu">
-            <div className="account-menu-card-head">
-              <span className="account-menu-avatar small">{initials}</span>
-              <div>
-                <strong>{name}</strong>
-                <small>{role === "ADMIN" ? "Administrator" : "Member"}</small>
-              </div>
-            </div>
-            <LoadingLink href="/account" role="menuitem" onClick={() => setOpen(false)}>
-              My account
-            </LoadingLink>
-            <LogoutForm action={action} pendingLabel="Logging out..." />
+      {open && (
+        <div className="account-menu-panel" role="menu">
+          <div className="account-menu-user">
+            <strong>{name}</strong>
+            <small>{role === "ADMIN" ? "Administrator" : "Member"}</small>
           </div>
-        )}
-      </div>
-    </>
+          <LoadingLink href="/account" role="menuitem" onClick={() => setOpen(false)}>
+            My account
+          </LoadingLink>
+          <LogoutForm action={logoutAction} pendingLabel="Logging out..." />
+        </div>
+      )}
+    </div>
   );
 }
