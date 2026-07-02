@@ -47,7 +47,7 @@ export function EditEventForm({
         />
       </div>
 
-      <div className="grid grid-2">
+      <div className="form-full-width">
         <div>
           <label htmlFor="edit-eventType">Event category</label>
           <select id="edit-eventType" name="type" defaultValue={event.type || "RUNNING"}>

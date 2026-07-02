@@ -177,6 +177,13 @@ export default async function HomePage() {
           </div>
         </article>
 
+        <nav className="mobile-quick-actions" aria-label="Member shortcuts">
+          <LoadingLink href="/events"><span>📅</span><strong>Events</strong></LoadingLink>
+          <LoadingLink href="/redemptions"><span>🎁</span><strong>Rewards</strong></LoadingLink>
+          <LoadingLink href="/challenges"><span>🛡️</span><strong>Challenge</strong></LoadingLink>
+          <LoadingLink href="/badges"><span>🏅</span><strong>Badges</strong></LoadingLink>
+        </nav>
+
         <div className="club-dashboard-grid-v2">
           <TierGauge
             totalPoints={myPoints}
@@ -221,7 +228,7 @@ export default async function HomePage() {
             {nextEvent && <span className={eventTypeClass(nextEvent.type)}>{getClubEventType(nextEvent.type).icon} {getClubEventType(nextEvent.type).label}</span>}
             <div className="cute-button-row">
               {nextEvent && <LoadingLink className="button" href={`/events/${nextEvent.slug}`}>Open event</LoadingLink>}
-              <LoadingLink className="button ghost" href="#events">All events</LoadingLink>
+              <LoadingLink className="button ghost" href="/events">All events</LoadingLink>
             </div>
           </article>
 

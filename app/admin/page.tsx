@@ -14,6 +14,7 @@ import { formatDateTimeRange } from "@/lib/datetime";
 import { getHomeContent } from "@/lib/site-content";
 import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
 import { closeExpiredOpenEvents } from "@/lib/event-maintenance";
+import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 import { stravaConfigStatus } from "@/lib/strava-config";
 import { redemptionStatusClass } from "@/lib/redemptions";
 import { eventTypeClass, getClubEventType } from "@/lib/event-types";
@@ -51,7 +52,7 @@ export default async function AdminPage() {
     prisma.submission.count({ where: { status: "PENDING" } }),
   ]);
 
-  const openEvents = events.filter((event) => event.status === "OPEN").length;
+  const openEvents = events.filter((event) => isEventAcceptingResponses(event)).length;
   const totalVotes = events.reduce((sum, event) => sum + event._count.votes, 0);
   const totalRuns = events.reduce((sum, event) => sum + event._count.submissions, 0);
   const pendingRedemptions = redemptionRequests.filter((item) => item.status === "PENDING").length;
@@ -101,6 +102,7 @@ export default async function AdminPage() {
           <div className="admin-v2-event-list">
             {upcomingEvents.map((event) => {
               const type = getClubEventType(event.type);
+              const displayStatus = eventDisplayStatus(event);
               return (
                 <article key={event.id} className="admin-v2-event-row">
                   <div className="admin-v2-date">
@@ -112,7 +114,7 @@ export default async function AdminPage() {
                     <small>{formatDateTimeRange(event.startAt, event.endAt)}</small>
                     <span className={eventTypeClass(event.type)}>{type.icon} {type.label}</span>
                   </div>
-                  <span className={event.status === "OPEN" ? "badge success" : event.status === "CLOSED" ? "badge danger" : "badge"}>{event.status}</span>
+                  <span className={displayStatus === "OPEN" ? "badge success" : displayStatus === "CLOSED" ? "badge danger" : "badge"}>{displayStatus}</span>
                   <div className="admin-v2-event-number"><strong>{event._count.votes}</strong><small>votes</small></div>
                   <div className="admin-v2-event-number"><strong>{event._count.submissions}</strong><small>runs</small></div>
                   <div className="admin-v2-actions">

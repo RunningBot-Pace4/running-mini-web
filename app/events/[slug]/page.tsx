@@ -7,7 +7,7 @@ import { EventDescription } from "@/components/EventDescription";
 import { VoteButtons } from "@/components/VoteButtons";
 import { LoadingLink } from "@/components/LoadingLink";
 import { formatDateTimeRange } from "@/lib/datetime";
-import { getScoreSettings, scoringDescription, scoringFormulaLabel } from "@/lib/scoring";
+import { getScoreSettings, scoringDescription } from "@/lib/scoring";
 import { eventDisplayStatus, isEventAcceptingResponses } from "@/lib/event-window";
 import { closeExpiredOpenEventIfNeeded } from "@/lib/event-maintenance";
 import { eventTypeClass, getClubEventType } from "@/lib/event-types";
@@ -17,6 +17,7 @@ export const dynamic = "force-dynamic";
 function statusClass(status: string) {
   if (status === "OPEN") return "badge success";
   if (status === "CLOSED") return "badge danger";
+  if (status === "DRAFT") return "badge warning";
   return "badge";
 }
 
@@ -40,14 +41,18 @@ export default async function EventPage({
     include: {
       submissions: {
         include: { user: true, activity: true },
-        orderBy: { totalPoints: "desc" },
+        orderBy: [{ totalPoints: "desc" }, { distanceKm: "desc" }],
       },
+      _count: { select: { votes: true, submissions: true } },
     },
   });
 
   if (!rawEvent) redirect("/");
 
   const event = await closeExpiredOpenEventIfNeeded(rawEvent);
+  const displayStatus = eventDisplayStatus(event);
+  const isOpen = isEventAcceptingResponses(event);
+  const eventType = getClubEventType(event.type);
 
   const vote = user
     ? await prisma.eventVote.findUnique({
@@ -71,68 +76,45 @@ export default async function EventPage({
     : [];
 
   const approvedSubmissions = event.submissions.filter((submission) => submission.status === "APPROVED");
-
-  const mySubmissions = user
-    ? event.submissions.filter((submission) => submission.userId === user.id)
-    : [];
-  const isOpen = isEventAcceptingResponses(event);
-  const displayStatus = eventDisplayStatus(event);
+  const mySubmissions = user ? event.submissions.filter((submission) => submission.userId === user.id) : [];
   const canSubmitRun = isOpen && vote?.status === "ATTEND";
   const submitBlockedReason = !isOpen
     ? "This event is closed. You cannot submit distance now."
     : vote?.status === "NOT_ATTEND"
-      ? "You selected NOT_ATTEND, so distance submission is disabled."
+      ? "You selected NOT ATTEND, so distance submission is disabled."
       : "Please vote ATTEND before submitting your distance.";
 
   const totalDistance = approvedSubmissions.reduce((sum, submission) => sum + Number(submission.distanceKm), 0);
   const totalPoints = approvedSubmissions.reduce((sum, submission) => sum + submission.totalPoints, 0);
-  const eventType = getClubEventType(event.type);
 
   return (
-    <>
-      <section className="cn-event-detail-hero">
-        <div className="cn-event-hero-copy">
-          <span className={statusClass(displayStatus)}>{displayStatus}</span>
-          <span className={eventTypeClass(event.type)}>{eventType.icon} {eventType.label}</span>
+    <section className="event-detail-page">
+      <div className="event-detail-hero">
+        <div className="event-detail-title">
+          <div className="event-detail-tags">
+            <span className={statusClass(displayStatus)}>{displayStatus}</span>
+            <span className={eventTypeClass(event.type)}>{eventType.icon} {eventType.label}</span>
+          </div>
           <h1>{event.title}</h1>
           <p>{formatDateTimeRange(event.startAt, event.endAt)}</p>
-          <div className="cn-event-chips">
-            <span>🧾 {approvedSubmissions.length} approved</span>
-            <span>📏 {totalDistance.toFixed(1)}km total</span>
-            <span>🏆 {totalPoints} points</span>
-          </div>
         </div>
 
-        <div className="cn-event-score-ticket premium-score-ticket">
-          <span>Points rule</span>
-          <div className="score-ticket-grid">
-            <strong>{scoreSettings.attendancePoints}</strong>
-            <small>Attend</small>
-            <strong>{scoreSettings.perKmPoints}</strong>
-            <small>Per km</small>
+        <div className="event-detail-rule-card">
+          <span className="eyebrow">Points rule</span>
+          <div>
+            <strong>{scoreSettings.attendancePoints}</strong><small>Attend</small>
+            <strong>{scoreSettings.perKmPoints}</strong><small>Per km</small>
           </div>
           <p>{scoringDescription(scoreSettings)}</p>
         </div>
-      </section>
+      </div>
 
-      <section className="cn-workout-board">
-        <div className="cn-board-header">
-          <div>
-            <span className="eyebrow">Workout plan</span>
-            <h2>Session mission</h2>
-          </div>
-          <span className="cn-board-badge">WORKOUT</span>
-        </div>
-        {event.description ? (
-          <EventDescription text={event.description} />
-        ) : (
-          <p className="muted">No event description yet.</p>
-        )}
-        <div className="score-note">
-          {scoringDescription(scoreSettings)}
-          {scoreSettings.requireSubmissionApproval ? " · Admin approval required before points count." : ""}
-        </div>
-      </section>
+      <div className="event-detail-metrics" aria-label="Event summary">
+        <article><strong>{approvedSubmissions.length}</strong><span>approved</span></article>
+        <article><strong>{totalDistance.toFixed(1)}</strong><span>km total</span></article>
+        <article><strong>{totalPoints}</strong><span>points</span></article>
+        <article><strong>{event._count.votes}</strong><span>votes</span></article>
+      </div>
 
       {(stravaError || syncError || stravaConnected) && (
         <div className="card cn-alert-card">
@@ -146,61 +128,66 @@ export default async function EventPage({
         </div>
       )}
 
+      <section className="event-detail-section workout">
+        <div className="section-title-row compact">
+          <div>
+            <span className="eyebrow">Workout plan</span>
+            <h2>Session mission</h2>
+          </div>
+          <span className="cn-board-badge">WORKOUT</span>
+        </div>
+        {event.description ? <EventDescription text={event.description} /> : <p className="muted">No event description yet.</p>}
+      </section>
+
       {!user && (
-        <div className="cn-locked-panel">
+        <div className="event-locked-panel">
           <div>
             <span className="eyebrow">Member action locked</span>
             <h2>Login to vote, submit distance and join the leaderboard.</h2>
             <p>Register your runner pass to unlock attendance voting, Strava sync, manual distance and result sharing.</p>
           </div>
-          <div className="row">
-            <LoadingLink className="button cn-main-cta" href="/register">
-              Register
-            </LoadingLink>
-            <LoadingLink className="button ghost" href="/login">
-              Login
-            </LoadingLink>
+          <div className="cute-button-row">
+            <LoadingLink className="button" href="/register">Register</LoadingLink>
+            <LoadingLink className="button ghost" href="/login">Login</LoadingLink>
           </div>
         </div>
       )}
 
       {user && (
         <>
-          <section className="cn-action-flow" aria-label="Event action flow">
-            <div className="cn-flow-card vote-flow">
-              <div className="cn-flow-step">01</div>
+          <section className="event-action-grid" aria-label="Event actions">
+            <article className="event-action-card">
+              <div className="event-action-step">01</div>
               <h2>Attendance vote</h2>
-              <p className="muted">
-                Current vote: <strong>{vote?.status || "No vote yet"}</strong>
-              </p>
+              <p className="muted">Current vote: <strong>{vote?.status || "No vote yet"}</strong></p>
               {!isOpen && <p className="error">This event is closed. New votes are disabled.</p>}
               <VoteButtons eventId={event.id} currentStatus={vote?.status} action={voteAction} disabled={!isOpen} />
-            </div>
+            </article>
 
-            <div className="cn-flow-card strava-flow">
-              <div className="cn-flow-step">02</div>
+            <article className="event-action-card">
+              <div className="event-action-step">02</div>
               <h2>Connect and sync</h2>
               {stravaToken ? (
                 <>
                   <p className="success-text">Strava connected.</p>
-                  <LoadingLink className="button cn-main-cta" href={`/api/strava/sync?eventId=${event.id}`}>
+                  <LoadingLink className="button" href={`/api/strava/sync?eventId=${event.id}`} loadingLabel="Syncing Strava runs...">
                     Sync event runs
                   </LoadingLink>
                 </>
               ) : (
                 <>
                   <p className="muted">Connect Strava to fetch activities, or submit manual distance after voting ATTEND.</p>
-                  <LoadingLink className="button cn-main-cta" href={`/api/strava/connect?next=/events/${event.slug}`}>
+                  <LoadingLink className="button" href={`/api/strava/connect?next=/events/${event.slug}`} loadingLabel="Opening Strava...">
                     Connect Strava
                   </LoadingLink>
                 </>
               )}
-            </div>
+            </article>
 
-            <div className="cn-flow-card submit-flow">
-              <div className="cn-flow-step">03</div>
+            <article className="event-action-card submit">
+              <div className="event-action-step">03</div>
               <h2>Submit distance</h2>
-              <p className="muted">Choose Strava activity or manually key in distance. Manual distance is allowed only after voting ATTEND.</p>
+              <p className="muted">Choose Strava activity or manually key in distance after voting ATTEND.</p>
               <SubmitRunForm
                 eventId={event.id}
                 activities={activities}
@@ -210,14 +197,16 @@ export default async function EventPage({
                 canSubmit={canSubmitRun}
                 blockedReason={submitBlockedReason}
               />
-            </div>
+            </article>
           </section>
 
           {mySubmissions.length > 0 && (
-            <section className="cn-submission-wallet">
-              <div>
-                <span className="eyebrow">My result wallet</span>
-                <h2>Your submissions</h2>
+            <section className="event-detail-section">
+              <div className="section-title-row compact">
+                <div>
+                  <span className="eyebrow">My result wallet</span>
+                  <h2>Your submissions</h2>
+                </div>
               </div>
               <div className="cn-submission-grid">
                 {mySubmissions.map((submission) => (
@@ -226,9 +215,7 @@ export default async function EventPage({
                       {submission.status}
                     </span>
                     <strong>{submission.status === "APPROVED" ? `${submission.totalPoints} pts` : "Waiting review"}</strong>
-                    <p>
-                      {submission.activity.name} · {submission.distanceKm.toString()}km
-                    </p>
+                    <p>{submission.activity.name} · {submission.distanceKm.toString()}km</p>
                     {submission.status === "APPROVED" ? (
                       <LoadingLink className="button full" href={`/share/${submission.id}`}>
                         Share result
@@ -244,11 +231,11 @@ export default async function EventPage({
         </>
       )}
 
-      <section className="cn-leaderboard-card">
-        <div className="cn-board-header">
+      <section className="event-detail-section leaderboard">
+        <div className="section-title-row compact">
           <div>
             <span className="eyebrow">Leaderboard</span>
-            <h2>Club ranking</h2>
+            <h2>Event ranking</h2>
           </div>
           <span className="cn-board-badge">RANKING</span>
         </div>
@@ -268,7 +255,7 @@ export default async function EventPage({
                   <td><strong>#{index + 1}</strong> {submission.user.name}</td>
                   <td>{submission.activity.name}</td>
                   <td>{submission.distanceKm.toString()}km</td>
-                  <td>{submission.totalPoints}</td>
+                  <td><strong>{submission.totalPoints}</strong></td>
                 </tr>
               ))}
             </tbody>
@@ -277,9 +264,7 @@ export default async function EventPage({
         {approvedSubmissions.length === 0 && <p className="muted">No approved submissions yet.</p>}
       </section>
 
-      <LoadingLink className="button ghost full" href="/">
-        Back to home
-      </LoadingLink>
-    </>
+      <LoadingLink className="button ghost full" href="/events">Back to events</LoadingLink>
+    </section>
   );
 }

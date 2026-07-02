@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { LoadingLink } from "@/components/LoadingLink";
-import { LogoutForm } from "@/components/LogoutForm";
 import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
+import { AccountMenu } from "@/components/AccountMenu";
 import "./globals.css";
 import { getCurrentUser } from "@/lib/session";
 import { logoutAction } from "@/app/auth/actions";
@@ -103,10 +103,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <nav className="loyalty-side-nav">
               <LoadingLink href="/"><span>🏠</span> Dashboard</LoadingLink>
               <LoadingLink href="/events"><span>📅</span> Events</LoadingLink>
-              <LoadingLink href="/account"><span>🛡️</span> Challenges</LoadingLink>
+              <LoadingLink href="/challenges"><span>🛡️</span> Challenges</LoadingLink>
               <LoadingLink href="/redemptions"><span>🎁</span> Rewards</LoadingLink>
-              <LoadingLink href="/account"><span>🏅</span> My Badges</LoadingLink>
-              <LoadingLink href="/account"><span>📈</span> Leaderboard</LoadingLink>
+              <LoadingLink href="/badges"><span>🏅</span> My Badges</LoadingLink>
+              <LoadingLink href="/leaderboard"><span>📈</span> Leaderboard</LoadingLink>
               {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>⚙️</span> Admin</LoadingLink>}
             </nav>
 
@@ -133,16 +133,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <header className="loyalty-page-topbar" aria-label="Page toolbar">
               <div className="loyalty-topbar-spacer" />
               {user ? (
-                <details className="account-menu">
-                  <summary>
-                    <span className="account-menu-avatar">{user.name.slice(0, 2).toUpperCase()}</span>
-                    <span>{user.name}</span>
-                  </summary>
-                  <div className="account-menu-panel">
-                    <LoadingLink href="/account">My account</LoadingLink>
-                    <LogoutForm action={logoutAction} pendingLabel="Logging out..." />
-                  </div>
-                </details>
+                <AccountMenu name={user.name} role={user.role} action={logoutAction} />
               ) : (
                 <div className="loyalty-auth-actions">
                   <LoadingLink href="/login">Login</LoadingLink>
@@ -158,9 +149,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <nav className="loyalty-mobile-tabbar" aria-label="Mobile app navigation">
           <LoadingLink href="/"><span>🏠</span>Home</LoadingLink>
           <LoadingLink href="/events"><span>📅</span>Events</LoadingLink>
-          <LoadingLink href="/redemptions"><span>🎁</span>Redeem</LoadingLink>
-          <LoadingLink href="/account"><span>👤</span>Account</LoadingLink>
-          {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>🛡️</span>Admin</LoadingLink>}
+          <LoadingLink href="/redemptions"><span>🎁</span>Rewards</LoadingLink>
+          <LoadingLink href="/challenges"><span>🛡️</span>Challenges</LoadingLink>
+          <LoadingLink href="/account"><span>👤</span>Me</LoadingLink>
+          {user?.role === "ADMIN" && <LoadingLink href="/admin"><span>⚙️</span>Admin</LoadingLink>}
         </nav>
         <PwaInstallPrompt />
       </body>

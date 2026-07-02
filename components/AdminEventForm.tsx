@@ -23,7 +23,7 @@ export function AdminEventForm({
         <input id="title" name="title" required />
       </div>
 
-      <div className="grid grid-2">
+      <div className="form-full-width">
         <div>
           <label htmlFor="eventType">Event category</label>
           <select id="eventType" name="type" defaultValue="RUNNING">
@@ -31,7 +31,6 @@ export function AdminEventForm({
               <option value={type.key} key={type.key}>{type.icon} {type.label}</option>
             ))}
           </select>
-          <p className="field-hint">Use this for HYROX, Redline, Marathon, Training and other club sessions.</p>
         </div>
       </div>
 

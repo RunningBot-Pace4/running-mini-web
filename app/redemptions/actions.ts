@@ -79,6 +79,8 @@ export async function redeemRewardAction(_: ActionState, formData: FormData): Pr
 
     revalidatePath("/redemptions");
     revalidatePath("/account");
+    revalidatePath("/badges");
+    revalidatePath("/challenges");
     revalidatePath("/admin");
     return result;
   } catch (error) {
@@ -234,4 +236,6 @@ export async function updateRedemptionStatusAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/redemptions");
   revalidatePath("/account");
+  revalidatePath("/badges");
+  revalidatePath("/challenges");
 }
